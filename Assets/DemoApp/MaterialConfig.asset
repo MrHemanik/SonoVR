@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e379570e17ab7649927c8745b4dd168, type: 3}
+  m_Name: MaterialConfig
+  m_EditorClassIdentifier: 
+  noiseType: 3
+  map:
+  - color: {r: 0, g: 0, b: 0, a: 0}
+    color1: {r: 0, g: 0, b: 0, a: 0}
+    color2: {r: 0, g: 0, b: 0, a: 0}
+    grayscale: {r: 0, g: 0, b: 0, a: 0}
+    grayscale1: {r: 0, g: 0, b: 0, a: 0}
+    grayscale2: {r: 0, g: 0, b: 0, a: 0}
+    noiseRange: 0.125
+    impedance1: 1.34
+    impedance2: 1.34
+  - color: {r: 0.41296315, g: 1, b: 0, a: 1}
+    color1: {r: 0.4117647, g: 1, b: 0, a: 1}
+    color2: {r: 0.33795795, g: 0.8207547, b: 0, a: 1}
+    grayscale: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+    grayscale1: {r: 0.3882353, g: 0.3882353, b: 0.3882353, a: 1}
+    grayscale2: {r: 0.3882353, g: 0.3882353, b: 0.3882353, a: 1}
+    noiseRange: 0.125
+    impedance1: 1.36
+    impedance2: 1.38
+  - color: {r: 0.58521414, g: 0, b: 1, a: 1}
+    color1: {r: 0.58431375, g: 0, b: 1, a: 1}
+    color2: {r: 0.7274511, g: 0.3443396, b: 1, a: 1}
+    grayscale: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+    grayscale1: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
+    grayscale2: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
+    noiseRange: 0.125
+    impedance1: 1.45
+    impedance2: 1.4
+  - color: {r: 1, g: 0.45808098, b: 0, a: 1}
+    color1: {r: 1, g: 0.45882353, b: 0, a: 1}
+    color2: {r: 1, g: 0.60447556, b: 0, a: 1}
+    grayscale: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    grayscale1: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    grayscale2: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    noiseRange: 0.125
+    impedance1: 1.22
+    impedance2: 1.1

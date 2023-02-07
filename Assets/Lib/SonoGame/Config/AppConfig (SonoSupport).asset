@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce569a43dc94e6b4d948a5e350a6f6b2, type: 3}
+  m_Name: AppConfig (SonoSupport)
+  m_EditorClassIdentifier: 
+  readLocalConfig: 0
+  arcadeFightStickName: PS3/PS4 Arcade Joystick
+  displayName: Sonogame 2.0
+  showAppInfo: 0
+  introSplash: 0
+  campaigns:
+  - name: DLT22
+  campaignScrolling: 1
+  gameProfiles:
+  - {fileID: 11400000, guid: 5ab8267b54461a84ca0e56be17176055, type: 2}
+  - {fileID: 11400000, guid: 42c25bf2e5ae6234585247df440b94e9, type: 2}
+  - {fileID: 11400000, guid: 436b2e2e770120f4d8965acf02ae8bf5, type: 2}
+  - {fileID: 11400000, guid: b7eff8b8dbaac3347bfe895b6dd12758, type: 2}
+  - {fileID: 11400000, guid: c52bc667677a6674c90bc17d19225b26, type: 2}
+  - {fileID: 11400000, guid: ca7269899435bb5498ac2d48ee80f12f, type: 2}
+  - {fileID: 11400000, guid: 39ba43f939f825e4a95da00cce6c28ed, type: 2}
+  - {fileID: 11400000, guid: 81ab1d82c3296cf49b81c514a54c522a, type: 2}
+  - {fileID: 11400000, guid: 5eff7abd15191634a81cba6098c5170f, type: 2}
+  - {fileID: 11400000, guid: 2f9354302de612d43a1fdd1c4d36612c, type: 2}
+  - {fileID: 11400000, guid: 54dbdb3dc4d502e46b4448156bdf27c3, type: 2}
+  - {fileID: 11400000, guid: 11735093f081b1a49b1debd518b5a8ba, type: 2}
+  - {fileID: 11400000, guid: e529fa887ea50f343a369805a995fdd4, type: 2}
+  - {fileID: 11400000, guid: d4c5241083802374c9145ca1c443b31b, type: 2}
+  - {fileID: 11400000, guid: 86434c0581666bd4085f8918044476fa, type: 2}
+  - {fileID: 11400000, guid: edd345d8d9ff71a4eab61b7c90b78ddf, type: 2}
+  mainMenuConfig: {fileID: 11400000, guid: 3b698fff52923d74a985785ba1f9185c, type: 2}
+  hideMainMenuInNavigation: 0
+  artificialVolumeSize: {x: 0.1, y: 0.1, z: 0.1}
+  artificialVolumeDataSize: {x: 200, y: 200, z: 200}
+  uiColorConfig: {fileID: 11400000, guid: 68d27c9710ff4a946a3e301597510615, type: 2}
+  iconConfig: {fileID: 11400000, guid: 4c48ab7189ba4eb42bf68fa2e73332c0, type: 2}
+  languageConfig: {fileID: 11400000, guid: d781036e816e17544878755fe5e7d794, type: 2}
+  maxRandomRotateLiveViewDeg: 40
+  visualizeTable: 1
+  maxRotateSolutionDegX: 14
+  maxRotateSolutionDegY: 90
+  maxRotateVolumesDeg: 45
+  cubeOutlineConfig: {fileID: 11400000, guid: 8015c71837813174b9ecd18eed497016, type: 2}
+  invertCameraControl: 0
+  gameViewInfoOverlay: 0
+  rotateDegreesPerSecond: 60
+  idleDetector: 1
+  tutorialButton: 1
+  logoutButton: 0
+  skippingAllowed: 1
+  manualGameSwitchAllowed: 0
+  showSolution: 0
+  MainMenuF2: 1
+  answerResponseVisibilityNoAnimation: 0.9
+  answerResponsePreAnimStayTime: 1
+  delayAfterFlight: 0.5
+  appearDelayTickCrossSymbol: 0.5
+  flightTimeTickCrossSymbol: 2
+  gateOpenSoundDelay: 1.8
+  defaultMaxPriority: 3
+  ultrasoundConfiguration:
+    defaultFrequency: 6.009511
+    defaultGain: 4119.324
+    sectorAngleDeg: 25.5
+    sectorHorizontalStretch: 1
+    sectorVerticalStretch: 0.38
+    sectorVerticalOffset: 105.9
+    impedanceMapping:
+    - materialIndex: 0
+      impedance1: 1.3888152
+      impedance2: 1.388815
+    - materialIndex: 0
+      impedance1: 1.67
+      impedance2: 1.67
+    - materialIndex: 0
+      impedance1: 1.79
+      impedance2: 1.86
+    - materialIndex: 0
+      impedance1: 1.42
+      impedance2: 1.7758723
+  loginConfig:
+    userListPath: Users/study-users.txt
+    userListAsset: {fileID: 0}
+    requireUserLogin: 0
+    requirePassword: 0
+    allowAdminLogin: 1
+    allowGuestLogin: 1
+    adminRole: admin
+    userRole: user
+    guestLogin: Guest
+    adminPwd: fh15
+    showUsername: 0
+  sessionLogging: 1
+  sessionReplay: 0
+  exportReplayJson: 0
+  targetFramerate: 120
+  showActiveTrackingOnStart: 1
+  allowTrackingSystemChange: 1
+  allowInputOrderSwitch: 1
+  restoreTrackingTypeFromPlayerPrefs: 0
+  allowManualHighscoreReset: 0
+  showTrackingHint: 0
+  hideSphereCheat: 1
+  showFPS: 0
+  devSettingsUS: 0
+  debugMinigame_OIL: 0
+  shapeEditorOverlay: 0
+  episodeTimeLimitMinutes: 30
+  episodeLogoutTime: 0
+  episodeTimeLogoutMinutes: 45
+  episodeTimeWarnLimit: 0
+  episodeWarnLimitMinutes: 1
+  showTimeElapsed: 0
+  hideInactiveMousePointer: 0
+  hideInactiveMouseTimeout: 3
+  helpMenu: 0

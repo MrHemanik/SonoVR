@@ -1,0 +1,462 @@
+﻿
+// compute shader for simulating ultrasound [from CT and direct impedance data]
+//
+// Written by Fenja Bruns, licensed under the MIT License
+/// 
+/// Change Log [MS Dec 2019]:
+///  - New parameter boolean bSampleAlpha: true: sample alpha channel, false: red channel
+///  - Made configurable: normalization range of specific impedance coeffecient (original: 7.8f), recommended: 4.2f
+///  - HU scaling: parameter pBase (default: 1.0f) scales HU input data (e.g. 0.79f for frozen Visible Human)
+///  - "Indexed specific impedance" mode for ARGB4444 Vm2 format: boolean UseIndexedImpedance, float[]ImpedanceArray for mapping
+///  - Changed temporary rendering resolution to fixed axialRes / lateralRes 
+/// 
+
+// kernels for high and low end
+#pragma kernel csImpedanceImage
+ 
+#pragma kernel csUltrasoundLinear
+#pragma kernel csUltrasoundCurved
+
+Texture3D<float4> labelVolume;
+
+// variables for function impedance
+RWTexture2D<float> Impedance2D; // impedance image // Note: float for 11.0 hardware compat
+RWTexture2D<float4> Result; // ultrasound image
+Texture3D<float4> Volume0, Volume1, Volume2, Volume3, Volume4, Volume5, Volume6, Volume7; 
+float3 directionX[8];
+float3 directionY[8];
+float3 directionZ[8];
+float3 originS[8];
+float2 stepW;
+float3 voxelpmm;
+bool bImp;
+
+int volumeCount;
+
+// sample .a or .r [MS]
+bool bSampleAlpha;
+
+// use impedance array [MS]
+int impedanceMode; // 0:CT, 1:CT+label-Index; 2:indexed 
+StructuredBuffer<float> impedanceArray;
+int indexMax; // set for 4-bit input: 15, for 8-bit input: 255
+
+// variables for function ultra
+StructuredBuffer<int> parameter;
+float ResultHeight;
+float gainCoef;
+float freq;
+float random;
+
+// variables for function curved
+RWTexture2D<float4> ResultCurved;
+float ResultWidth;
+//float ResultHeightFull;
+float4 curvedParams;
+
+float4 voxelDim; // dataset extent
+SamplerState my_trilinear_clamp_sampler; 
+SamplerState my_point_clamp_sampler;
+float pBase;
+float maxImpedance;
+
+// noise
+bool bNoiseImpedance; // unused
+bool bNoiseImage; // image noise 
+float NoiseImageRange; // percent range
+
+// limits
+float absorptionMax; // 0.95
+float tgcFactor; // 10
+float intensityMin; // 0.1
+float transmissionMin; // 0.1
+float reflectionMax; // 
+
+// scanner type : 0=LINEAR
+int scannerType;
+
+int bReflection = 0;
+int bTransmission = 0;
+int bAbsorption = 0;
+int bSimGel = 0;
+
+float distanceMeters = 0;
+
+
+float4 SampleInputVolume(int i, float3 normalizedCoordinate, SamplerState samplerState)
+{
+	float4 result = 0;
+
+	switch (i)
+	{
+		case 0:
+            result = Volume0.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+		case 1:
+            result = Volume1.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+		case 2:
+            result = Volume2.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+		case 3:
+            result = Volume3.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+		case 4:
+            result = Volume4.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+		case 5:
+            result = Volume5.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+		case 6:
+            result = Volume6.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+		case 7:
+			result = Volume7.SampleLevel(samplerState, normalizedCoordinate, 0);
+			break;
+	}
+
+	return result;
+}
+
+
+float4 SampleInputVolumes(uint2 id, SamplerState samplerState)
+{
+	float stepX = stepW.x;
+	float stepY = stepW.y;
+
+	float4 result = 0;
+
+	for (int i = 0; i < volumeCount; i++)
+	{
+		float3 current = (originS[i] + stepX * id.x * directionX[i].xyz + stepY * id.y * directionY[i].xyz) * voxelpmm;
+		float3 normalizedCoordinate = current / voxelDim.xyz;
+
+		if (i < volumeCount && all(normalizedCoordinate >= 0) && all(normalizedCoordinate <= 1))
+		{
+			result = max(result, SampleInputVolume(i, normalizedCoordinate, samplerState));
+		}
+	}
+
+	return result;
+}
+
+[numthreads(4, 4, 1)]
+// function for getting ct-data and calculating impedance
+void csImpedanceImage(uint3 id : SV_DispatchThreadID) 
+{
+	//float stepX = stepW.x;
+	//float stepY = stepW.y;
+	float3 current = (originS[0] + stepW.x * id.x * directionX[0].xyz + stepW.y * id.y * directionY[0].xyz) * voxelpmm; // for random
+
+	// position of the voxel in the volume
+
+	//float hu = Volume[current].a; // normalized values between 0 and 1
+	
+	random = (int) (current.x+current.y+current.z);
+
+	float hu = 0;
+    float spatialNoise = -0.5 + frac(sin(dot(int2(id.x, id.y), float2(12.9898, random))) * 43758.5453);
+    float Z = spatialNoise > 0 ? impedanceArray[0] : impedanceArray[1]; // default for outside volume 
+	
+	/*float3 normalizedCoordinate = clamp(current / voxelDim.xyz, float3(0,0,0), float3(1,1,1));*/
+
+	int labelIndex = 0;
+	float3 rgb = 0;
+
+	//if (!(any(normalizedCoordinate < 0.01f) && any(normalizedCoordinate > 0.99f))) // prevent clamp artificats by defining a margin [MS]
+	//{
+
+	if (impedanceMode == 2)
+    {
+		// indexed (point sampling)
+        float4 inputData = SampleInputVolumes(id.xy, my_point_clamp_sampler);
+        float indexNorm = bSampleAlpha ? inputData.a : inputData.r; // sample .a or .r channel 
+
+		labelIndex = (int) (indexNorm * (float) indexMax);
+
+        if (labelIndex > 0)
+            Z = impedanceArray[labelIndex]; // map and normalize
+    }
+	else
+    {
+		// CT (interpolated sampling)
+        float4 inputData = SampleInputVolumes(id.xy, my_trilinear_clamp_sampler);
+        hu = pBase * (bSampleAlpha ? inputData.a : inputData.r); // sample .a or .r channel 
+
+        if (impedanceMode == 1)
+        {
+            float stepX = stepW.x;
+            float stepY = stepW.y;
+			
+			// CT + labels
+            float3 normalizedCoordinate = current / voxelDim.xyz;
+			
+			rgb = labelVolume.SampleLevel(my_trilinear_clamp_sampler, normalizedCoordinate, 0).rgb;
+            labelIndex = labelVolume.SampleLevel(my_point_clamp_sampler, normalizedCoordinate, 0).a * indexMax;
+        }
+    }
+	
+	//}
+
+	//float HU = 1000 * (hu - 0.25) / 0.25; // HU values between -1000 and 3000
+	float HU = 4096 * (hu - 0.25);
+	float p = 0;
+
+	// if impedance is to be calculted
+	if (impedanceMode != 2)
+	{
+		// convert CT to Hounsfield (HU)
+
+		if (HU > 100) {
+			p = 1.017 + 0.592 * 0.001 * HU;
+		}
+		else if (HU <= 100 && HU > 22) {
+			p = 1.003 + 1.169 * 0.001 * HU;
+		}
+		else if (HU <= 22 && HU > 14) {
+			p = 1.03;
+		}
+		else if (HU <= 14 && HU > -99) {
+			p = 1.018 + 0.893 * 0.001 * abs(HU);
+		}	
+		else if (HU <= -99) {
+			p = 1.03091 + 0.0010297 * -HU;
+		}
+
+		Z = 0.5627045639 * p * p * p + 1.2283132346 * p * p - 0.3241973372 * p - 0.007941689953; // got with regression		
+	}
+	
+	if (impedanceMode == 1)
+	{
+		// CT + Labels 
+		float offset = 0; // -0.0001 + length(rgb) * 0.002f;
+		float fixedImpedance = impedanceArray[labelIndex];
+		if (fixedImpedance > 0 )
+		{
+			Z = impedanceArray[labelIndex] + offset; // map 
+		}
+		
+		// spatial noise
+		//Z += clamp(Z * spatialNoise, -0.05, 0.05) ;
+	
+    }
+	
+	//Z += clamp(Z,0,1) * 0.1 * spatialNoise;
+	
+	Z = clamp(Z / maxImpedance, 0, 1); //normalize between 0 and 1		
+
+	Impedance2D[id.xy] = Z; // float4(Z, Z, Z, 1);
+	
+}
+
+
+float UltrasoundImageAt(uint x, int y, float Z1, float Z2, float intensityVal, float noiseImageVal, uint2 destPos)
+{
+	float reflectionVal = 0;
+	float transmissionVal = 0;
+	float absorptionVal = 0; 
+
+	int height = ResultHeight - y; // start at the top
+
+	if (bReflection == 1) {
+		//reflectionVal = (((Z2 - Z1) / (Z2 + Z1)) * ((Z2 - Z1) / (Z2 + Z1)));
+		reflectionVal = ((Z2 - Z1) * (Z2 - Z1)) / ((Z2 + Z1) * (Z2 + Z1));
+	}
+
+	if (bTransmission == 1) {
+		transmissionVal = clamp((4 * Z1 * Z2) / ((Z1 + Z2) * (Z1 + Z2)), transmissionMin, 1);
+	}
+
+	if (bAbsorption == 1) {
+		//float distance = stepW.y *height;
+		//float distance = abs(stepW.y); // MS: removed height factor [asorption must be treated incremental]
+		float distance = distanceMeters * 100; // m in cm
+		float mu = 0;
+		float Znormal = Z1 * maxImpedance; // normalized Z to real Z between 0 and 7.8
+		if (Znormal < 1.48) { // lower than impedance of water 
+			mu = 5.752172983 * Znormal * Znormal - 16.37153205 * Znormal + 11.74;
+		}
+		else if (Znormal >= 1.48) {
+			mu = 0.2962105983 * Znormal * Znormal + 0.399434738 * Znormal - 1.137068744;
+		}
+		if (Znormal >= 0.15 && Znormal < 0.2) { //lung
+			mu = 40;
+		}
+
+		absorptionVal = clamp(pow(10, (-1 * clamp(mu * distance * freq, 0, 1000)) / 10), absorptionMax, 1); // 10^((-mu*distance*freq)/10) // added clamp [MS]
+	}
+
+
+	// put everything together 
+	if (bTransmission == 1 || bReflection == 1 || bAbsorption == 1)
+	{
+		float tgc = 1.0 + tgcFactor * distanceMeters * height * height;
+		float input = intensityVal * absorptionVal;
+		float resultPx = clamp(input * input * reflectionVal * gainCoef * tgc, 0, 1);
+
+		// amplify noise by intensity
+		resultPx = clamp(resultPx + (gainCoef / 2000) * noiseImageVal + resultPx * noiseImageVal, 0, 1);
+		//resultPx = clamp(resultPx + noiseImageVal + 10 * resultPx * noiseImageVal, 0, 1);
+
+		if (destPos.x > 0 && destPos.y > 0 && destPos.x < (uint)ResultWidth - 1 && destPos.y < (uint)ResultHeight - 1)
+			Result[destPos] = float4(resultPx, resultPx, resultPx, 1);
+
+		intensityVal = clamp(intensityVal * transmissionVal * absorptionVal, intensityMin, 1); // MS: applied absorptionVal here
+	}
+
+	//// if gel should be simulated, find first point with large impedance difference
+	//if (bSimGel == 1) {
+	//	float z = nextRow.x;
+	//	if (insideBody == false && (Z1 < 0.1) && (z >= 0.1)) {
+	//		intensityVal = 1;
+	//		insideBody = true; // just once 
+	//	}
+	//}
+
+	return intensityVal;
+}
+
+
+
+// CS ultrasound image (linear)
+void ultrasound(uint3 id) {
+	int row;
+
+	// impedance
+	float Z1;
+	float Z2;
+
+	// for simulating gel
+	bool insideBody = false;
+
+	bReflection =  parameter[0];
+	bTransmission = parameter[1];
+	bAbsorption = parameter[2];
+	bSimGel =  parameter[3];
+
+	distanceMeters = abs(stepW.y);
+
+	float intensityVal = 0;
+
+	float reflectionVal = 0;
+	float transmissionVal = 1;
+	float absorptionVal = 1;
+
+	int ResultWidthHalf = ResultWidth / 2;
+
+	float4 lastRow = Impedance2D[uint2(id.x, ResultHeight - 1)];
+	float4 nextRow;
+
+	// for, from top to bottom of texture 
+	for (row = ResultHeight -1; row >= 1; row--)
+	{		
+		// pseudo-random number for noise
+		// src: https://stackoverflow.com/questions/12964279/whats-the-origin-of-this-glsl-rand-one-liner
+		float noiseImageVal = bNoiseImage == 0 ? 0: NoiseImageRange - NoiseImageRange * frac(sin(dot(int2(id.x, row), float2(12.9898, random))) * 43758.5453); 
+
+		nextRow = Impedance2D[uint2(id.x, (row - 1))];
+
+		Z1 = lastRow.x; // *noiseVal;
+		Z2 = nextRow.x;
+
+		lastRow = nextRow; // store for next iteration
+
+		// If gel should be simulated, find first point with large impedance difference
+		if (!insideBody && bSimGel == 1 && Z1 > 0.1)
+		{
+				intensityVal = 1;
+				insideBody = true; // just once 
+		}
+
+		uint2 destPos = uint2(id.x, row);
+
+		intensityVal = UltrasoundImageAt(id.x, row, Z1, Z2, intensityVal, noiseImageVal, destPos);
+	}
+}
+
+// sector projection
+uint2 projSector(float2 img)
+{
+	uint2 result = uint2(0, 0);
+
+	float halfWidth = ResultWidth / 2;
+
+	float x = -halfWidth + img.x;
+	float y = ResultHeight - 1 - img.y + curvedParams[1];
+
+	float angle = radians((x / halfWidth) * curvedParams[0]);
+
+	result.y = round(clamp(curvedParams[1] + ResultHeight - 1 - curvedParams[2] * y *cos(angle), 0, ResultHeight - 1));
+	result.x = round(clamp(curvedParams[3] * y * sin(angle) + halfWidth, 0, ResultWidth - 1));
+
+	return result;
+}
+
+// CS ultrasound image (sector)
+void ultrasoundCurved(uint3 id) {
+	int row;
+
+	// impedance
+	float Z1;
+	float Z2;
+
+	// for simulating gel
+	bool insideBody = false;
+
+	bReflection = parameter[0];
+	bTransmission = parameter[1];
+	bAbsorption = parameter[2];
+	bSimGel = parameter[3];
+
+	float intensityVal = 1;
+
+	int ResultWidthHalf = ResultWidth / 2;
+
+	float4 lastRow = Impedance2D[projSector(uint2(id.x, ResultHeight - 1))];
+	float4 nextRow;
+
+	distanceMeters = abs(stepW.y);
+
+	// for, from top to bottom of texture
+	for (row = ResultHeight - 1; row >= 1; row--)
+	{
+		
+		// pseudo-random number for noise
+		// src: https://stackoverflow.com/questions/12964279/whats-the-origin-of-this-glsl-rand-one-liner
+		float noiseImageVal = bNoiseImage == 0 ? 0 : NoiseImageRange - 2 * NoiseImageRange * frac(sin(dot(int2(id.x, row), float2(12.9898, id.x * random))) * 43758.5453);
+
+		nextRow = Impedance2D[projSector(uint2(id.x, (row - 1)))];
+
+		Z1 = lastRow.x; // *noiseVal;
+		Z2 = nextRow.x;
+
+		lastRow = nextRow; // store for next iteration
+
+		// If gel should be simulated, find first point with large impedance difference
+		if (!insideBody && bSimGel == 1 && Z1 > 0.1)
+		{
+			intensityVal = 1;
+			insideBody = true; // just once 
+		}
+		
+		uint2 destPos = projSector(uint2(id.x, row));
+
+		intensityVal = UltrasoundImageAt(id.x, row, Z1, Z2, intensityVal, noiseImageVal, destPos); 
+	}
+}
+
+
+// kernels to start the function ultrasound
+// just one thread in y-direction, so it can be calculated from top to bottom
+[numthreads(4, 1, 1)]
+void csUltrasoundLinear(uint3 id : SV_DispatchThreadID)
+{
+	ultrasound(id);
+}
+
+[numthreads(4, 1, 1)]
+void csUltrasoundCurved(uint3 id : SV_DispatchThreadID)
+{
+	ultrasoundCurved(id);
+}
+

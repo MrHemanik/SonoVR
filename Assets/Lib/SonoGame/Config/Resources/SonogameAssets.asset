@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b97f5b2c2c6b04a809a051702b9a3b, type: 3}
+  m_Name: SonogameAssets
+  m_EditorClassIdentifier: 
+  usViewRawImageLinearMaterial: {fileID: 2100000, guid: 9d9afc635a6491f45ba528dcfcf13e54, type: 2}
+  usViewRawImageCurvedMaterial: {fileID: 2100000, guid: 10586934be74b32449e65c987f5ab354, type: 2}
+  usViewRawImageSectorMaterial: {fileID: 2100000, guid: ae5909cef29b8d043b4603f1769a0b37, type: 2}
+  ultrasoundMaskCurved: {fileID: 2800000, guid: 7445f32bda1fe904c90c18b388559b87, type: 3}
+  ultrasoundMaskSector: {fileID: 2800000, guid: ceeb330c63bb39043a8a096d29813a44, type: 3}
+  curvedLineOverlay: {fileID: 2800000, guid: 7dfb5d37a0d14a547b259059aeaba409, type: 3}
+  linearLineOverLay: {fileID: 2800000, guid: 7f964c1ac2d484e4bb110c9169c2ed14, type: 3}
+  sectorLineOverlay: {fileID: 2800000, guid: 1b16cbf33ef9960499fb5c042e77d4a9, type: 3}
+  hideSpherePrefab: {fileID: 174722, guid: e484e52b2917afb44bdada9c01e9f747, type: 3}
+  hideCubePrefab: {fileID: 174722, guid: d5d589f177fada647b8bb70e76c8ebe4, type: 3}
+  hideCylinder: {fileID: 1797497494215012, guid: aa191e10bcff81e4e9de3431dd1f877f, type: 3}
+  tubePrefab: {fileID: 7843843207404476770, guid: 378735f152eea6c408f539389d9a7bd8, type: 3}
+  artificialMat:
+  - {fileID: 2100000, guid: 1c535c457ebbfe642971c3cfc0a12370, type: 2}
+  - {fileID: 2100000, guid: 89daf6ac4955acc4a93d824b635e4ea0, type: 2}
+  - {fileID: 2100000, guid: 8800725493dcd874b8899c7cce5e5995, type: 2}
+  - {fileID: 2100000, guid: c87b09b9808843b489f50fc74aae00aa, type: 2}

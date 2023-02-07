@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72655dbfd7c3db2458b666a66c50bb8c, type: 3}
+  m_Name: MenuConfig (Main)
+  m_EditorClassIdentifier: 
+  exploreTask:
+    miniGame: Exploration
+    visualization: 1
+    level: 0
+  tutorialTask:
+    miniGame: Tutorial
+    visualization: 1
+    level: 0
+  studyTask:
+    miniGame: IdentifyObjectFFP
+    visualization: 1
+    level: 0
+  onStudyEnd: 4
+  defaultOption: 1
+  menuItems:
+  - active: 0
+    sortIndex: 10
+    adminOnly: 0
+    option: 8
+    displayTitle: Start Study
+    menuIcon: {fileID: 21300000, guid: d8dcefd613346ad4999d556d56ab6135, type: 3}
+  - active: 1
+    sortIndex: 20
+    adminOnly: 0
+    option: 1
+    displayTitle: Campaign
+    menuIcon: {fileID: 21300000, guid: d8dcefd613346ad4999d556d56ab6135, type: 3}
+  - active: 0
+    sortIndex: 30
+    adminOnly: 0
+    option: 3
+    displayTitle: Exploration
+    menuIcon: {fileID: 21300000, guid: e8a46c8f7ad6b3644859dbb13bcb80e1, type: 3}
+  - active: 0
+    sortIndex: 40
+    adminOnly: 0
+    option: 0
+    displayTitle: Tutorial
+    menuIcon: {fileID: 21300000, guid: e8a46c8f7ad6b3644859dbb13bcb80e1, type: 3}
+  - active: 1
+    sortIndex: 50
+    adminOnly: 0
+    option: 2
+    displayTitle: Game Selection
+    menuIcon: {fileID: 21300000, guid: e8a46c8f7ad6b3644859dbb13bcb80e1, type: 3}
+  - active: 0
+    sortIndex: 60
+    adminOnly: 0
+    option: 7
+    displayTitle: Settings
+    menuIcon: {fileID: 21300000, guid: e5f4a3f45d32e07439c6127f9a949a53, type: 3}
+  - active: 0
+    sortIndex: 70
+    adminOnly: 0
+    option: 5
+    displayTitle: Credits
+    menuIcon: {fileID: 21300000, guid: 060cb88606b27054d9d2d40e8fdec568, type: 3}
+  - active: 0
+    sortIndex: 80
+    adminOnly: 0
+    option: 6
+    displayTitle: Quit
+    menuIcon: {fileID: 1525094615255028475, guid: 45ecb10e66e8adf4b8c7efad23a6e0c1, type: 3}
+  - active: 1
+    sortIndex: 5
+    adminOnly: 1
+    option: 9
+    displayTitle: Log Replay
+    menuIcon: {fileID: 21300000, guid: e5f4a3f45d32e07439c6127f9a949a53, type: 3}

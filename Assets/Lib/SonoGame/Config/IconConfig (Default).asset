@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b406f2e9b5322cc4495dbcc424c3057b, type: 3}
+  m_Name: IconConfig (Default)
+  m_EditorClassIdentifier: 
+  transparentSprite: {fileID: 21300000, guid: fb337068a29173e489e97b41339ef646, type: 3}
+  bronzeMedalSprite: {fileID: 21300000, guid: 89853bbcff643bc438767051770b167e, type: 3}
+  silverMedalSprite: {fileID: 21300000, guid: 1e214d36e99e87140867951a6188f93b, type: 3}
+  goldMedalSprite: {fileID: 21300000, guid: 5946e525c599c0d4090ac8ec7619da28, type: 3}

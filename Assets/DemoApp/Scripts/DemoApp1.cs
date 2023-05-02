@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using SonoGame;
 using mKit;
 
@@ -95,11 +96,16 @@ public class DemoApp1 : MonoBehaviour
     {
         var shapeConfigs = DefineShapeList();
 
-        yield return VolumeManager.Instance.GenerateArtificialVolume(shapeConfigs, volumeSlot:0, addObjectModels: replaceVolumeRenderingWithModels);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(shapeConfigs, volumeSlot: 0, addObjectModels: replaceVolumeRenderingWithModels);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(shapeConfigs, volumeSlot: 1, addObjectModels: replaceVolumeRenderingWithModels);
         Debug.Log("GenerateArtificialVolume finished");
 
         ConfigureVolume(Volume.Volumes[0], scannerType, visualization);
+        ConfigureVolume(Volume.Volumes[1], scannerType, visualization);
+
         ConfigureSliceViews(Volume.Volumes[0], scannerType, visualization);
+
+        ConfigureVolume(Volume.Volumes[1], scannerType, visualization);
 
         enabled = true; // enable Update()
     }
@@ -109,9 +115,20 @@ public class DemoApp1 : MonoBehaviour
     #region SliceViewConfiguration
     void ConfigureSliceViews(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization)
     {
-        sliceViewQuad.InitSliceView(visualization, scannerType, v.GetSliceRenderTexture()); // assign mkit texture to slice display
-        sliceViewRawImage.InitSliceView(visualization, scannerType, v.GetSliceRenderTexture()); // assign mkit texture to slice display
-        
+        MultiVolumeSlice mvs = GetComponent<MultiVolumeSlice>();
+        if (mvs == null)
+        {
+            sliceViewQuad.InitSliceView(visualization, scannerType, v.GetSliceRenderTexture()); // assign mkit texture to slice display
+            sliceViewRawImage.InitSliceView(visualization, scannerType, v.GetSliceRenderTexture()); // assign mkit texture to slice display
+        }
+        else
+        {
+            // multi-volume-slice Material
+            Material mvsMat = mvs.SetupMultiVolumeSlice(0, visualization, Volume.Volumes[0].GetToolSize(0));
+            sliceViewRawImage.SetMaterial(mvsMat);
+            sliceViewQuad.SetMaterial(mvsMat);
+        }
+
         sliceCopy.SetSliceMask(scannerType);
     }
     #endregion
@@ -126,12 +143,12 @@ public class DemoApp1 : MonoBehaviour
         VolumeManager.Instance.UseMaterialConfigVisualization(v, visualization);
         UltrasoundSimulation.Instance.Init(v);
 
-        Volume.Volumes[0].VolumeProxy.position = volumeAnchor.position; // set volume position
+        v.VolumeProxy.position = volumeAnchor.position; // set volume position
 
         if (!replaceVolumeRenderingWithModels)
         {
-            Volume.Volumes[0].VolumeProxy.GetComponent<Renderer>().enabled = true; // enable volume rendering
-            Volume.Volumes[0].Threshold = 0.001f;
+            v.VolumeProxy.GetComponent<Renderer>().enabled = true; // enable volume rendering
+            v.Threshold = 0.001f;
         }
     }
     #endregion

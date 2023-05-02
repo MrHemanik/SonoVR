@@ -50,19 +50,11 @@ namespace SonoGame
                 InitVisualizationType(visType, mat);
                 mat.SetTexture("_MainTex", texture);
 
+                SetMaterial(mat);
+
                 if (rawImage!=null)
                 {
-                    rawImage.texture = null;
-                    rawImage.material = mat;
                     rawImage.texture = texture;
-                }
-                else if (meshRenderer != null)
-                {
-                    meshRenderer.material = mat;
-                }
-                else
-                {
-                    Debug.LogError("Neither RawImage nor Renderer on this gameobect!");
                 }
             }
 
@@ -93,6 +85,22 @@ namespace SonoGame
             mat.SetInt("bgColoring", autoColorBg && bgColoring ? 1 : 0);
         }
 
+        public void SetMaterial(Material mat)
+        {
+            if (rawImage != null)
+            {
+                rawImage.texture = null;
+                rawImage.material = mat;
+            }
+            else if (meshRenderer != null)
+            {
+                meshRenderer.material = mat;
+            }
+            else
+            {
+                Debug.LogError("Neither RawImage nor Renderer on this gameobect!");
+            }
+        }
     }
 
 }

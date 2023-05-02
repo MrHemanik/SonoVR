@@ -295,11 +295,11 @@ public class UltrasoundSimulation : MonoBehaviour, IUltrasoundRenderer
                     var vol = Volume.Volumes[volumeCount];
                     if (vol != null && vol.VolumeState == VolumeStateEnum.READY)
                     {
-                        var ts = volume.CurrentToolgroupState;
-                        directionZ[0] = ts.sliceNormal1[sliceIndex]; // slice normal
-                        directionX[0] = ts.sliceNormal2[sliceIndex];
-                        directionY[0] = ts.sliceNormal3[sliceIndex]; // add * -1 for Mkit Version 20190515 (fixed in 2019813)
-                        slicePosition[0] = (Vector3)ts.slicePosition1[sliceIndex] + 0.5f * volume.VolumeSize;
+                        var ts = vol.CurrentToolgroupState;
+                        directionZ[volumeCount] = ts.sliceNormal1[sliceIndex]; // slice normal
+                        directionX[volumeCount] = ts.sliceNormal2[sliceIndex];
+                        directionY[volumeCount] = ts.sliceNormal3[sliceIndex]; // add * -1 for Mkit Version 20190515 (fixed in 2019813)
+                        slicePosition[volumeCount] = (Vector3)ts.slicePosition1[sliceIndex] + 0.5f * volume.VolumeSize;
 
                         volumeCount++;
                     }

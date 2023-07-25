@@ -11,13 +11,12 @@ public class VolumeGenerationManager : MonoBehaviour
 {
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
-    
+
     /// <summary>
     /// Position anchor for volume placement
     /// </summary>
-    [Header ("Scene")]
-    public Transform volumeAnchor;
-    
+    [Header("Scene")] public Transform volumeAnchor;
+
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
@@ -38,6 +37,13 @@ public class VolumeGenerationManager : MonoBehaviour
     /// </summary>
     public SliceView sliceViewQuad;
 
+    /// <summary>
+    /// 2D slice view (on Unity quad mesh)
+    /// </summary>
+    public GameObject stillSliceViewQuad;
+
+    public GameObject stillSliceViewRawImage;
+
     private List<Level> levelList;
 
     private void Awake()
@@ -51,48 +57,61 @@ public class VolumeGenerationManager : MonoBehaviour
         enabled = false; // will be re-enabled after generating artificials
 
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
-        
         yield return GenerateVolumeWithVolumeManager();
+        stillSliceViewRawImage.GetComponent<RawImage>().texture =
+            VolumeManager.Instance.GetSliceCamCapture(Volume.Volumes[0]); //Adds still shot of volume 0 to stillView
     }
-    
+
     void Update()
     {
         // make mKit slice follow sliceTransform
-        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopy.transform.position, sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
+        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopy.transform.position,
+            sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
         Volume.Volumes[0].SetToolSize(new Vector2(sliceCopy.transform.localScale.x, sliceCopy.transform.localScale.y));
     }
+
     #region GenerateVolumeWithVolumeManager
+
     IEnumerator GenerateVolumeWithVolumeManager()
     {
-        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[0], volumeSlot: 0, addObjectModels: true);
-        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[1], volumeSlot: 1, addObjectModels: true);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[0], volumeSlot: 0,
+            addObjectModels: true);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[1], volumeSlot: 1,
+            addObjectModels: true);
         Debug.Log("GenerateArtificialVolume finished");
-        
+
         /*
          * position of volume needs to be set before configuration
          * Without:         https://i.imgur.com/4Su6Wyp.png
          * With:            https://i.imgur.com/iIdQK1p.png
          * Problem as GIF:  https://i.imgur.com/RKlqztO.gif
          */
-        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopy.transform.position, sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
+        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopy.transform.position,
+            sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
         Volume.Volumes[0].SetToolSize(new Vector2(sliceCopy.transform.localScale.x, sliceCopy.transform.localScale.y));
-        
-        ConfigureVolume(Volume.Volumes[0], scannerType, visualization);
-        ConfigureVolume(Volume.Volumes[1], scannerType, visualization);
-        ConfigureSliceViews(Volume.Volumes[0], scannerType, visualization);
-        ConfigureSliceViews(Volume.Volumes[1], scannerType, visualization);
-        
+
+        foreach (var volume in Volume.Volumes) //Initializes Visualization
+        {
+            ConfigureVolume(volume, scannerType, visualization);
+            ConfigureSliceViews(volume, scannerType, visualization);
+        }
+
         enabled = true; // enable Update()
     }
+
     #endregion
+
     #region SliceViewConfiguration
+
     void ConfigureSliceViews(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization)
     {
         MultiVolumeSlice mvs = GetComponent<MultiVolumeSlice>();
         if (mvs == null)
         {
-            sliceViewQuad.InitSliceView(visualization, scannerType, v.GetSliceRenderTexture()); // assign mkit texture to slice display
-            sliceViewRawImage.InitSliceView(visualization, scannerType, v.GetSliceRenderTexture()); // assign mkit texture to slice display
+            sliceViewQuad.InitSliceView(visualization, scannerType,
+                v.GetSliceRenderTexture()); // assign mkit texture to slice display
+            sliceViewRawImage.InitSliceView(visualization, scannerType,
+                v.GetSliceRenderTexture()); // assign mkit texture to slice display
         }
         else
         {
@@ -104,8 +123,11 @@ public class VolumeGenerationManager : MonoBehaviour
 
         sliceCopy.SetSliceMask(scannerType);
     }
+
     #endregion
+
     #region VolumeConfiguration
+
     void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization)
     {
         v.SliceMaskingTexture = AppConfig.assets.GetScannerMask(scannerType);
@@ -116,10 +138,11 @@ public class VolumeGenerationManager : MonoBehaviour
         UltrasoundSimulation.Instance.Init(v);
 
         v.VolumeProxy.position = volumeAnchor.position; // set volume position
-        
+
         //replaces Volume rendering with models
         v.VolumeProxy.GetComponent<Renderer>().enabled = true; // enable volume rendering
         v.Threshold = 0.001f;
     }
+
     #endregion
 }

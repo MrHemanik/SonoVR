@@ -50,3 +50,12 @@ MonoBehaviour:
     noiseRange: 0.125
     impedance1: 1.22
     impedance2: 1.1
+  - color: {r: 0, g: 1, b: 1, a: 1}
+    color1: {r: 0, g: 1, b: 1, a: 1}
+    color2: {r: 0.39215687, g: 1, b: 1, a: 1}
+    grayscale: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    grayscale1: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    grayscale2: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    noiseRange: 0.125
+    impedance1: 1.1
+    impedance2: 1.05

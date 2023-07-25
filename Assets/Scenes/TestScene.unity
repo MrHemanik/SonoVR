@@ -156,6 +156,8 @@ MonoBehaviour:
   materialConfig: {fileID: 11400000, guid: 19e856ba8b799bd44a8993c6a09c7125, type: 2}
   sliceViewRawImage: {fileID: 1387591736}
   sliceViewQuad: {fileID: 3127481}
+  stillSliceViewQuad: {fileID: 0}
+  stillSliceViewRawImage: {fileID: 447237130}
 --- !u!1001 &93972940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -213,6 +215,94 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c422769c16d1f334cbbd38fbbd992144, type: 3}
+--- !u!1 &447237130
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 447237131}
+  - component: {fileID: 447237134}
+  - component: {fileID: 447237133}
+  - component: {fileID: 447237132}
+  m_Layer: 5
+  m_Name: IdentifySlice-stillSliceView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &447237131
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447237130}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1455711336}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.542, y: 0.019}
+  m_SizeDelta: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &447237132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447237130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cbbb45f42bf00049b52211f09da49dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualization: 1
+  autoColorBg: 1
+--- !u!114 &447237133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447237130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: ff03caa28ec5352408b770125d543656, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &447237134
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447237130}
+  m_CullTransparentMesh: 1
 --- !u!114 &837746579 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 247135444260570213, guid: c422769c16d1f334cbbd38fbbd992144, type: 3}
@@ -381,6 +471,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbbb45f42bf00049b52211f09da49dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1455711336 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2223903561812444922, guid: f69db2c1ae00554489b012e37697d62c, type: 3}
+  m_PrefabInstance: {fileID: 2223903562409628901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2223903562409628901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -388,6 +483,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2223903561108040924, guid: f69db2c1ae00554489b012e37697d62c, type: 3}
+      propertyPath: m_Texture
+      value: 
+      objectReference: {fileID: 2800000, guid: 7445f32bda1fe904c90c18b388559b87, type: 3}
     - target: {fileID: 2223903561812444922, guid: f69db2c1ae00554489b012e37697d62c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

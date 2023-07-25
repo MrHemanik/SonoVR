@@ -23,9 +23,9 @@ public class LevelList
                 new List<List<ShapeConfig>> //Unique Shapes
                 {
                     //Volume 1
-                    new() {LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color)},
+                    new() {LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,usesSlices:true)},
                     //Volume 2
-                    new() {LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,size:new Vector3(100,100,100))}
+                    new() {LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,size:new Vector3(100,100,100),usesSlices:true,edgeWidth:10)}
                 }
             ),
             //Level 2
@@ -33,8 +33,8 @@ public class LevelList
                 new List<ShapeConfig> //Shapes in every Volume
                 {
                     LevelHelper.GenerateBasicCube(materialConfig.map[4].color),
-                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[1].color),
-                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[2].color),
+                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[1].color,usesSlices:true),
+                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[2].color,usesSlices:true),
                     new ShapeConfigVoxel(ShapeType.CUBOID,
                         color: materialConfig.map[2].color,
                         edgeWidth: 20,
@@ -114,15 +114,16 @@ public static class LevelHelper
     public static ShapeConfigVoxel GenerateRandomizedShape(ShapeType shape, Color color, Vector3? size = null,
         Vector3? center = null,
         Quaternion? rotation = null,
-        int edgeWidth = 20)
+        int edgeWidth = 100, bool usesSlices = false)
     {
-        Debug.Log("Size before"+size);
-        Debug.Log((size ?? new Vector3(70, 70, 70)));
+        //usesSlices is relevant when Slice is generated automatically to make sure that every shape is visible
+        var zPositionOffset = usesSlices ? 0 : UnityEngine.Random.Range(-40f, 40.0f);
+        
         return new ShapeConfigVoxel(shape, edgeWidth,
             (size ?? new Vector3(50, 50, 50)) + new Vector3(20, 20, 20) * UnityEngine.Random.Range(-0.5f, 1f),
             color,
             center ?? new Vector3(100 + UnityEngine.Random.Range(-40f, 40.0f),
-                100 + UnityEngine.Random.Range(-40f, 40.0f), 100 + UnityEngine.Random.Range(-40f, 40.0f)),
+                100 + UnityEngine.Random.Range(-40f, 40.0f), 100 + zPositionOffset),
             rotation ?? Quaternion.identity);
     }
 }

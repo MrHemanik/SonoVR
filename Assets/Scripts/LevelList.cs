@@ -15,9 +15,9 @@ public class LevelList
                 var materialConfig = mc;
                 levelList = new List<Level>
                 {
-                        new Level(LevelType.IdentifySliceFromObject,new List<List<ShapeConfig>>
-                        {
-                                new List<ShapeConfig>(){ //Volume 1
+                        new Level(LevelType.IdentifySliceFromObject,
+                                new List<ShapeConfig> //Shapes in every Volume
+                                {
                                         new ShapeConfigVoxel(ShapeType.ELIPSOID,
                                                 color: materialConfig.map[1].color,
                                                 edgeWidth: 20,
@@ -30,34 +30,26 @@ public class LevelList
                                                 size: new Vector3(40, 40, 40),
                                                 center: new Vector3(100, 100, 100),
                                                 rotation: Quaternion.identity),
-                                        new ShapeConfigVoxel(ShapeType.TUBE_Y,
-                                                color: materialConfig.map[3].color,
-                                                edgeWidth: 20,
-                                                size: new Vector3(80, 80, 80),
-                                                center: new Vector3(160, 100, 100),
-                                                rotation: Quaternion.Euler(0, 0, 90))
-                                },new List<ShapeConfig>(){ //Volume 2
-                                        new ShapeConfigVoxel(ShapeType.ELIPSOID,
-                                                color: materialConfig.map[1].color,
-                                                edgeWidth: 20,
-                                                size: new Vector3(80, 80, 80),
-                                                center: new Vector3(40, 100, 100),
-                                                rotation: Quaternion.identity),
-                                        new ShapeConfigVoxel(ShapeType.CUBOID,
-                                                color: materialConfig.map[3].color,
-                                                edgeWidth: 20,
-                                                size: new Vector3(40, 40, 40),
-                                                center: new Vector3(80, 100, 120),
-                                                rotation: Quaternion.identity),
-                                        new ShapeConfigVoxel(ShapeType.TUBE_Y,
-                                                color: materialConfig.map[2].color,
-                                                edgeWidth: 20,
-                                                size: new Vector3(60, 60, 60),
-                                                center: new Vector3(160, 80, 100),
-                                                rotation: Quaternion.Euler(0, 0, 90))
                                 },
-                        
-                        })
+                                new List<List<ShapeConfig>> //Unique Shapes
+                                {
+                                        new List<ShapeConfig>(){ //Volume 1
+                                                new ShapeConfigVoxel(ShapeType.TUBE_Y,
+                                                        color: materialConfig.map[3].color,
+                                                        edgeWidth: 20,
+                                                        size: new Vector3(80, 80, 80),
+                                                        center: new Vector3(160, 100, 100),
+                                                        rotation: Quaternion.Euler(0, 0, 90))
+                                        },new List<ShapeConfig>(){ //Volume 2
+                                                new ShapeConfigVoxel(ShapeType.TUBE_Y,
+                                                        color: materialConfig.map[3].color,
+                                                        edgeWidth: 20,
+                                                        size: new Vector3(60, 60, 60),
+                                                        center: new Vector3(160, 80, 100),
+                                                        rotation: Quaternion.Euler(0, 0, 90))
+                                        },
+                                
+                                })
                 };
         }
 }
@@ -96,12 +88,17 @@ public static class LevelHelper
 public class Level
 {
         public LevelType levelType;
-        public List<List<ShapeConfig>> volumes;
+        public List<ShapeConfig> repeatingShapes; //Shapes that are used in every volume
+        public List<List<ShapeConfig>> volumeList;
 
-        public Level(LevelType lt,List<List<ShapeConfig>> v)
+        public Level(LevelType lt, List<ShapeConfig> repeatingShapes,List<List<ShapeConfig>> volList)
         {
                 levelType = lt;
-                volumes = v;
+                foreach (var volume in volList) //Adds every repeating shape to the volumeList
+                {
+                        volume.AddRange(repeatingShapes);
+                }
+                volumeList = volList;
         }
         
 }

@@ -64,8 +64,8 @@ public class VolumeGenerationManager : MonoBehaviour
     #region GenerateVolumeWithVolumeManager
     IEnumerator GenerateVolumeWithVolumeManager()
     {
-        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumes[0], volumeSlot: 0, addObjectModels: true);
-        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumes[1], volumeSlot: 1, addObjectModels: true);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[0], volumeSlot: 0, addObjectModels: true);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[1], volumeSlot: 1, addObjectModels: true);
         Debug.Log("GenerateArtificialVolume finished");
         
         /*

@@ -6,13 +6,13 @@ using mKit;
 using SonoGame;
 using UnityEngine;
 
-public class LevelList: MonoBehaviour
+public class LevelList
 {
-        public MaterialConfig materialConfig;
         public List<Level> levelList;
 
-        public LevelList()
+        public LevelList(MaterialConfig mc)
         {
+                var materialConfig = mc;
                 levelList = new List<Level>
                 {
                         new Level(LevelType.IdentifySliceFromObject,new List<List<ShapeConfig>>

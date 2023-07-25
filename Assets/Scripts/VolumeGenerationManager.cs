@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,9 +37,17 @@ public class VolumeGenerationManager : MonoBehaviour
     /// 2D slice view (on Unity quad mesh)
     /// </summary>
     public SliceView sliceViewQuad;
-    
+
+    private List<Level> levelList;
+
+    private void Awake()
+    {
+        levelList = new LevelList(materialConfig).levelList;
+    }
+
     IEnumerator Start()
     {
+        Debug.Log(Application.dataPath);
         enabled = false; // will be re-enabled after generating artificials
 
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
@@ -52,72 +61,11 @@ public class VolumeGenerationManager : MonoBehaviour
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopy.transform.position, sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
         Volume.Volumes[0].SetToolSize(new Vector2(sliceCopy.transform.localScale.x, sliceCopy.transform.localScale.y));
     }
-    #region ShapeDefinition
-    List<ShapeConfig> DefineShapeList()
-    {
-        // define shaped with color from materialConfig.map[n].color
-
-        List<ShapeConfig> shapeConfigs = new List<ShapeConfig>();
-        shapeConfigs.Add(new ShapeConfigVoxel(ShapeType.ELIPSOID,
-            color: materialConfig.map[1].color,
-            edgeWidth: 20,
-            size: new Vector3(80, 80, 80),
-            center: new Vector3(40, 100, 100),
-            rotation: Quaternion.identity));
-
-        shapeConfigs.Add(new ShapeConfigVoxel(ShapeType.CUBOID,
-            color: materialConfig.map[2].color,
-            edgeWidth: 20,
-            size: new Vector3(40, 40, 40),
-            center: new Vector3(100, 100, 100),
-            rotation: Quaternion.identity));
-
-        shapeConfigs.Add(new ShapeConfigVoxel(ShapeType.TUBE_Y,
-            color: materialConfig.map[3].color,
-            edgeWidth: 20,
-            size: new Vector3(80, 80, 80),
-            center: new Vector3(160, 100, 100),
-            rotation: Quaternion.Euler(0, 0, 90)));
-
-        return shapeConfigs;
-    }
-    List<ShapeConfig> DefineShapeList2()
-    {
-        // define shaped with color from materialConfig.map[n].color
-
-        List<ShapeConfig> shapeConfigs = new List<ShapeConfig>();
-        shapeConfigs.Add(new ShapeConfigVoxel(ShapeType.ELIPSOID,
-            color: materialConfig.map[1].color,
-            edgeWidth: 20,
-            size: new Vector3(80, 80, 60),
-            center: new Vector3(40, 160, 100),
-            rotation: Quaternion.identity));
-
-        shapeConfigs.Add(new ShapeConfigVoxel(ShapeType.CUBOID,
-            color: materialConfig.map[3].color,
-            edgeWidth: 20,
-            size: new Vector3(40, 20, 40),
-            center: new Vector3(80, 170, 100),
-            rotation: Quaternion.identity));
-
-        shapeConfigs.Add(new ShapeConfigVoxel(ShapeType.TUBE_Y,
-            color: materialConfig.map[2].color,
-            edgeWidth: 20,
-            size: new Vector3(80, 80, 80),
-            center: new Vector3(160, 180, 100),
-            rotation: Quaternion.Euler(0, 0, 90)));
-
-        return shapeConfigs;
-    }
-    #endregion
     #region GenerateVolumeWithVolumeManager
     IEnumerator GenerateVolumeWithVolumeManager()
     {
-        var shapeConfig1 = DefineShapeList();
-        var shapeConfig2 = DefineShapeList2();
-
-        yield return VolumeManager.Instance.GenerateArtificialVolume(shapeConfig1, volumeSlot: 0, addObjectModels: true);
-        yield return VolumeManager.Instance.GenerateArtificialVolume(shapeConfig2, volumeSlot: 1, addObjectModels: true);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumes[0], volumeSlot: 0, addObjectModels: true);
+        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumes[1], volumeSlot: 1, addObjectModels: true);
         Debug.Log("GenerateArtificialVolume finished");
         
         /*

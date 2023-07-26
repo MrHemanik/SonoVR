@@ -15,7 +15,7 @@ public class VolumeGenerationManager : MonoBehaviour
     /// <summary>
     /// Position anchor for volume placement
     /// </summary>
-    [Header("Scene")] public Transform volumeAnchor;
+    [Header("Scene")] public Transform[] volumeAnchors;
 
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
@@ -90,11 +90,16 @@ public class VolumeGenerationManager : MonoBehaviour
             sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
         Volume.Volumes[0].SetToolSize(new Vector2(sliceCopy.transform.localScale.x, sliceCopy.transform.localScale.y));
 
-        foreach (var volume in Volume.Volumes) //Initializes Visualization
+        for (int i = 0; i < Volume.Volumes.Count; i++)
         {
-            ConfigureVolume(volume, scannerType, visualization);
-            ConfigureSliceViews(volume, scannerType, visualization);
+            ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i);
+            ConfigureSliceViews(Volume.Volumes[i], scannerType, visualization);
         }
+        /*foreach (var volume in Volume.Volumes) //Initializes Visualization
+        {
+            ConfigureVolume(volume, scannerType, visualization, 0);
+            ConfigureSliceViews(volume, scannerType, visualization);
+        }*/
 
         enabled = true; // enable Update()
     }
@@ -128,17 +133,15 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #region VolumeConfiguration
 
-    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization)
+    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, int index)
     {
         v.SliceMaskingTexture = AppConfig.assets.GetScannerMask(scannerType);
         v.UseSliceMasking = scannerType != UltrasoundScannerTypeEnum.LINEAR;
         v.UltrasoundScannerType = scannerType;
-
         VolumeManager.Instance.UseMaterialConfigVisualization(v, visualization);
         UltrasoundSimulation.Instance.Init(v);
-
-        v.VolumeProxy.position = volumeAnchor.position; // set volume position
-
+        
+        v.VolumeProxy.position = volumeAnchors[index].position; // set volume position
         //replaces Volume rendering with models
         v.VolumeProxy.GetComponent<Renderer>().enabled = true; // enable volume rendering
         v.Threshold = 0.001f;

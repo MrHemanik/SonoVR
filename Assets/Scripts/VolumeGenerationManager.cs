@@ -142,9 +142,11 @@ public class VolumeGenerationManager : MonoBehaviour
         UltrasoundSimulation.Instance.Init(v);
         
         v.VolumeProxy.position = volumeAnchors[index].position; // set volume position
+        GameObject.Find("mKitVolume #"+index+" (ArtificialVolume.vm2)").transform.SetParent(volumeAnchors[index]); //set volumeAnchor as parent of volume
         //replaces Volume rendering with models
         v.VolumeProxy.GetComponent<Renderer>().enabled = true; // enable volume rendering
         v.Threshold = 0.001f;
+        Debug.Log(GameObject.Find("mKitVolume #0 (ArtificialVolume.vm2)").name);
     }
 
     #endregion

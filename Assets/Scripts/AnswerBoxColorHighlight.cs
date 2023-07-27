@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class AnswerAreaOutlineHighlight : MonoBehaviour
+public class AnswerBoxColorHighlight : MonoBehaviour
 {
     private bool[] insideVolumes = new bool[4]; //Should be flexible size from Volume.Volumes.Count
-
-    public Outline outline;
+    
+    public Material material;
     private Color noVolumes;
-    private Color oneVolume = Color.green;
-    private Color twoOrMoreVolumes = Color.red;
+    private Color oneVolume = new Color(0f, 1f, 0f, 0.2f);
+    private Color twoOrMoreVolumes = new Color(1f, 0f, 0f, 0.2f);
 
     void Start()
     {
-        noVolumes = outline.OutlineColor;
+        noVolumes = material.color;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -49,8 +49,8 @@ public class AnswerAreaOutlineHighlight : MonoBehaviour
         {
             if (volCheck) inside++;
         }
-        if (inside < 1) outline.OutlineColor = noVolumes;
-        else if (inside == 1) outline.OutlineColor = oneVolume;
-        else outline.OutlineColor = twoOrMoreVolumes;
+        if (inside < 1) material.color = noVolumes;
+        else if (inside == 1) material.color = oneVolume;
+        else material.color = twoOrMoreVolumes;
     }
 }

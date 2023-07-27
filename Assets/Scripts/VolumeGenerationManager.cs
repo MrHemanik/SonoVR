@@ -75,22 +75,16 @@ public class VolumeGenerationManager : MonoBehaviour
 
     IEnumerator GenerateVolumeWithVolumeManager()
     {
-        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[0], volumeSlot: 0,
-            addObjectModels: true);
-        yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[1], volumeSlot: 1,
-            addObjectModels: true);
+        for (int i = 0; i < levelList[0].volumeList.Count; i++)
+        {
+            yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[i], volumeSlot: i,
+                addObjectModels: true);
+        }
         Debug.Log("GenerateArtificialVolume finished");
-
-        /*
-         * position of volume needs to be set before configuration
-         * Without:         https://i.imgur.com/4Su6Wyp.png
-         * With:            https://i.imgur.com/iIdQK1p.png
-         * Problem as GIF:  https://i.imgur.com/RKlqztO.gif
-         */
+        //position of volume toolgroup needs to be set before configuration. only for toolgroup 1 as it is used as multiview
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
             sliceCopyTransform.rotation * Quaternion.Euler(-90, 0, 0));
         Volume.Volumes[0].SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.localScale.y));
-
         for (int i = 0; i < Volume.Volumes.Count; i++)
         {
             ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i);
@@ -99,11 +93,6 @@ public class VolumeGenerationManager : MonoBehaviour
             //Bugfix: problem where render is flickering, Gets temporarily fixed when clicking on OsCamera, even when it is inactive at the time. Changing the CameraType also works
             Volume.Volumes[i].GetToolgroupCamera(0).cameraType = CameraType.Preview;
         }
-        /*foreach (var volume in Volume.Volumes) //Initializes Visualization
-        {
-            ConfigureVolume(volume, scannerType, visualization, 0);
-            ConfigureSliceViews(volume, scannerType, visualization);
-        }*/
 
         enabled = true; // enable Update()
     }

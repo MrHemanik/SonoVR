@@ -9,6 +9,7 @@ using mKit;
 // uses Assets/DemoApp/Scripts/DemoApp1.cs as base
 public class VolumeGenerationManager : MonoBehaviour
 {
+    #region Variables
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
 
@@ -44,6 +45,8 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private List<Level> levelList;
 
+    private int winningAnswerVolumeId;
+    #endregion
     private void Awake()
     {
         levelList = new LevelList(materialConfig).levelList;
@@ -57,7 +60,8 @@ public class VolumeGenerationManager : MonoBehaviour
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
 
         yield return GenerateVolumeWithVolumeManager();
-        yield return GetStillDefaultSlice(1, stillSliceViewRawImage.GetComponent<RawImage>());
+        SetWinningAnswerVolume();
+        yield return GetStillDefaultSlice(winningAnswerVolumeId, stillSliceViewRawImage.GetComponent<RawImage>());
     }
 
     void Update()
@@ -148,7 +152,7 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #endregion
 
-    #region GetStillSlice
+    #region GetStillDefaultSlice
 
     /// <summary>
     /// Generates a texture from volume with id of volumeId in default position (centered, straight from the top directed at the bottom) and assigns it to the RawImage image
@@ -169,6 +173,14 @@ public class VolumeGenerationManager : MonoBehaviour
         sliceAnchorTransform.rotation = defaultRotation;
         //return null;
     }
+    #endregion
+    
+    #region winningVolume
 
+    private void SetWinningAnswerVolume()
+    {
+        winningAnswerVolumeId = UnityEngine.Random.Range(0, Volume.Volumes.Count);
+        Debug.Log(winningAnswerVolumeId);
+    }
     #endregion
 }

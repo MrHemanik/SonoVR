@@ -55,9 +55,9 @@ public class VolumeGenerationManager : MonoBehaviour
         enabled = false; // will be re-enabled after generating artificials
 
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
+
         yield return GenerateVolumeWithVolumeManager();
-        stillSliceViewRawImage.GetComponent<RawImage>().texture =
-            VolumeManager.Instance.GetSliceCamCapture(Volume.Volumes[0]); //Adds still shot of volume 0 to stillView
+        yield return GetStillDefaultSlice(1, stillSliceViewRawImage.GetComponent<RawImage>());
     }
 
     void Update()
@@ -138,11 +138,36 @@ public class VolumeGenerationManager : MonoBehaviour
         v.UltrasoundScannerType = scannerType;
         VolumeManager.Instance.UseMaterialConfigVisualization(v, visualization);
         UltrasoundSimulation.Instance.Init(v);
-        
+
         v.VolumeProxy.position = volumeAnchors[index].position; // set volume position
-        GameObject.Find("mKitVolume #"+index+" (ArtificialVolume.vm2)").transform.SetParent(volumeAnchors[index]); //set volumeAnchor as parent of volume
+        GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
+            .SetParent(volumeAnchors[index]); //set volumeAnchor as parent of volume
         v.Threshold = 0.001f;
         Debug.Log(GameObject.Find("mKitVolume #0 (ArtificialVolume.vm2)").name);
+    }
+
+    #endregion
+
+    #region GetStillSlice
+
+    /// <summary>
+    /// Generates a texture from volume with id of volumeId in default position (centered, straight from the top directed at the bottom) and assigns it to the RawImage image
+    /// </summary>
+    IEnumerator GetStillDefaultSlice(int volumeId, RawImage image)
+    {
+        //The image will flash on the normal imageslice, for now it shouldn't be a problem as it will only be called right after object generation
+        Transform sliceAnchorTransform = sliceCopy.transform.parent.GetChild(3).transform;
+        Vector3 defaultPosition = sliceAnchorTransform.position;
+        Quaternion defaultRotation = sliceAnchorTransform.rotation;
+        yield return sliceAnchorTransform.position =
+            GameObject.Find("VolumeAnchor (Volume" + (volumeId + 1) + ")").transform.position;
+        yield return sliceAnchorTransform.rotation = Quaternion.identity;
+        image.texture =
+            VolumeManager.Instance
+                .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume 0 to stillView
+        sliceAnchorTransform.position = defaultPosition;
+        sliceAnchorTransform.rotation = defaultRotation;
+        //return null;
     }
 
     #endregion

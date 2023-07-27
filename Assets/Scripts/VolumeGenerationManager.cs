@@ -95,6 +95,9 @@ public class VolumeGenerationManager : MonoBehaviour
         {
             ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i);
             ConfigureSliceViews(Volume.Volumes[i], scannerType, visualization);
+            
+            //Bugfix: problem where render is flickering, Gets temporarily fixed when clicking on OsCamera, even when it is inactive at the time. Changing the CameraType also works
+            Volume.Volumes[i].GetToolgroupCamera(0).cameraType = CameraType.Preview;
         }
         /*foreach (var volume in Volume.Volumes) //Initializes Visualization
         {

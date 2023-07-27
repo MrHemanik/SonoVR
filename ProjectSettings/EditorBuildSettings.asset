@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/DemoApp/SonoTestScene.unity
-    guid: ee2a2e37254059344ad0fe6e85b809d9
+    path: Assets/Scenes/TestScene.unity
+    guid: 9c4440e9ec5d3ee45b19f31a0ebb87ea
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: f5dcd8bdc09a96a42b81d54beff3dd2f, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 0bd1605c1ac26fb45ba0459bdc4c792a, type: 2}

@@ -21,7 +21,7 @@ public class VolumeGenerationManager : MonoBehaviour
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
-    public EmptySliceCopy sliceCopy;
+    public Transform sliceCopyTransform;
 
     /// <summary>
     /// MaterialConfig for different visualizations
@@ -67,9 +67,8 @@ public class VolumeGenerationManager : MonoBehaviour
     void Update()
     {
         // make mKit slice follow sliceTransform
-        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopy.transform.position,
-            sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
-        Volume.Volumes[0].SetToolSize(new Vector2(sliceCopy.transform.localScale.x, sliceCopy.transform.localScale.y));
+        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position, sliceCopyTransform.rotation * Quaternion.Euler(-90, 0, 0));
+        //Volume.Volumes[0].SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.transform.localScale.y));
     }
 
     #region GenerateVolumeWithVolumeManager
@@ -88,9 +87,9 @@ public class VolumeGenerationManager : MonoBehaviour
          * With:            https://i.imgur.com/iIdQK1p.png
          * Problem as GIF:  https://i.imgur.com/RKlqztO.gif
          */
-        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopy.transform.position,
-            sliceCopy.transform.rotation * Quaternion.Euler(-90, 0, 0));
-        Volume.Volumes[0].SetToolSize(new Vector2(sliceCopy.transform.localScale.x, sliceCopy.transform.localScale.y));
+        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
+            sliceCopyTransform.rotation * Quaternion.Euler(-90, 0, 0));
+        Volume.Volumes[0].SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.localScale.y));
 
         for (int i = 0; i < Volume.Volumes.Count; i++)
         {
@@ -128,7 +127,7 @@ public class VolumeGenerationManager : MonoBehaviour
             sliceViewQuad.SetMaterial(mvsMat);
         }
 
-        sliceCopy.SetSliceMask(scannerType);
+        //sliceCopyTransform.SetSliceMask(scannerType);
     }
 
     #endregion
@@ -160,7 +159,7 @@ public class VolumeGenerationManager : MonoBehaviour
     IEnumerator GetStillDefaultSlice(int volumeId, RawImage image)
     {
         //The image will flash on the normal imageslice, for now it shouldn't be a problem as it will only be called right after object generation
-        Transform sliceAnchorTransform = sliceCopy.transform.parent.GetChild(3).transform;
+        Transform sliceAnchorTransform = sliceCopyTransform.parent.GetChild(3).transform;
         Vector3 defaultPosition = sliceAnchorTransform.position;
         Quaternion defaultRotation = sliceAnchorTransform.rotation;
         yield return sliceAnchorTransform.position =

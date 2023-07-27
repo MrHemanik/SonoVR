@@ -16,20 +16,24 @@ public class OutlineManager : MonoBehaviour
     public void StartHover()
     {
         outline.OutlineColor = hover;
+        outline.enabled = true;
     }
 
     public void StopHover()
     {
         outline.OutlineColor = defaultOutlineColor;
+        outline.enabled = false;
     }
 
     public void StartGrab()
     {
         outline.OutlineColor = grab;
+        outline.enabled = true;
     }
     public void StopGrab()
     {
         outline.OutlineColor = hover; //sets color to interactable due to it still being in range of hover
+        outline.enabled = true;
     }
     
 }

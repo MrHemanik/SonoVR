@@ -6539,6 +6539,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 440538363}
     - target: {fileID: 2388908582259179849, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2388908582259179849, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: precomputeOutline
       value: 0
       objectReference: {fileID: 0}

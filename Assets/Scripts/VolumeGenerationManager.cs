@@ -38,10 +38,8 @@ public class VolumeGenerationManager : MonoBehaviour
     public SliceView sliceViewQuad;
 
     /// <summary>
-    /// 2D slice view (on Unity quad mesh)
+    /// still 2D slice view (on Canvas with RawImage)
     /// </summary>
-    public GameObject stillSliceViewQuad;
-
     public GameObject stillSliceViewRawImage;
 
     private List<Level> levelList;

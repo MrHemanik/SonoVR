@@ -190,21 +190,20 @@ public class VolumeGenerationManager : MonoBehaviour
     {
         
         Transform sliceAnchorTransform = sliceCopyTransform.parent.GetChild(3).transform;
-        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",0);
+        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",0); //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
         sliceCopyTransform.gameObject.layer = 3; //Make slice temporarily invisible so 
         Vector3 defaultPosition = sliceAnchorTransform.position;
         Quaternion defaultRotation = sliceAnchorTransform.rotation;
         yield return sliceAnchorTransform.position =
             GameObject.Find("VolumeAnchor (Volume" + (volumeId + 1) + ")").transform.position;
         yield return sliceAnchorTransform.rotation = Quaternion.identity;
-        //Due to GetSliceCamCapture the image will flash on the normal imageslice even with texCount on BlendSlices set to 0
-        image.texture =
+        yield return image.texture =
             VolumeManager.Instance
                 .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume of volumeID to stillView
-        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",Volume.Volumes.Count);
+        yield return sliceAnchorTransform.position = defaultPosition;
+        yield return sliceAnchorTransform.rotation = defaultRotation;
         sliceCopyTransform.gameObject.layer = 0;
-        sliceAnchorTransform.position = defaultPosition;
-        sliceAnchorTransform.rotation = defaultRotation;
+        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",Volume.Volumes.Count);
         //return null;
     }
 

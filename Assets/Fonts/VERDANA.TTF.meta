@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 70f8d7a41137d0740b5cf45196058887
+guid: c560bc0f82adeb24bbf23d3722e250db
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - HFF Ultrasound
+  - Verdana
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

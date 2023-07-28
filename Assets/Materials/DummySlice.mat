@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SliceCopy
+  m_Name: DummySlice
   m_Shader: {fileID: 4800000, guid: cd506eed020d6664d9d6f08a8602a31c, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords:
@@ -86,7 +86,7 @@ Material:
     - uUseMask: 1
     m_Colors:
     - _BgColor: {r: 0.12941177, g: 0.12941177, b: 0.12941177, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.12941177, g: 0.12941177, b: 0.12941177, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

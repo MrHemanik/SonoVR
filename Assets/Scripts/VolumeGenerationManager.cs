@@ -10,14 +10,17 @@ using mKit;
 public class VolumeGenerationManager : MonoBehaviour
 {
     #region Variables
+
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
-    
+
     /// <summary>
     /// Position anchor for volume placement
     /// </summary>
     [Header("Scene")] public Transform[] volumeAnchors;
+
     public AnswerBoxManager abm;
+
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
@@ -43,12 +46,16 @@ public class VolumeGenerationManager : MonoBehaviour
     /// </summary>
     public GameObject answerSliceView;
 
-    
+
     private List<Level> levelList;
     private int currentLevel = 0;
 
-    private int winningAnswerVolumeId;
+    private int winningAnswerId;
+
     #endregion
+
+    #region Initiation
+
     private void Awake()
     {
         levelList = new LevelList(materialConfig).levelList;
@@ -59,9 +66,6 @@ public class VolumeGenerationManager : MonoBehaviour
         enabled = false; // will be re-enabled after generating artificials
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         yield return InitLevel();
-        currentLevel++;
-        yield return new WaitForSeconds(10f);
-        yield return InitLevel();
     }
 
     IEnumerator InitLevel()
@@ -69,7 +73,7 @@ public class VolumeGenerationManager : MonoBehaviour
         ResetComponents();
         yield return GenerateVolumeWithVolumeManager();
         SetWinningAnswerVolume();
-        yield return GetStillDefaultSlice(winningAnswerVolumeId, answerSliceView.GetComponent<RawImage>());
+        yield return GetStillDefaultSlice(winningAnswerId, answerSliceView.GetComponent<RawImage>());
     }
 
     private void ResetComponents()
@@ -80,51 +84,54 @@ public class VolumeGenerationManager : MonoBehaviour
             volumeAnchor.GetChild(0).position = volumeAnchor.position;
             volumeAnchor.GetChild(0).rotation = volumeAnchor.rotation;
         }
+
         //Resets answerSliceBox to AnswerAnchor
         Transform answerSliceBox = answerSliceView.transform.parent.parent;
         answerSliceBox.position = answerSliceBox.parent.position;
         answerSliceBox.rotation = answerSliceBox.parent.rotation;
-        
+
         //Resets answerBox
         abm.InitAnswerBox(levelList[currentLevel].volumeList.Count);
     }
 
+    #endregion
+
     void Update()
     {
         // make mKit slice follow sliceTransform
-        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position, sliceCopyTransform.rotation * Quaternion.Euler(-90, 0, 0));
+        Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
+            sliceCopyTransform.rotation * Quaternion.Euler(-90, 0, 0));
         //Volume.Volumes[0].SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.transform.localScale.y));
     }
 
-    #region GenerateVolumeWithVolumeManager
+    #region Generation & Configuration of Volume and Slice
 
     IEnumerator GenerateVolumeWithVolumeManager()
     {
         for (int i = 0; i < levelList[currentLevel].volumeList.Count; i++)
         {
-            yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[currentLevel].volumeList[i], volumeSlot: i,
+            yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[currentLevel].volumeList[i],
+                volumeSlot: i,
                 addObjectModels: true);
         }
+
         Debug.Log("GenerateArtificialVolume finished");
         //position of volume toolgroup needs to be set before configuration. only for toolgroup 1 as it is used as multiview
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
             sliceCopyTransform.rotation * Quaternion.Euler(-90, 0, 0));
-        Volume.Volumes[0].SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.localScale.y));
+        Volume.Volumes[0]
+            .SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.localScale.y));
         for (int i = 0; i < Volume.Volumes.Count; i++)
         {
             ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i);
             ConfigureSliceViews(Volume.Volumes[i], scannerType, visualization);
-            
+
             //Bugfix: problem where render is flickering, Gets temporarily fixed when clicking on OsCamera, even when it is inactive at the time. Changing the CameraType also works
             Volume.Volumes[i].GetToolgroupCamera(0).cameraType = CameraType.Preview;
         }
 
         enabled = true; // enable Update()
     }
-
-    #endregion
-
-    #region SliceViewConfiguration
 
     void ConfigureSliceViews(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization)
     {
@@ -147,10 +154,6 @@ public class VolumeGenerationManager : MonoBehaviour
         //sliceCopyTransform.SetSliceMask(scannerType);
     }
 
-    #endregion
-
-    #region VolumeConfiguration
-
     void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, int index)
     {
         v.SliceMaskingTexture = AppConfig.assets.GetScannerMask(scannerType);
@@ -165,9 +168,6 @@ public class VolumeGenerationManager : MonoBehaviour
         v.Threshold = 0.001f;
         Debug.Log(GameObject.Find("mKitVolume #0 (ArtificialVolume.vm2)").name);
     }
-    #endregion
-
-    #region GetStillDefaultSlice
 
     /// <summary>
     /// Generates a texture from volume with id of volumeId in default position (centered, straight from the top directed at the bottom) and assigns it to the RawImage image
@@ -188,14 +188,29 @@ public class VolumeGenerationManager : MonoBehaviour
         sliceAnchorTransform.rotation = defaultRotation;
         //return null;
     }
+
     #endregion
-    
-    #region winningVolume
+
+    #region levelhandling
 
     private void SetWinningAnswerVolume()
     {
-        winningAnswerVolumeId = UnityEngine.Random.Range(0, Volume.Volumes.Count);
-        Debug.Log(winningAnswerVolumeId);
+        winningAnswerId = UnityEngine.Random.Range(0, Volume.Volumes.Count);
+        Debug.Log(winningAnswerId);
     }
+
+    public void CheckAnswer(int answerID)
+    {
+        StartCoroutine(EndLevel(winningAnswerId == answerID));
+    }
+
+    private IEnumerator EndLevel(bool winning)
+    {
+        Debug.Log(winning ? "Richtige Antwort abgegeben!" : "Falsche Antwort abgegeben!");
+        currentLevel++;
+        yield return new WaitForSeconds(5f);
+        yield return InitLevel();
+    }
+
     #endregion
 }

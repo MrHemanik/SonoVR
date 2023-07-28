@@ -12,6 +12,16 @@ public class AnswerBoxManager : MonoBehaviour
         insideVolumes = new bool[volumeCount];
         colorHighlighter.Reset();
     }
+
+    public List<int> GetInsideVolumes()
+    {
+        List<int> inside = new List<int>();
+        for (int i = 0; i < insideVolumes.Length; i++)
+        {
+            if (insideVolumes[i]) inside.Add(i);
+        }
+        return inside;
+    }
     private void OnTriggerEnter(Collider other)
     {
         for (int i = 0; i < insideVolumes.Length; i++)
@@ -23,7 +33,7 @@ public class AnswerBoxManager : MonoBehaviour
                 Debug.Log("Volume Trigger in AnswerBox:"+i);
             }
         }
-        colorHighlighter.ChangeOutline(insideVolumes);
+        colorHighlighter.ChangeOutline(GetInsideVolumes().Count);
     }
 
     private void OnTriggerExit(Collider other)
@@ -35,6 +45,6 @@ public class AnswerBoxManager : MonoBehaviour
                 insideVolumes[i] = false;
             }
         }
-        colorHighlighter.ChangeOutline(insideVolumes);
+        colorHighlighter.ChangeOutline(GetInsideVolumes().Count);
     }
 }

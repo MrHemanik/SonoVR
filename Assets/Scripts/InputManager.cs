@@ -10,7 +10,12 @@ public class InputManager : MonoBehaviour
 
     public void OnLeftTrigger(InputAction.CallbackContext context)
     {
-        Debug.Log("Pressed the Left Trigger");
+        if (!context.started) return; //Only work when initial click
+        Debug.Log("VolumeCount in AnswerBox "+gm.abm.GetInsideVolumes().Count);
+        if (gm.abm.GetInsideVolumes().Count == 1)
+        {
+            gm.CheckAnswer(gm.abm.GetInsideVolumes()[0]);
+        }
     }
     
 }

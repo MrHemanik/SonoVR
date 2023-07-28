@@ -16,15 +16,10 @@ public class AnswerBoxColorHighlight : MonoBehaviour
     {
         material.color = noVolumes;
     }
-    public void ChangeOutline(bool[] insideVolumes)
+    public void ChangeOutline(int insideVolumesCount)
     {
-        int inside = 0;
-        foreach (var volCheck in insideVolumes)
-        {
-            if (volCheck) inside++;
-        }
-        if (inside < 1) material.color = noVolumes;
-        else if (inside == 1) material.color = oneVolume;
+        if (insideVolumesCount < 1) material.color = noVolumes;
+        else if (insideVolumesCount == 1) material.color = oneVolume;
         else material.color = twoOrMoreVolumes;
     }
 }

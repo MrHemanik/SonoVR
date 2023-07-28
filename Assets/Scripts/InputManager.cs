@@ -12,11 +12,12 @@ public class InputManager : MonoBehaviour
     {
         if (!context.started) return; //Only work when initial click
         SubmitAnswer();
+        //if(GameObject.Find("Left Controller").transform.GetChild(1).name.Contains()
     }
+    
 
     private void SubmitAnswer()
     {
-        Debug.Log("VolumeCount in AnswerBox "+gm.abm.GetInsideVolumes().Count);
         if (gm.abm.GetInsideVolumes().Count == 1 && gm.activeRound)
         {
             gm.CheckAnswer(gm.abm.GetInsideVolumes()[0]);

@@ -12,12 +12,12 @@ public class VolumeGenerationManager : MonoBehaviour
     #region Variables
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
-
+    
     /// <summary>
     /// Position anchor for volume placement
     /// </summary>
     [Header("Scene")] public Transform[] volumeAnchors;
-
+    public AnswerBoxManager abm;
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
@@ -43,6 +43,7 @@ public class VolumeGenerationManager : MonoBehaviour
     /// </summary>
     public GameObject answerSliceView;
 
+    
     private List<Level> levelList;
     private int currentLevel = 0;
 
@@ -83,6 +84,9 @@ public class VolumeGenerationManager : MonoBehaviour
         Transform answerSliceBox = answerSliceView.transform.parent.parent;
         answerSliceBox.position = answerSliceBox.parent.position;
         answerSliceBox.rotation = answerSliceBox.parent.rotation;
+        
+        //Resets answerBox
+        abm.InitAnswerBox(levelList[currentLevel].volumeList.Count);
     }
 
     void Update()

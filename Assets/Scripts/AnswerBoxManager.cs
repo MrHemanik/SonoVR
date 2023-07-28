@@ -5,15 +5,22 @@ using UnityEngine;
 public class AnswerBoxManager : MonoBehaviour
 {
     public AnswerBoxColorHighlight colorHighlighter;
-    private bool[] insideVolumes = new bool[4]; //Should be flexible size from Volume.Volumes.Count
+    public bool[] insideVolumes = new bool[4]; //Will get init with the right volume amount
+
+    public void InitAnswerBox(int volumeCount)
+    {
+        insideVolumes = new bool[volumeCount];
+        colorHighlighter.Reset();
+    }
     private void OnTriggerEnter(Collider other)
     {
         for (int i = 0; i < insideVolumes.Length; i++)
         {
-            if (other.name == "VolumeBoxGrabbable" && other.transform.parent.name.Contains(""+(i+1))) //If name-check isn't true it won't check for parent.
+            Debug.Log(other.name);
+            if (other.name.Equals("VolumeBoxGrabbable")&& other.transform.GetChild(1).name.Contains(""+i)) //Namecheck own name as it gets detaached from parent on grab
             {
                 insideVolumes[i] = true;
-                Debug.Log("Volume Trigger:"+i);
+                Debug.Log("Volume Trigger in AnswerBox:"+i);
             }
         }
         colorHighlighter.ChangeOutline(insideVolumes);
@@ -23,7 +30,7 @@ public class AnswerBoxManager : MonoBehaviour
     {
         for (int i = 0; i < insideVolumes.Length; i++)
         {
-            if (other.transform.name.Contains(""+(i+1)))
+            if (other.name.Equals("VolumeBoxGrabbable")&& other.transform.GetChild(1).name.Contains(""+i))
             {
                 insideVolumes[i] = false;
             }

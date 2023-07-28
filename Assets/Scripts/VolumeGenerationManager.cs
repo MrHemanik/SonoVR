@@ -52,6 +52,7 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private int winningAnswerId;
 
+    public bool activeRound = true;
     #endregion
 
     #region Initiation
@@ -74,6 +75,7 @@ public class VolumeGenerationManager : MonoBehaviour
         yield return GenerateVolumeWithVolumeManager();
         SetWinningAnswerVolume();
         yield return GetStillDefaultSlice(winningAnswerId, answerSliceView.GetComponent<RawImage>());
+        activeRound = true;
     }
 
     private void ResetComponents()
@@ -81,8 +83,10 @@ public class VolumeGenerationManager : MonoBehaviour
         //Resets volumeAnchor positions so new Volumes can be generated
         foreach (var volumeAnchor in volumeAnchors)
         {
-            volumeAnchor.GetChild(0).position = volumeAnchor.position;
-            volumeAnchor.GetChild(0).rotation = volumeAnchor.rotation;
+            SetVisibility(volumeAnchor, false);
+            Transform volumeBox = volumeAnchor.GetChild(0);
+            volumeBox.position = volumeAnchor.position;
+            volumeBox.rotation = volumeAnchor.rotation;
         }
 
         //Resets answerSliceBox to AnswerAnchor
@@ -91,7 +95,16 @@ public class VolumeGenerationManager : MonoBehaviour
         answerSliceBox.rotation = answerSliceBox.parent.rotation;
 
         //Resets answerBox
+        Debug.Log("Loading level " + currentLevel + " with " + levelList[currentLevel].volumeList.Count + "Volumes");
         abm.InitAnswerBox(levelList[currentLevel].volumeList.Count);
+    }
+    //Sets the layer of every child to either the default or an invisible layer
+    private void SetVisibility(Transform obj, bool visible)
+    {
+        foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
+        {
+                trans.gameObject.layer = visible ? 0 : 3;
+        }
     }
 
     #endregion
@@ -165,6 +178,7 @@ public class VolumeGenerationManager : MonoBehaviour
         v.VolumeProxy.position = volumeAnchors[index].position; // set volume position
         GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
             .SetParent(volumeAnchors[index].GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
+        SetVisibility(volumeAnchors[index], true);
         v.Threshold = 0.001f;
         Debug.Log(GameObject.Find("mKitVolume #0 (ArtificialVolume.vm2)").name);
     }
@@ -201,6 +215,7 @@ public class VolumeGenerationManager : MonoBehaviour
 
     public void CheckAnswer(int answerID)
     {
+        activeRound = false;
         StartCoroutine(EndLevel(winningAnswerId == answerID));
     }
 

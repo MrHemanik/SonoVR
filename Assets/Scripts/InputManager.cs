@@ -1,27 +1,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using mKit;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class InputManager : MonoBehaviour
 {
     public VolumeGenerationManager gm;
-
+    
     public void OnLeftTrigger(InputAction.CallbackContext context)
     {
         if (!context.started) return; //Only work when initial click
-        SubmitAnswer();
-        //if(GameObject.Find("Left Controller").transform.GetChild(1).name.Contains()
-    }
-    
 
-    private void SubmitAnswer()
-    {
-        if (gm.abm.GetInsideVolumes().Count == 1 && gm.activeRound)
+        foreach (var xrSelectInteractable in GameObject.Find("Left Controller").GetComponent<XRDirectInteractor>().interactablesSelected)
         {
-            gm.CheckAnswer(gm.abm.GetInsideVolumes()[0]);
+            Debug.Log("In Hand: "+xrSelectInteractable.transform.name);
+            for (int i = 0; i < Volume.Volumes.Count; i++)
+            {
+                if(xrSelectInteractable.transform.GetChild(1).name.Contains(""+i))
+                {
+                    gm.CheckAnswer(i);
+                    break;
+                }
+            }
         }
+
     }
-    
 }

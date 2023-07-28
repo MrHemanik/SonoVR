@@ -193,16 +193,16 @@ public class VolumeGenerationManager : MonoBehaviour
             sliceView.GetComponent<MeshRenderer>().material.SetFloat("texCount",0); //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
         }
         sliceCopyTransform.gameObject.layer = 3; //Make slice temporarily invisible so 
-        Vector3 defaultPosition = sliceAnchorTransform.position;
-        Quaternion defaultRotation = sliceAnchorTransform.rotation;
+        Vector3 defaultPosition = sliceAnchorTransform.localPosition;
+        Quaternion defaultRotation = sliceAnchorTransform.localRotation;
         yield return sliceAnchorTransform.position =
             GameObject.Find("VolumeAnchor (Volume" + (volumeId + 1) + ")").transform.position;
         yield return sliceAnchorTransform.rotation = Quaternion.identity;
         yield return image.texture =
             VolumeManager.Instance
                 .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume of volumeID to stillView
-        yield return sliceAnchorTransform.position = defaultPosition;
-        yield return sliceAnchorTransform.rotation = defaultRotation;
+        yield return sliceAnchorTransform.localPosition = defaultPosition;
+        yield return sliceAnchorTransform.localRotation = defaultRotation;
         sliceCopyTransform.gameObject.layer = 0;
         foreach (var sliceView in sliceViews)
         {

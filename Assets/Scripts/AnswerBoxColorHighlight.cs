@@ -13,9 +13,13 @@ public class AnswerBoxColorHighlight : MonoBehaviour
 
     void Start()
     {
-        noVolumes = material.color;
+        Reset();
     }
 
+    public void Reset()
+    {
+        material.color = noVolumes;
+    }
     public void ChangeOutline(bool[] insideVolumes)
     {
         int inside = 0;

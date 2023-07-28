@@ -41,9 +41,10 @@ public class VolumeGenerationManager : MonoBehaviour
     /// <summary>
     /// still 2D slice view (on Canvas with RawImage)
     /// </summary>
-    public GameObject stillSliceViewRawImage;
+    public GameObject answerSliceView;
 
     private List<Level> levelList;
+    private int currentLevel = 0;
 
     private int winningAnswerVolumeId;
     #endregion
@@ -54,14 +55,34 @@ public class VolumeGenerationManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        Debug.Log(Application.dataPath);
         enabled = false; // will be re-enabled after generating artificials
-
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
+        yield return InitLevel();
+        currentLevel++;
+        yield return new WaitForSeconds(10f);
+        yield return InitLevel();
+    }
 
+    IEnumerator InitLevel()
+    {
+        ResetComponents();
         yield return GenerateVolumeWithVolumeManager();
         SetWinningAnswerVolume();
-        yield return GetStillDefaultSlice(winningAnswerVolumeId, stillSliceViewRawImage.GetComponent<RawImage>());
+        yield return GetStillDefaultSlice(winningAnswerVolumeId, answerSliceView.GetComponent<RawImage>());
+    }
+
+    private void ResetComponents()
+    {
+        //Resets volumeAnchor positions so new Volumes can be generated
+        foreach (var volumeAnchor in volumeAnchors)
+        {
+            volumeAnchor.GetChild(0).position = volumeAnchor.position;
+            volumeAnchor.GetChild(0).rotation = volumeAnchor.rotation;
+        }
+        //Resets answerSliceBox to AnswerAnchor
+        Transform answerSliceBox = answerSliceView.transform.parent.parent;
+        answerSliceBox.position = answerSliceBox.parent.position;
+        answerSliceBox.rotation = answerSliceBox.parent.rotation;
     }
 
     void Update()
@@ -75,9 +96,9 @@ public class VolumeGenerationManager : MonoBehaviour
 
     IEnumerator GenerateVolumeWithVolumeManager()
     {
-        for (int i = 0; i < levelList[0].volumeList.Count; i++)
+        for (int i = 0; i < levelList[currentLevel].volumeList.Count; i++)
         {
-            yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[0].volumeList[i], volumeSlot: i,
+            yield return VolumeManager.Instance.GenerateArtificialVolume(levelList[currentLevel].volumeList[i], volumeSlot: i,
                 addObjectModels: true);
         }
         Debug.Log("GenerateArtificialVolume finished");
@@ -136,11 +157,10 @@ public class VolumeGenerationManager : MonoBehaviour
 
         v.VolumeProxy.position = volumeAnchors[index].position; // set volume position
         GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
-            .SetParent(volumeAnchors[index]); //set volumeAnchor as parent of volume
+            .SetParent(volumeAnchors[index].GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
         v.Threshold = 0.001f;
         Debug.Log(GameObject.Find("mKitVolume #0 (ArtificialVolume.vm2)").name);
     }
-
     #endregion
 
     #region GetStillDefaultSlice

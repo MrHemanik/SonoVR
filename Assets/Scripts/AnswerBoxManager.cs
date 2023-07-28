@@ -10,7 +10,7 @@ public class AnswerBoxManager : MonoBehaviour
     {
         for (int i = 0; i < insideVolumes.Length; i++)
         {
-            if (other.gameObject.name.Contains(""+(i+1)))
+            if (other.name == "VolumeBoxGrabbable" && other.transform.parent.name.Contains(""+(i+1))) //If name-check isn't true it won't check for parent.
             {
                 insideVolumes[i] = true;
                 Debug.Log("Volume Trigger:"+i);
@@ -23,7 +23,7 @@ public class AnswerBoxManager : MonoBehaviour
     {
         for (int i = 0; i < insideVolumes.Length; i++)
         {
-            if (other.gameObject.name.Contains(""+(i+1)))
+            if (other.transform.name.Contains(""+(i+1)))
             {
                 insideVolumes[i] = false;
             }

@@ -19,8 +19,6 @@ public class VolumeGenerationManager : MonoBehaviour
     /// </summary>
     [Header("Scene")] public Transform[] volumeAnchors;
 
-    public AnswerBoxManager abm;
-
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
@@ -81,7 +79,7 @@ public class VolumeGenerationManager : MonoBehaviour
         foreach (var volumeAnchor in volumeAnchors)
         {
             SetVisibility(volumeAnchor, false);
-            Transform volumeBox = volumeAnchor.GetChild(0);
+            Transform volumeBox = volumeAnchor.GetChild(0); //TODO: Will fail if object is currently grabbed, need to fix!
             volumeBox.position = volumeAnchor.position;
             volumeBox.rotation = volumeAnchor.rotation;
         }
@@ -90,10 +88,8 @@ public class VolumeGenerationManager : MonoBehaviour
         Transform answerSliceBox = answerSliceView.transform.parent.parent;
         answerSliceBox.position = answerSliceBox.parent.position;
         answerSliceBox.rotation = answerSliceBox.parent.rotation;
-
-        //Resets answerBox
+        
         Debug.Log("Loading level " + currentLevel + " with " + levelList[currentLevel].volumeList.Count + "Volumes");
-        abm.InitAnswerBox(levelList[currentLevel].volumeList.Count);
     }
     //Sets the layer of every child to either the default or an invisible layer
     private void SetVisibility(Transform obj, bool visible)

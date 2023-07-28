@@ -11,6 +11,11 @@ public class InputManager : MonoBehaviour
     public void OnLeftTrigger(InputAction.CallbackContext context)
     {
         if (!context.started) return; //Only work when initial click
+        SubmitAnswer();
+    }
+
+    private void SubmitAnswer()
+    {
         Debug.Log("VolumeCount in AnswerBox "+gm.abm.GetInsideVolumes().Count);
         if (gm.abm.GetInsideVolumes().Count == 1 && gm.activeRound)
         {

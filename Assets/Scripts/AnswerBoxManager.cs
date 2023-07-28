@@ -26,11 +26,9 @@ public class AnswerBoxManager : MonoBehaviour
     {
         for (int i = 0; i < insideVolumes.Length; i++)
         {
-            Debug.Log(other.name);
             if (other.name.Equals("VolumeBoxGrabbable")&& other.transform.GetChild(1).name.Contains(""+i)) //Namecheck own name as it gets detaached from parent on grab
             {
                 insideVolumes[i] = true;
-                Debug.Log("Volume Trigger in AnswerBox:"+i);
             }
         }
         colorHighlighter.ChangeOutline(GetInsideVolumes().Count);

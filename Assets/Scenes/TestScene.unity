@@ -3016,7 +3016,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gm: {fileID: 77948865}
-  playerInput: {fileID: 1048120688}
 --- !u!114 &1048120688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3344,7 +3343,7 @@ MonoBehaviour:
     m_ActionName: XRI UI/RightClick[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: XRI Head
+  m_DefaultActionMap: XRI LeftHand Interaction
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!4 &1067807910 stripped
@@ -5151,6 +5150,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 94456477818149792, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 743250448094162008, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -5167,6 +5170,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 908630487}
+    - target: {fileID: 4987128644852752269, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5292621029105472215, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
       value: 

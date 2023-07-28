@@ -64,15 +64,17 @@ public class VolumeGenerationManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        enabled = false; // will be re-enabled after generating artificials
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         yield return InitLevel();
     }
 
     IEnumerator InitLevel()
     {
+        enabled = false; // will be re-enabled after generating artificials
         ResetComponents();
-        yield return GenerateVolumeWithVolumeManager();
+        yield return GenerateVolumesWithVolumeManager();
+        SetupVolumes();
+        enabled = true;
         SetWinningAnswerVolume();
         yield return GetStillDefaultSlice(winningAnswerId, answerSliceView.GetComponent<RawImage>());
         activeRound = true;
@@ -119,7 +121,7 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #region Generation & Configuration of Volume and Slice
 
-    IEnumerator GenerateVolumeWithVolumeManager()
+    IEnumerator GenerateVolumesWithVolumeManager()
     {
         for (int i = 0; i < levelList[currentLevel].volumeList.Count; i++)
         {
@@ -127,13 +129,15 @@ public class VolumeGenerationManager : MonoBehaviour
                 volumeSlot: i,
                 addObjectModels: true);
         }
-
         Debug.Log("GenerateArtificialVolume finished");
+    }
+
+    void SetupVolumes()
+    {
         //position of volume toolgroup needs to be set before configuration. only for toolgroup 1 as it is used as multiview
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
             sliceCopyTransform.rotation * Quaternion.Euler(-90, 0, 0));
-        Volume.Volumes[0]
-            .SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.localScale.y));
+        Volume.Volumes[0].SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.localScale.y));
         for (int i = 0; i < Volume.Volumes.Count; i++)
         {
             ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i);
@@ -142,10 +146,7 @@ public class VolumeGenerationManager : MonoBehaviour
             //Bugfix: problem where render is flickering, Gets temporarily fixed when clicking on OsCamera, even when it is inactive at the time. Changing the CameraType also works
             Volume.Volumes[i].GetToolgroupCamera(0).cameraType = CameraType.Preview;
         }
-
-        enabled = true; // enable Update()
     }
-
     void ConfigureSliceViews(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization)
     {
         MultiVolumeSlice mvs = GetComponent<MultiVolumeSlice>();
@@ -178,9 +179,8 @@ public class VolumeGenerationManager : MonoBehaviour
         v.VolumeProxy.position = volumeAnchors[index].position; // set volume position
         GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
             .SetParent(volumeAnchors[index].GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
-        SetVisibility(volumeAnchors[index], true);
+        SetVisibility(volumeAnchors[index], true); //Sets all elements of volumeanchor to visible
         v.Threshold = 0.001f;
-        Debug.Log(GameObject.Find("mKitVolume #0 (ArtificialVolume.vm2)").name);
     }
 
     /// <summary>
@@ -188,16 +188,21 @@ public class VolumeGenerationManager : MonoBehaviour
     /// </summary>
     IEnumerator GetStillDefaultSlice(int volumeId, RawImage image)
     {
-        //The image will flash on the normal imageslice, for now it shouldn't be a problem as it will only be called right after object generation
+        
         Transform sliceAnchorTransform = sliceCopyTransform.parent.GetChild(3).transform;
+        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",0);
+        sliceCopyTransform.gameObject.layer = 3; //Make slice temporarily invisible so 
         Vector3 defaultPosition = sliceAnchorTransform.position;
         Quaternion defaultRotation = sliceAnchorTransform.rotation;
         yield return sliceAnchorTransform.position =
             GameObject.Find("VolumeAnchor (Volume" + (volumeId + 1) + ")").transform.position;
         yield return sliceAnchorTransform.rotation = Quaternion.identity;
+        //Due to GetSliceCamCapture the image will flash on the normal imageslice even with texCount on BlendSlices set to 0
         image.texture =
             VolumeManager.Instance
-                .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume 0 to stillView
+                .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume of volumeID to stillView
+        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",Volume.Volumes.Count);
+        sliceCopyTransform.gameObject.layer = 0;
         sliceAnchorTransform.position = defaultPosition;
         sliceAnchorTransform.rotation = defaultRotation;
         //return null;

@@ -30,16 +30,11 @@ public class VolumeGenerationManager : MonoBehaviour
     /// MaterialConfig for different visualizations
     /// </summary>
     public MaterialConfig materialConfig;
-
-    /// <summary>
-    /// 2D slice view (on Canvas with RawImage)
-    /// </summary>
-    public SliceView sliceViewRawImage;
-
+    
     /// <summary>
     /// 2D slice view (on Unity quad mesh)
     /// </summary>
-    public SliceView sliceViewQuad;
+    public SliceView[] sliceViews;
 
     /// <summary>
     /// still 2D slice view (on Canvas with RawImage)
@@ -152,17 +147,20 @@ public class VolumeGenerationManager : MonoBehaviour
         MultiVolumeSlice mvs = GetComponent<MultiVolumeSlice>();
         if (mvs == null)
         {
-            sliceViewQuad.InitSliceView(visualization, scannerType,
-                v.GetSliceRenderTexture()); // assign mkit texture to slice display
-            sliceViewRawImage.InitSliceView(visualization, scannerType,
-                v.GetSliceRenderTexture()); // assign mkit texture to slice display
+            foreach (var sliceView in sliceViews)
+            {
+                sliceView.InitSliceView(visualization, scannerType,
+                    v.GetSliceRenderTexture()); // assign mkit texture to slice display
+            }
         }
         else
         {
             // multi-volume-slice Material
             Material mvsMat = mvs.SetupMultiVolumeSlice(0, visualization, Volume.Volumes[0].GetToolSize(0));
-            sliceViewRawImage.SetMaterial(mvsMat);
-            sliceViewQuad.SetMaterial(mvsMat);
+            foreach (var sliceView in sliceViews)
+            {
+                sliceView.SetMaterial(mvsMat);
+            }
         }
 
         //sliceCopyTransform.SetSliceMask(scannerType);
@@ -190,7 +188,10 @@ public class VolumeGenerationManager : MonoBehaviour
     {
         
         Transform sliceAnchorTransform = sliceCopyTransform.parent.GetChild(3).transform;
-        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",0); //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
+        foreach (var sliceView in sliceViews)
+        {
+            sliceView.GetComponent<MeshRenderer>().material.SetFloat("texCount",0); //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
+        }
         sliceCopyTransform.gameObject.layer = 3; //Make slice temporarily invisible so 
         Vector3 defaultPosition = sliceAnchorTransform.position;
         Quaternion defaultRotation = sliceAnchorTransform.rotation;
@@ -203,7 +204,10 @@ public class VolumeGenerationManager : MonoBehaviour
         yield return sliceAnchorTransform.position = defaultPosition;
         yield return sliceAnchorTransform.rotation = defaultRotation;
         sliceCopyTransform.gameObject.layer = 0;
-        sliceViewRawImage.GetComponent<RawImage>().material.SetFloat("texCount",Volume.Volumes.Count);
+        foreach (var sliceView in sliceViews)
+        {
+            sliceView.GetComponent<MeshRenderer>().material.SetFloat("texCount",Volume.Volumes.Count); //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
+        }
         //return null;
     }
 
@@ -227,7 +231,7 @@ public class VolumeGenerationManager : MonoBehaviour
     {
         Debug.Log(winning ? "Richtige Antwort abgegeben!" : "Falsche Antwort abgegeben!");
         currentLevel++;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(1f);
         yield return InitLevel();
     }
 

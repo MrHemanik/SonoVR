@@ -44,8 +44,8 @@ public class VolumeGenerationManager : MonoBehaviour
     private int currentLevel = 0;
 
     private int winningAnswerId;
-
     public bool activeRound = true;
+    public LevelInformationScript levelInformationScript;
     #endregion
 
     #region Initiation
@@ -65,6 +65,7 @@ public class VolumeGenerationManager : MonoBehaviour
     {
         enabled = false; // will be re-enabled after generating artificials
         ResetComponents();
+        levelInformationScript.SetLevelInformation(levelList[currentLevel].levelType);
         yield return GenerateVolumesWithVolumeManager();
         SetupVolumes();
         enabled = true;
@@ -99,7 +100,6 @@ public class VolumeGenerationManager : MonoBehaviour
                 trans.gameObject.layer = visible ? 0 : 3;
         }
     }
-
     #endregion
 
     void Update()

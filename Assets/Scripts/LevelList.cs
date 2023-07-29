@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using mKit;
 using SonoGame;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using Volume = System.Collections.Generic.List<mKit.ShapeConfig>;
 
 public class LevelList
 {
     public List<Level> levelList;
-
     public LevelList(MaterialConfig mc)
     {
         var materialConfig = mc;
@@ -20,7 +21,7 @@ public class LevelList
         levelList = new List<Level>
         {
             //Level 1
-            new Level(LevelType.IdentifySliceFromObject,
+            new Level(LevelType.levelTypes[0],
                 new List<ShapeConfig> //Shapes in every Volume
                     {LevelHelper.GenerateBasicCube(materialConfig.map[4].color)},
                 new List<List<ShapeConfig>> //Unique Shapes
@@ -29,25 +30,26 @@ public class LevelList
                     new()
                     {
                         LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
-                            usesSlices: true)
+                            usesSlices: true, rotation: Quaternion.identity)
                     },
                     //Volume 2
                     new()
                     {
                         LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
-                            size: new Vector3(100, 100, 100), usesSlices: true, edgeWidth: 10)
+                            size: new Vector3(100, 100, 100), usesSlices: true, edgeWidth: 10,
+                            rotation: Quaternion.identity)
                     }
                 }
             ),
             //Level 2
-            new Level(LevelType.IdentifySliceFromObject,
+            new Level(LevelType.levelTypes[0],
                 new List<ShapeConfig> //Shapes in every Volume
                 {
                     LevelHelper.GenerateBasicCube(materialConfig.map[4].color),
                     LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[1].color,
-                        usesSlices: true),
+                        usesSlices: true, rotation: Quaternion.identity),
                     LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[2].color,
-                        usesSlices: true),
+                        usesSlices: true, rotation: Quaternion.identity),
                     new ShapeConfigVoxel(ShapeType.CUBOID,
                         color: materialConfig.map[2].color,
                         edgeWidth: 20,
@@ -78,44 +80,93 @@ public class LevelList
                             center: new Vector3(160, 80, 100),
                             rotation: Quaternion.Euler(0, 0, 90))
                     },
-                })
+                }),
+            //Level 2
+            new Level(LevelType.levelTypes[0],
+                LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 5),
+                new List<List<ShapeConfig>> //Unique Shapes
+                {
+                    //Volume 1
+                    new()
+                    {
+                        LevelHelper.GenerateRandomizedShape(ShapeType.SPLINE, materialConfig.map[2].color,
+                            usesSlices: true)
+                    },
+                    //Volume 2
+                    new()
+                    {
+                        LevelHelper.GenerateRandomizedShape(ShapeType.CUBOID, materialConfig.map[2].color,
+                            size: new Vector3(100, 100, 100), usesSlices: true, edgeWidth: 10)
+                    }
+                }
+            )
         };
     }
 }
 
-public enum LevelType
+public enum ObjectType
 {
-    IdentifyObjectFromObjectWithSlice,
-    IdentifySliceFromObject,
-    IdentifyObjectFromHiddenObject,
-    IdentifySliceFromHiddenObject,
-    IdentifyObjectFromHiddenObjectAfterglow,
-    IdentifySliceFromHiddenObjectAfterglow,
+    Slice, //Probable = never
+    Volume, //Probable if answer = slice
+    HiddenVolume, //Probable if answer = slice or volume
+    HiddenVolumeAfterglow
 }
+
+public enum ProbeType
+{
+    CompareObject, //Type of object the player gets to compare to the answerOptions, so always the right answer
+    AnswerOptions
+}
+
+public class LevelType
+{
+    public ObjectType
+        compareObject; //Type of object the player gets to compare to the answerOptions to idenfity the right answer
+
+    public ObjectType answerOptions; // What type of answerOption it is
+    public ProbeType toProbe; //What is probable with the Sonoprobe
+    public string description;
+    public LevelType(ObjectType iCompareObject, ObjectType iAnswerOption, string iDescription)
+    {
+        compareObject = iCompareObject;
+        answerOptions = iAnswerOption;
+        description = iDescription;
+        toProbe = new Func<ProbeType>(() =>
+        {
+            //Priority over Probe: HiddenVolume -> Volume -> Slice
+            switch (compareObject)
+            {
+                case ObjectType.HiddenVolume:
+                case ObjectType.HiddenVolumeAfterglow:
+                    return ProbeType.CompareObject;
+                case ObjectType.Volume:
+                    return answerOptions == ObjectType.Slice ? ProbeType.CompareObject : ProbeType.AnswerOptions;
+                case ObjectType.Slice: //Included for readability
+                    return ProbeType.AnswerOptions;
+                default:
+                    return ProbeType.AnswerOptions;
+            }
+        })();
+    }
+
+    public static LevelType[] levelTypes = new LevelType[]
+    {
+        new LevelType(ObjectType.Slice,ObjectType.Volume, "Untersuche die Volumen und finde heraus, welches der Volumen das Schnittbild darstellt!"),
+        new LevelType(ObjectType.Volume,ObjectType.Slice, "Untersuche das Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
+        new LevelType(ObjectType.HiddenVolumeAfterglow,ObjectType.Volume, "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!"),
+        new LevelType(ObjectType.HiddenVolumeAfterglow,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
+        new LevelType(ObjectType.HiddenVolume,ObjectType.Volume, "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!"),
+        new LevelType(ObjectType.HiddenVolume,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
+        new LevelType(ObjectType.Volume,ObjectType.HiddenVolumeAfterglow, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Volumen ist!"),
+        new LevelType(ObjectType.Slice,ObjectType.HiddenVolumeAfterglow, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Schnittbild ist!"),
+        new LevelType(ObjectType.Volume,ObjectType.HiddenVolume, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Volumen ist!"),
+        new LevelType(ObjectType.Slice,ObjectType.HiddenVolume, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Schnittbild ist!")
+    };
+}
+
 
 public static class LevelHelper
 {
-    public static string TypeDescription(LevelType lt)
-    {
-        switch (lt)
-        {
-            case LevelType.IdentifyObjectFromObjectWithSlice:
-                return "Untersuche die Volumen und finde heraus, welches der Volumen das Schnittbild darstellt!";
-            case LevelType.IdentifySliceFromObject:
-                return "Untersuche das Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!";
-            case LevelType.IdentifyObjectFromHiddenObject:
-            case LevelType.IdentifyObjectFromHiddenObjectAfterglow:
-                return
-                    "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!";
-            case LevelType.IdentifySliceFromHiddenObject:
-            case LevelType.IdentifySliceFromHiddenObjectAfterglow:
-                return
-                    "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!";
-        }
-
-        return "Keine Beschreibung für dieses Level";
-    }
-
     public static ShapeConfigVoxel GenerateBasicCube(Color color, Vector3? size = null, Vector3? center = null,
         Quaternion? rotation = null,
         int edgeWidth = 20)

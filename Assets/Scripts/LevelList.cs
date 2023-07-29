@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 using mKit;
 using SonoGame;
 using UnityEngine;
-using Random = System.Random;
+using Volume = System.Collections.Generic.List<mKit.ShapeConfig>;
 
 public class LevelList
 {
@@ -14,6 +11,12 @@ public class LevelList
     public LevelList(MaterialConfig mc)
     {
         var materialConfig = mc;
+        List<ShapeType> shapes = new List<ShapeType>()
+        {
+            ShapeType.TUBE_X, ShapeType.TUBE_Y, ShapeType.TUBE_Z, ShapeType.CUBOID, ShapeType.SPLINE, ShapeType.ELIPSOID
+        };
+        List<Color> shapeColors = new List<Color>();
+        mc.map.ForEach(map => shapeColors.Add(map.color));
         levelList = new List<Level>
         {
             //Level 1
@@ -23,9 +26,17 @@ public class LevelList
                 new List<List<ShapeConfig>> //Unique Shapes
                 {
                     //Volume 1
-                    new() {LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,usesSlices:true)},
+                    new()
+                    {
+                        LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
+                            usesSlices: true)
+                    },
                     //Volume 2
-                    new() {LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,size:new Vector3(100,100,100),usesSlices:true,edgeWidth:10)}
+                    new()
+                    {
+                        LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
+                            size: new Vector3(100, 100, 100), usesSlices: true, edgeWidth: 10)
+                    }
                 }
             ),
             //Level 2
@@ -33,14 +44,16 @@ public class LevelList
                 new List<ShapeConfig> //Shapes in every Volume
                 {
                     LevelHelper.GenerateBasicCube(materialConfig.map[4].color),
-                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[1].color,usesSlices:true),
-                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[2].color,usesSlices:true),
+                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[1].color,
+                        usesSlices: true),
+                    LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[2].color,
+                        usesSlices: true),
                     new ShapeConfigVoxel(ShapeType.CUBOID,
                         color: materialConfig.map[2].color,
                         edgeWidth: 20,
-                        size: new Vector3(50, 50, 50) + new Vector3(20, 20, 20) * UnityEngine.Random.Range(-1f, 1f),
-                        center: new Vector3(100 + UnityEngine.Random.Range(-20f, 20.0f),
-                            100 + UnityEngine.Random.Range(-20f, 20.0f), 100 + UnityEngine.Random.Range(-20f, 20.0f)),
+                        size: new Vector3(50, 50, 50) + new Vector3(20, 20, 20) * Random.Range(-1f, 1f),
+                        center: new Vector3(100 + Random.Range(-20f, 20.0f),
+                            100 + Random.Range(-20f, 20.0f), 100 + Random.Range(-20f, 20.0f)),
                         rotation: Quaternion.identity),
                 },
                 new List<List<ShapeConfig>> //Unique Shapes
@@ -115,33 +128,35 @@ public static class LevelHelper
         Vector3? center = null,
         Quaternion? rotation = null,
         int edgeWidth = 100, bool usesSlices = false)
+
     {
         //usesSlices is relevant when Slice is generated automatically to make sure that every shape is visible
-        var zPositionOffset = usesSlices ? 0 : UnityEngine.Random.Range(-40f, 40.0f);
-        
+        var zPositionOffset = usesSlices ? 0 : Random.Range(-40f, 40.0f);
+
         return new ShapeConfigVoxel(shape, edgeWidth,
-            (size ?? new Vector3(50, 50, 50)) + new Vector3(20, 20, 20) * UnityEngine.Random.Range(-0.5f, 1f),
+            (size ?? new Vector3(50, 50, 50)) + new Vector3(20, 20, 20) * Random.Range(-0.5f, 1f),
             color,
-            center ?? new Vector3(100 + UnityEngine.Random.Range(-40f, 40.0f),
-                100 + UnityEngine.Random.Range(-40f, 40.0f), 100 + zPositionOffset),
+            center ?? new Vector3(100 + Random.Range(-40f, 40.0f),
+                100 + Random.Range(-40f, 40.0f), 100 + zPositionOffset),
             rotation ?? Quaternion.identity);
     }
-}
 
-public class Level
-{
-    public LevelType levelType;
-    public List<ShapeConfig> repeatingShapes; //Shapes that are used in every volume
-    public List<List<ShapeConfig>> volumeList;
-
-    public Level(LevelType lt, List<ShapeConfig> repeatingShapes, List<List<ShapeConfig>> volList)
+    public static List<ShapeConfig> GenerateRandomizedShapes(List<ShapeType> shapes, List<Color> shapeColors,
+        int amount)
     {
-        levelType = lt;
-        foreach (var volume in volList) //Adds every repeating shape to the volumeList
+        var list = new List<ShapeConfig>();
+
+        //Add Shapes to List
+        for (int i = 0; i < amount; i++)
         {
-            volume.AddRange(repeatingShapes);
+            ShapeType shape = shapes[Random.Range(0, shapes.Count)];
+            Color shapeColor = shapeColors[Random.Range(0, shapeColors.Count)];
+            shapes.Remove(shape);
+            shapeColors.Remove(shapeColor);
+            list.Add(GenerateRandomizedShape(shapes[Random.Range(0, shapes.Count)],
+                shapeColors[Random.Range(0, shapeColors.Count)]));
         }
 
-        volumeList = volList;
+        return list;
     }
 }

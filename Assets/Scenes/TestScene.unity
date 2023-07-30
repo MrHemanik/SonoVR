@@ -616,6 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 917f3d415a532f54890abbda5a51c65f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftController: {fileID: 1908378795}
   sliceCopyTransform: {fileID: 1145044184}
   sliceViews:
   - {fileID: 3127481}

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SonoGame;
 using mKit;
+using UnityEngine.XR.Interaction.Toolkit;
 
 // uses Assets/DemoApp/Scripts/DemoApp1.cs as base
 public class VolumeGenerationManager : MonoBehaviour
@@ -14,7 +15,7 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
-
+    public XRDirectInteractor leftController;
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
@@ -60,20 +61,32 @@ public class VolumeGenerationManager : MonoBehaviour
     internal IEnumerator GenerateLevel(Level currentLevel, int winningAnswerID, Transform[] answerAnchors,
         Transform compareAnchor)
     {
-        ResetComponents(answerAnchors, compareAnchor);
+        enabled = false; // will be re-enabled after generating artificials
+        yield return ResetComponents(answerAnchors, compareAnchor);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID);
         SetupVolumes(answerAnchors);
+        Transform mKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
+        Transform compareVolumeGrabBox = compareAnchor.GetChild(0).GetChild(0);
+        Transform compareVolumeAnchor = compareAnchor.GetChild(0);
+        List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
+        for (var i = 0; i < mKitVolume.childCount; i++)
+        {
+            mKitVolumeVisibleObjects.Add(mKitVolume.GetChild(i));
+        }
+        //Set
+        if (currentLevel.levelType.compareObject == ObjectType.HiddenVolume ||
+            currentLevel.levelType.compareObject == ObjectType.HiddenVolume)
+        {
+            foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
+            {
+                mKitVolumeVisibleObject.SetParent(mKitVolume.parent);
+                mKitVolume.Translate(compareVolumeAnchor.position - mKitVolume.position);
+            }
+            SetVisibility(compareVolumeAnchor, true);
+        }
         //Sets visible volume to compareAnchor while mKitVolume stays on answer
         if (currentLevel.levelType.compareObject == ObjectType.Volume)
         {
-            Transform mKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
-            Transform compareVolumeGrabBox = compareAnchor.GetChild(0).GetChild(0);
-            List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
-            for (var i = 0; i < mKitVolume.childCount; i++)
-            {
-                mKitVolumeVisibleObjects.Add(mKitVolume.GetChild(i));
-            }
-
             //TODO: Needs to be deleted on Level change!
             Transform compareAnchorVisibleVolume =
                 Instantiate(new GameObject("mKitVolumeVisibleObjects"), compareVolumeGrabBox).transform;
@@ -81,11 +94,11 @@ public class VolumeGenerationManager : MonoBehaviour
             foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
             {
                 mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
-                mKitVolumeVisibleObject.Translate(compareAnchor.GetChild(0).position - mKitVolume.position);
+                mKitVolumeVisibleObject.Translate(compareVolumeAnchor.position - mKitVolume.position);
             }
 
             compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
-            SetVisibility(compareAnchor.GetChild(0), true);
+            SetVisibility(compareVolumeAnchor, true);
             //mKitVolume.SetParent(compareVolumeGrabBox);
         }
 
@@ -94,12 +107,16 @@ public class VolumeGenerationManager : MonoBehaviour
             yield return GetStillDefaultSlice(winningAnswerID, answerAnchors[winningAnswerID].GetChild(1),
                 compareAnchor.GetChild(1));
         }
+
+        enabled = true;
     }
 
-    private void ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
+    private IEnumerator ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
     {
+        yield return leftController.allowSelect = false; //If there is an object currently grabbed it will cancel it.
         //Resets all grabbable boxes to their respective anchor
         Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
+        Debug.Log("aaa3");
         foreach (var anchor in anchors)
         {
             //TODO: Will fail if object is currently grabbed, need to fix!
@@ -112,12 +129,16 @@ public class VolumeGenerationManager : MonoBehaviour
             volumeBoxGrabbable.SetPositionAndRotation(volumeAnchor.position, volumeAnchor.rotation);
             sliceBoxGrabbable.SetPositionAndRotation(sliceAnchor.position, sliceAnchor.rotation);
         }
+        Debug.Log("aaa4");
+        
 
         //Delete temporary Objects
         foreach (var temporaryObject in temporaryObjects)
         {
             Destroy(temporaryObject);
         }
+
+        yield return leftController.allowSelect = true;
     }
 
     internal IEnumerator GenerateVolumesWithVolumeManager(Level currentLevel, int winningAnswerID)

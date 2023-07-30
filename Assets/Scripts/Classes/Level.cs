@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using mKit;
 
-public class Level
+namespace Classes
 {
-    public LevelType levelType;
-    public List<List<ShapeConfig>> volumeList;
-
-    public Level(LevelType lt, List<ShapeConfig> repeatingShapes, List<List<ShapeConfig>> volList)
+    public class Level
     {
-        levelType = lt;
-        foreach (var volume in volList) //Adds every repeating shape to the volumeList
+        public readonly LevelType levelType;
+        public readonly List<List<ShapeConfig>> volumeList;
+
+        public Level(LevelType lt, List<ShapeConfig> repeatingShapes, List<List<ShapeConfig>> volList)
         {
-            volume.AddRange(repeatingShapes);
+            levelType = lt;
+            foreach (var volume in volList) //Adds every repeating shape to the volumeList
+            {
+                volume.AddRange(repeatingShapes);
+            }
+            volumeList = volList;
         }
-        volumeList = volList;
     }
 }

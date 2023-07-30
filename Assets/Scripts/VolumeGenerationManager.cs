@@ -215,13 +215,13 @@ public class VolumeGenerationManager : MonoBehaviour
         sliceAnchorTransform.SetPositionAndRotation(sourceSliceAnchor.position, Quaternion.identity);
         SetVisibility(targetSliceAnchor,
             true); //Needs to be done before GetSliceCamCapture, as it will not work without being active
+        yield return null; //Needs yield return or else the SetPositionAndRotation will be executed after the sliceCamCapture
         yield return targetSliceAnchor.GetComponentInChildren<RawImage>().texture =
             VolumeManager.Instance
                 .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume of volumeID to stillView
-        sliceAnchorTransform.localPosition = defaultPosition;
-        yield return
-            sliceAnchorTransform.localRotation =
-                defaultRotation; //needs yield return or else it will be executed after the foreach
+        sliceAnchorTransform.SetPositionAndRotation(defaultPosition, defaultRotation);
+        yield return null; //needs yield return or else it will be executed after the foreach
+        sliceCopyTransform.gameObject.layer = 0;
         foreach (var sliceView in sliceViews
         ) //sets volumes in multiVolume texture back so everything will get rendered again
         {

@@ -66,6 +66,7 @@ public class VolumeGenerationManager : MonoBehaviour
         yield return ResetComponents(answerAnchors, compareAnchor);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID);
         SetupVolumes(answerAnchors);
+        enabled = true;
         Transform mKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
         Transform compareVolumeGrabBox = compareAnchor.GetChild(0).GetChild(0);
         Transform compareVolumeAnchor = compareAnchor.GetChild(0);
@@ -108,9 +109,8 @@ public class VolumeGenerationManager : MonoBehaviour
         {
             yield return GetStillDefaultSlice(winningAnswerID, answerAnchors[winningAnswerID].GetChild(1),
                 compareAnchor.GetChild(1));
+                
         }
-
-        enabled = true;
     }
 
     private IEnumerator ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
@@ -118,7 +118,6 @@ public class VolumeGenerationManager : MonoBehaviour
         yield return leftController.allowSelect = false; //If there is an object currently grabbed it will cancel it.
         //Resets all grabbable boxes to their respective anchor
         Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
-        Debug.Log("aaa3");
         foreach (var anchor in anchors)
         {
             //TODO: Will fail if object is currently grabbed, need to fix!
@@ -131,8 +130,7 @@ public class VolumeGenerationManager : MonoBehaviour
             volumeBoxGrabbable.SetPositionAndRotation(volumeAnchor.position, volumeAnchor.rotation);
             sliceBoxGrabbable.SetPositionAndRotation(sliceAnchor.position, sliceAnchor.rotation);
         }
-        Debug.Log("aaa4");
-        
+
 
         //Delete temporary Objects
         foreach (var temporaryObject in temporaryObjects)
@@ -223,7 +221,8 @@ public class VolumeGenerationManager : MonoBehaviour
     /// </summary>
     internal IEnumerator GetStillDefaultSlice(int volumeId, Transform sourceSliceAnchor, Transform targetSliceAnchor)
     {
-        Transform sliceAnchorTransform = sliceCopyTransform.parent.GetChild(3).transform;
+
+        Transform sliceCopyParent = sliceCopyTransform.parent;
         foreach (var sliceView in sliceViews
         ) //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
         {
@@ -231,18 +230,19 @@ public class VolumeGenerationManager : MonoBehaviour
                 .SetFloat("texCount",
                     0);
         }
-
         sliceCopyTransform.gameObject.layer = 3; //Make slice temporarily invisible so 
-        Vector3 defaultPosition = sliceAnchorTransform.localPosition;
-        Quaternion defaultRotation = sliceAnchorTransform.localRotation;
-        sliceAnchorTransform.SetPositionAndRotation(sourceSliceAnchor.position, Quaternion.identity);
+        Vector3 defaultPosition = sliceCopyTransform.localPosition;
+        Quaternion defaultRotation = sliceCopyTransform.localRotation;
+        sliceCopyTransform.SetPositionAndRotation(sourceSliceAnchor.position, Quaternion.identity);
+        sliceCopyTransform.parent = null;
         SetVisibility(targetSliceAnchor,
             true); //Needs to be done before GetSliceCamCapture, as it will not work without being active
         yield return null; //Needs yield return or else the SetPositionAndRotation will be executed after the sliceCamCapture
         yield return targetSliceAnchor.GetComponentInChildren<RawImage>().texture =
             VolumeManager.Instance
                 .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume of volumeID to stillView
-        sliceAnchorTransform.SetPositionAndRotation(defaultPosition, defaultRotation);
+        sliceCopyTransform.SetParent(sliceCopyParent);
+        sliceCopyTransform.SetLocalPositionAndRotation(defaultPosition, defaultRotation);
         yield return null; //needs yield return or else it will be executed after the foreach
         sliceCopyTransform.gameObject.layer = 0;
         foreach (var sliceView in sliceViews
@@ -253,6 +253,7 @@ public class VolumeGenerationManager : MonoBehaviour
                     Volume.Volumes
                         .Count);
         }
+        
     }
 
     #endregion

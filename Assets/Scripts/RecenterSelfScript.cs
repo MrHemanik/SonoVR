@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RecenterSelf : MonoBehaviour
+public class RecenterSelfScript : MonoBehaviour
 {
     public Transform head;
     public Transform origin;

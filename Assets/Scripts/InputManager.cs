@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class InputManager : MonoBehaviour
 {
-    public VolumeGenerationManager gm;
+    public GameManager gm;
     
     public void OnLeftTrigger(InputAction.CallbackContext context)
     {

@@ -458,14 +458,10 @@ MonoBehaviour:
   - {fileID: 1717678003}
   - {fileID: 890630259}
   sliceCopyTransform: {fileID: 1145044184}
-  materialConfig: {fileID: 11400000, guid: 19e856ba8b799bd44a8993c6a09c7125, type: 2}
   sliceViews:
   - {fileID: 3127481}
   - {fileID: 139803575}
   - {fileID: 1488926508}
-  answerSliceView: {fileID: 1671123227}
-  activeRound: 1
-  levelInformationScript: {fileID: 1517555746}
 --- !u!1 &123450849
 GameObject:
   m_ObjectHideFlags: 0
@@ -4119,9 +4115,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1048120685}
+  - component: {fileID: 1048120690}
+  - component: {fileID: 77948865}
   - component: {fileID: 1048120686}
   - component: {fileID: 6}
-  - component: {fileID: 77948865}
   - component: {fileID: 1048120687}
   - component: {fileID: 1048120688}
   - component: {fileID: 1048120689}
@@ -4172,7 +4169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e73058fead12d4c43b9cad036e363f34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gm: {fileID: 77948865}
+  gm: {fileID: 1048120690}
 --- !u!114 &1048120688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4534,6 +4531,28 @@ MonoBehaviour:
   head: {fileID: 911207362}
   origin: {fileID: 2072483358}
   target: {fileID: 1048120685}
+--- !u!114 &1048120690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048120683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed222b10a5265b4428ee7e6f5620c1d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeAnchors:
+  - {fileID: 1217447774}
+  - {fileID: 1191674277}
+  - {fileID: 1717678003}
+  - {fileID: 890630259}
+  materialConfig: {fileID: 11400000, guid: 19e856ba8b799bd44a8993c6a09c7125, type: 2}
+  answerSliceView: {fileID: 1671123227}
+  activeRound: 1
+  levelInformationScript: {fileID: 1517555746}
+  volGenMan: {fileID: 77948865}
 --- !u!4 &1067807910 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8091901814461496689, guid: ab417eef72aa26044a0ae0417ce12585, type: 3}
@@ -6007,8 +6026,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Untersuche die Objekte mit dem rechten Controller und finde heraus, welches
-    der Objekte dem Schnittbild entspricht (Hier text laden)
+  m_text: 'Level
+
+    Information
+
+
+    Changes on InitLevel'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 121acbf6ceae6674088dc7877b5e9a0a, type: 2}
   m_sharedMaterial: {fileID: -3579625792165650921, guid: 121acbf6ceae6674088dc7877b5e9a0a, type: 2}

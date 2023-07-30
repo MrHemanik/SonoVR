@@ -8,30 +8,28 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region Variables
+    [Header("Scripts")]
+    public LevelInformationScript levelInformationScript;
+    public VolumeGenerationManager volGenMan;
     
+    /// <summary>
+    /// MaterialConfig for different visualizations
+    /// </summary>
+    [Header("Fixed")] public MaterialConfig materialConfig;
     /// <summary>
     /// Position anchor for volume placement
     /// </summary>
     [Header("Scene")] public Transform[] volumeAnchors;
-
-    /// <summary>
-    /// MaterialConfig for different visualizations
-    /// </summary>
-    public MaterialConfig materialConfig;
-    
     /// <summary>
     /// still 2D slice view (on Canvas with RawImage)
     /// </summary>
     public GameObject answerSliceView;
-
-
+    
     private List<Level> levelList;
-    private int currentLevel = 0;
-
+    private int currentLevelID;
     private int winningAnswerId;
-    public bool activeRound = true;
-    public LevelInformationScript levelInformationScript;
-    public VolumeGenerationManager volGenMan;
+    [Header("Open to other scripts")] public bool activeRound = true;
+    
 
     #endregion
 
@@ -42,18 +40,18 @@ public class GameManager : MonoBehaviour
         levelList = new LevelList(materialConfig).levelList;
     }
 
-    IEnumerator Start()
+    private IEnumerator Start()
     {
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         yield return InitLevel();
     }
 
-    IEnumerator InitLevel()
+    private IEnumerator InitLevel()
     {
         enabled = false; // will be re-enabled after generating artificials
         ResetComponents();
-        levelInformationScript.SetLevelInformation(levelList[currentLevel].levelType);
-        yield return volGenMan.GenerateVolumesWithVolumeManager(levelList[currentLevel]);
+        levelInformationScript.SetLevelInformation(levelList[currentLevelID].levelType);
+        yield return volGenMan.GenerateVolumesWithVolumeManager(levelList[currentLevelID]);
         volGenMan.SetupVolumes();
         enabled = true;
         SetWinningAnswerVolume();
@@ -78,7 +76,7 @@ public class GameManager : MonoBehaviour
         answerSliceBox.position = answerSliceBox.parent.position;
         answerSliceBox.rotation = answerSliceBox.parent.rotation;
 
-        Debug.Log("Loading level " + currentLevel + " with " + levelList[currentLevel].volumeList.Count + "Volumes");
+        Debug.Log("Loading level " + currentLevelID + " with " + levelList[currentLevelID].volumeList.Count + "Volumes");
     }
 
     //Sets the layer of every child to either the default or an invisible layer
@@ -87,9 +85,9 @@ public class GameManager : MonoBehaviour
 
     #region levelhandling
 
-    internal void SetWinningAnswerVolume()
+    private void SetWinningAnswerVolume()
     {
-        winningAnswerId = UnityEngine.Random.Range(0, Volume.Volumes.Count);
+        winningAnswerId = Random.Range(0, Volume.Volumes.Count);
         Debug.Log(winningAnswerId);
     }
 
@@ -102,7 +100,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator EndLevel(bool winning)
     {
         Debug.Log(winning ? "Richtige Antwort abgegeben!" : "Falsche Antwort abgegeben!");
-        currentLevel++;
+        currentLevelID++;
         yield return new WaitForSeconds(1f);
         yield return InitLevel();
     }

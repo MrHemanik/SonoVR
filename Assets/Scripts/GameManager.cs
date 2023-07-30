@@ -18,13 +18,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("Fixed")] public MaterialConfig materialConfig;
     /// <summary>
-    /// Position anchor for volume placement
+    /// Position anchors for answer placement ObjectType
     /// </summary>
-    [Header("Scene")] public Transform[] volumeAnchors;
+    [Header("Scene")] public Transform[] answerAnchors;
     /// <summary>
-    /// still 2D slice view (on Canvas with RawImage)
+    /// Position anchor for compare placement ObjectType
     /// </summary>
-    public GameObject answerSliceView;
+    public Transform compareAnchor;
     
     private List<Level> levelList;
     private int currentLevelID;
@@ -53,29 +53,36 @@ public class GameManager : MonoBehaviour
         ResetComponents();
         levelInformationScript.SetLevelInformation(levelList[currentLevelID].levelType);
         yield return volGenMan.GenerateVolumesWithVolumeManager(levelList[currentLevelID]);
-        volGenMan.SetupVolumes();
+        volGenMan.SetupVolumes(answerAnchors);
         enabled = true;
         SetWinningAnswerVolume();
-        yield return volGenMan.GetStillDefaultSlice(winningAnswerId, answerSliceView.GetComponent<RawImage>());
+        if (levelList[currentLevelID].levelType.compareObject == ObjectType.Slice)
+        {
+            yield return volGenMan.GetStillDefaultSlice(winningAnswerId, answerAnchors[winningAnswerId],
+                compareAnchor.GetComponentInChildren<RawImage>());
+            volGenMan.SetVisibility(compareAnchor, true);
+        }
+
         activeRound = true;
     }
 
     private void ResetComponents()
     {
-        //Resets volumeAnchor positions so new Volumes can be generated
-        foreach (var volumeAnchor in volumeAnchors)
+        //Resets all grabbable boxes to their respective anchor
+        Transform[] anchors = {answerAnchors[0],answerAnchors[1],answerAnchors[2],answerAnchors[3],compareAnchor};
+        foreach (var anchor in anchors)
         {
-            volGenMan.SetVisibility(volumeAnchor, false);
-            Transform
-                volumeBox = volumeAnchor.GetChild(0); //TODO: Will fail if object is currently grabbed, need to fix!
-            volumeBox.position = volumeAnchor.position;
-            volumeBox.rotation = volumeAnchor.rotation;
+            //TODO: Will fail if object is currently grabbed, need to fix!
+            Transform volumeAnchor = anchor.GetChild(0);
+            Transform sliceAnchor = anchor.GetChild(1);
+            Transform volumeBoxGrabbable = volumeAnchor.GetChild(0);
+            Transform sliceBoxGrabbable = sliceAnchor.GetChild(0);
+            volGenMan.SetVisibility(anchor, false);
+            volumeBoxGrabbable.position = volumeAnchor.position;
+            volumeBoxGrabbable.rotation = volumeAnchor.rotation;
+            sliceBoxGrabbable.position = sliceAnchor.position;
+            sliceBoxGrabbable.rotation = sliceAnchor.rotation;
         }
-
-        //Resets answerSliceBox to AnswerAnchor
-        Transform answerSliceBox = answerSliceView.transform.parent.parent;
-        answerSliceBox.position = answerSliceBox.parent.position;
-        answerSliceBox.rotation = answerSliceBox.parent.rotation;
 
         Debug.Log("Loading level " + currentLevelID + " with " + levelList[currentLevelID].volumeList.Count + "Volumes");
     }

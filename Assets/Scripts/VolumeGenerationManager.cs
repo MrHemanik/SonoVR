@@ -12,16 +12,11 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
-
-    /// <summary>
-    /// Position anchor for volume placement
-    /// </summary>
-    [Header("Scene")] public Transform[] volumeAnchors;
-
+    
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
-    public Transform sliceCopyTransform;
+    [Header("Scene")] public Transform sliceCopyTransform;
     
     /// <summary>
     /// 2D slice views (on Unity quad mesh) that shows current activeSlice
@@ -65,7 +60,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Debug.Log("GenerateArtificialVolume finished");
     }
 
-    internal void SetupVolumes()
+    internal void SetupVolumes(Transform[] answerAnchors)
     {
         //position of volume toolgroup needs to be set before configuration. only for toolgroup 1 as it is used as multiview
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
@@ -76,7 +71,7 @@ public class VolumeGenerationManager : MonoBehaviour
         //Configuration of Volumes
         for (int i = 0; i < Volume.Volumes.Count; i++)
         {
-            ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i);
+            ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i, answerAnchors[i]);
             ConfigureSliceViews(Volume.Volumes[i], scannerType, visualization);
 
             //Bugfix: problem where render is flickering, Gets temporarily fixed when clicking on OsCamera, even when it is inactive at the time. Changing the CameraType also works
@@ -108,25 +103,25 @@ public class VolumeGenerationManager : MonoBehaviour
         //sliceCopyTransform.SetSliceMask(scannerType);
     }
 
-    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, int index)
+    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, int index, Transform answerAnchor)
     {
         v.SliceMaskingTexture = AppConfig.assets.GetScannerMask(scannerType);
         v.UseSliceMasking = scannerType != UltrasoundScannerTypeEnum.LINEAR;
         v.UltrasoundScannerType = scannerType;
         VolumeManager.Instance.UseMaterialConfigVisualization(v, visualization);
         UltrasoundSimulation.Instance.Init(v);
-
-        v.VolumeProxy.position = volumeAnchors[index].position; // set volume position
+        Transform volumeAnchor = answerAnchor.GetChild(0);
+        v.VolumeProxy.position = volumeAnchor.position; // set volume position
         GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
-            .SetParent(volumeAnchors[index].GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
-        SetVisibility(volumeAnchors[index], true); //Sets all elements of volumeanchor to visible
+            .SetParent(volumeAnchor.GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
+        SetVisibility(volumeAnchor, true); //Sets all elements of volumeanchor to visible
         v.Threshold = 0.001f;
     }
 
     /// <summary>
-    /// Generates a texture from volume with id of volumeId in default position (centered, straight from the top directed at the bottom) and assigns it to the RawImage image
+    /// Generates a texture from volume with id of volumeId in default position (centered, straight from the top directed at the bottom) and assigns it to the RawImage targetRawImage
     /// </summary>
-    internal IEnumerator GetStillDefaultSlice(int volumeId, RawImage image)
+    internal IEnumerator GetStillDefaultSlice(int volumeId, Transform answerAnchor, RawImage targetRawImage)
     {
         Transform sliceAnchorTransform = sliceCopyTransform.parent.GetChild(3).transform;
         foreach (var sliceView in sliceViews)
@@ -139,10 +134,9 @@ public class VolumeGenerationManager : MonoBehaviour
         sliceCopyTransform.gameObject.layer = 3; //Make slice temporarily invisible so 
         Vector3 defaultPosition = sliceAnchorTransform.localPosition;
         Quaternion defaultRotation = sliceAnchorTransform.localRotation;
-        yield return sliceAnchorTransform.position =
-            GameObject.Find("VolumeAnchor (Volume" + (volumeId + 1) + ")").transform.position;
+        yield return sliceAnchorTransform.position = answerAnchor.GetChild(0).position;
         yield return sliceAnchorTransform.rotation = Quaternion.identity;
-        yield return image.texture =
+        yield return targetRawImage.texture =
             VolumeManager.Instance
                 .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume of volumeID to stillView
         yield return sliceAnchorTransform.localPosition = defaultPosition;

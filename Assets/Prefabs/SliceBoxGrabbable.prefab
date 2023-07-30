@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 8091901814461496690}
   - component: {fileID: 8091901814461496693}
   m_Layer: 0
-  m_Name: CompareSliceBox
+  m_Name: SliceBoxGrabbable
   m_TagString: Grabbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

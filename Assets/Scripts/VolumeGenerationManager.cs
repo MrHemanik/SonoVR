@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SonoGame;
 using mKit;
+using Unity.Mathematics;
 using UnityEngine.XR.Interaction.Toolkit;
 using Object = System.Object;
 
@@ -17,6 +18,7 @@ public class VolumeGenerationManager : MonoBehaviour
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
     public XRDirectInteractor leftController;
+
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
@@ -36,17 +38,6 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #region Initiation
 
-    //Sets the layer of every child to either the default or an invisible layer
-    internal void SetVisibility(Transform obj, bool visible)
-    {
-        foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
-        {
-            trans.gameObject.layer = visible ? 0 : 3;
-        }
-
-        obj.gameObject.SetActive(visible);
-    }
-
     #endregion
 
     void Update()
@@ -64,7 +55,7 @@ public class VolumeGenerationManager : MonoBehaviour
     {
         enabled = false; // will be re-enabled after generating artificials
         yield return ResetComponents(answerAnchors, compareAnchor);
-        yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID);
+        yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
         SetupVolumes(answerAnchors);
         enabled = true;
         Transform mKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
@@ -75,73 +66,71 @@ public class VolumeGenerationManager : MonoBehaviour
         {
             mKitVolumeVisibleObjects.Add(mKitVolume.GetChild(i));
         }
-        //Set
+        if (currentLevel.levelType.answerOptions == ObjectType.Slice)
+        {
+            //Makes stillSlices for every Answeroption -- needs to be done before any mkitVolumes move
+            for (int i = 0; i < currentLevel.volumeList.Count; i++)
+            {
+                yield return GetStillDefaultSlice( answerAnchors[i].GetChild(1),
+                    answerAnchors[i].GetChild(1));
+            }
+        }
+        //Setting Up CompareObject
         if (currentLevel.levelType.compareObject == ObjectType.HiddenVolume ||
             currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
         {
+            //Set mKitVolume into compareObject
             foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
             {
+                temporaryObjects.Add(mKitVolumeVisibleObject.gameObject); //Deletes on new Level
                 mKitVolumeVisibleObject.SetParent(mKitVolume.parent);
             }
+
             mKitVolume.SetParent(compareVolumeGrabBox);
             mKitVolume.Translate(compareVolumeAnchor.position - mKitVolume.position);
-            mKitVolume.Rotate(Vector3.up,-90);
+            mKitVolume.Rotate(Vector3.up, -90);
             SetVisibility(compareVolumeAnchor, true);
         }
-        //Sets visible volume to compareAnchor while mKitVolume stays on answer
-        if (currentLevel.levelType.compareObject == ObjectType.Volume)
+
+        else if (currentLevel.levelType.compareObject == ObjectType.Volume)
         {
-            Transform compareAnchorVisibleVolume =
-                Instantiate(new GameObject("mKitVolumeVisibleObjects"), compareVolumeGrabBox).transform;
-            temporaryObjects.Add(compareAnchorVisibleVolume.gameObject);
-            foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
-            {
-                mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
-                mKitVolumeVisibleObject.Translate(compareVolumeAnchor.position - mKitVolume.position);
+            if (currentLevel.levelType.answerOptions != ObjectType.Slice)
+            {//Sets visible volume to compareAnchor while mKitVolume stays on answer
+                Transform compareAnchorVisibleVolume =
+                    Instantiate(new GameObject("mKitVolumeVisibleObjects"), compareVolumeGrabBox).transform;
+                temporaryObjects.Add(compareAnchorVisibleVolume.gameObject);
+                foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
+                {
+                    mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
+                    mKitVolumeVisibleObject.Translate(compareVolumeAnchor.position - mKitVolume.position);
+                }
+
+                compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
             }
-
-            compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
+            else
+            {
+                mKitVolume.SetParent(compareVolumeGrabBox);
+                mKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                for (int i = 0; i < currentLevel.volumeList.Count; i++)
+                {
+                    Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(0);
+                    //Instead of destroying it, move it to somewhere where it isn't examinable
+                    if(volumeBoxGrabbable.childCount == 2) volumeBoxGrabbable.GetChild(1).position -=new Vector3(0,100,0);
+                }
+            }
             SetVisibility(compareVolumeAnchor, true);
-            //mKitVolume.SetParent(compareVolumeGrabBox);
         }
 
-        if (currentLevel.levelType.compareObject == ObjectType.Slice)
+        else if (currentLevel.levelType.compareObject == ObjectType.Slice)
         {
-            yield return GetStillDefaultSlice(winningAnswerID, answerAnchors[winningAnswerID].GetChild(1),
+            //Generate stillSlice for winningAnswer
+            yield return GetStillDefaultSlice(answerAnchors[winningAnswerID].GetChild(1),
                 compareAnchor.GetChild(1));
-                
         }
     }
 
-    private IEnumerator ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
-    {
-        yield return leftController.allowSelect = false; //If there is an object currently grabbed it will cancel it.
-        //Resets all grabbable boxes to their respective anchor
-        Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
-        foreach (var anchor in anchors)
-        {
-            //TODO: Will fail if object is currently grabbed, need to fix!
-            Transform volumeAnchor = anchor.GetChild(0);
-            Transform sliceAnchor = anchor.GetChild(1);
-            Transform volumeBoxGrabbable = volumeAnchor.GetChild(0);
-            Transform sliceBoxGrabbable = sliceAnchor.GetChild(0);
-            SetVisibility(volumeAnchor, false);
-            SetVisibility(sliceAnchor, false);
-            volumeBoxGrabbable.SetPositionAndRotation(volumeAnchor.position, volumeAnchor.rotation);
-            sliceBoxGrabbable.SetPositionAndRotation(sliceAnchor.position, sliceAnchor.rotation);
-        }
 
-
-        //Delete temporary Objects
-        foreach (var temporaryObject in temporaryObjects)
-        {
-            Destroy(temporaryObject);
-        }
-
-        yield return leftController.allowSelect = true;
-    }
-
-    internal IEnumerator GenerateVolumesWithVolumeManager(Level currentLevel, int winningAnswerID)
+    internal IEnumerator GenerateVolumesWithVolumeManager(Level currentLevel, int winningAnswerID, Transform[] answerAnchors)
     {
         ObjectType ao = currentLevel.levelType.answerOptions;
         ObjectType co = currentLevel.levelType.compareObject;
@@ -151,6 +140,7 @@ public class VolumeGenerationManager : MonoBehaviour
                 volumeSlot: i,
                 //Make Model visible if answerOptions are volumes or if compareObject is Volume and this is the winningAnswer
                 addObjectModels: ao == ObjectType.Volume || co == ObjectType.Volume && winningAnswerID == i);
+            if(ao != ObjectType.Slice) SetVisibility(answerAnchors[i].GetChild(0), true); //Sets all elements of volumeanchor to visible
         }
 
         Debug.Log("GenerateArtificialVolume finished");
@@ -210,7 +200,6 @@ public class VolumeGenerationManager : MonoBehaviour
         UltrasoundSimulation.Instance.Init(v);
         Transform volumeAnchor = answerAnchor.GetChild(0);
         v.VolumeProxy.position = volumeAnchor.position; // set volume position
-        SetVisibility(volumeAnchor, true); //Sets all elements of volumeanchor to visible
         //Only works the first time as it will be disabled on further level
         GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
             .SetParent(volumeAnchor.GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
@@ -219,9 +208,8 @@ public class VolumeGenerationManager : MonoBehaviour
     /// <summary>
     /// Generates a texture from volume with id of volumeId in default position (centered, straight from the top directed at the bottom) and assigns it to the RawImage targetRawImage
     /// </summary>
-    internal IEnumerator GetStillDefaultSlice(int volumeId, Transform sourceSliceAnchor, Transform targetSliceAnchor)
+    internal IEnumerator GetStillDefaultSlice(Transform sourceSliceAnchor, Transform targetSliceAnchor)
     {
-
         Transform sliceCopyParent = sliceCopyTransform.parent;
         foreach (var sliceView in sliceViews
         ) //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
@@ -230,6 +218,7 @@ public class VolumeGenerationManager : MonoBehaviour
                 .SetFloat("texCount",
                     0);
         }
+
         sliceCopyTransform.gameObject.layer = 3; //Make slice temporarily invisible so 
         Vector3 defaultPosition = sliceCopyTransform.localPosition;
         Quaternion defaultRotation = sliceCopyTransform.localRotation;
@@ -237,10 +226,11 @@ public class VolumeGenerationManager : MonoBehaviour
         sliceCopyTransform.parent = null;
         SetVisibility(targetSliceAnchor,
             true); //Needs to be done before GetSliceCamCapture, as it will not work without being active
-        yield return null; //Needs yield return or else the SetPositionAndRotation will be executed after the sliceCamCapture
+        yield return
+            null; //Needs yield return or else the SetPositionAndRotation will be executed after the sliceCamCapture
         yield return targetSliceAnchor.GetComponentInChildren<RawImage>().texture =
             VolumeManager.Instance
-                .GetSliceCamCapture(Volume.Volumes[volumeId]); //Adds still shot of volume of volumeID to stillView
+                .GetSliceCamCapture(Volume.Volumes[sourceSliceAnchor.GetComponentInChildren<InteractableInformation>().answerId-1]); //Adds still shot of volume of volumeID to stillView
         sliceCopyTransform.SetParent(sliceCopyParent);
         sliceCopyTransform.SetLocalPositionAndRotation(defaultPosition, defaultRotation);
         yield return null; //needs yield return or else it will be executed after the foreach
@@ -253,8 +243,45 @@ public class VolumeGenerationManager : MonoBehaviour
                     Volume.Volumes
                         .Count);
         }
-        
     }
 
     #endregion
+
+    private IEnumerator ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
+    {
+        yield return leftController.allowSelect = false; //If there is an object currently grabbed it will cancel it.
+        //Resets all grabbable boxes to their respective anchor
+        Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
+        foreach (var anchor in anchors)
+        {
+            //TODO: Will fail if object is currently grabbed, need to fix!
+            Transform volumeAnchor = anchor.GetChild(0);
+            Transform sliceAnchor = anchor.GetChild(1);
+            Transform volumeBoxGrabbable = volumeAnchor.GetChild(0);
+            Transform sliceBoxGrabbable = sliceAnchor.GetChild(0);
+            SetVisibility(volumeAnchor, false);
+            SetVisibility(sliceAnchor, false);
+            volumeBoxGrabbable.SetPositionAndRotation(volumeAnchor.position, volumeAnchor.rotation);
+            sliceBoxGrabbable.SetPositionAndRotation(sliceAnchor.position, sliceAnchor.rotation);
+        }
+
+        //Delete temporary Objects
+        foreach (var temporaryObject in temporaryObjects)
+        {
+            Destroy(temporaryObject);
+        }
+
+        yield return leftController.allowSelect = true;
+    }
+
+    //Sets the layer of every child to either the default or an invisible layer
+    internal void SetVisibility(Transform obj, bool visible)
+    {
+        foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = visible ? 0 : 3;
+        }
+
+        obj.gameObject.SetActive(visible);
+    }
 }

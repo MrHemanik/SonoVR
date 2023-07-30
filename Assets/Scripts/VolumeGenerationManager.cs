@@ -23,7 +23,10 @@ public class VolumeGenerationManager : MonoBehaviour
     /// 2D slice views (on Unity quad mesh) that shows current activeSlice
     /// </summary>
     public SliceView[] sliceViews;
-
+    /// <summary>
+    /// List of objects that get deleted when a new level is loaded
+    /// </summary>
+    private List<GameObject> temporaryObjects = new List<GameObject>();
     #endregion
 
     #region Initiation
@@ -55,6 +58,7 @@ public class VolumeGenerationManager : MonoBehaviour
     internal IEnumerator GenerateLevel(Level currentLevel, int winningAnswerID, Transform[] answerAnchors,
         Transform compareAnchor)
     {
+        ResetComponents(answerAnchors, compareAnchor);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID);
         SetupVolumes(answerAnchors);
         //Sets visible volume to compareAnchor while mKitVolume stays on answer
@@ -69,6 +73,7 @@ public class VolumeGenerationManager : MonoBehaviour
             }
             //TODO: Needs to be deleted on Level change!
             Transform compareAnchorVisibleVolume = Instantiate(new GameObject("mKitVolumeVisibleObjects"), compareVolumeGrabBox).transform;
+            temporaryObjects.Add(compareAnchorVisibleVolume.gameObject);
             foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
             {
                 mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
@@ -83,6 +88,29 @@ public class VolumeGenerationManager : MonoBehaviour
             yield return GetStillDefaultSlice(winningAnswerID, answerAnchors[winningAnswerID],
                 compareAnchor.GetComponentInChildren<RawImage>());
             SetVisibility(compareAnchor, true);
+        }
+    }
+    private void ResetComponents(Transform[]answerAnchors, Transform compareAnchor)
+    {
+        //Resets all grabbable boxes to their respective anchor
+        Transform[] anchors = {answerAnchors[0],answerAnchors[1],answerAnchors[2],answerAnchors[3],compareAnchor};
+        foreach (var anchor in anchors)
+        {
+            //TODO: Will fail if object is currently grabbed, need to fix!
+            Transform volumeAnchor = anchor.GetChild(0);
+            Transform sliceAnchor = anchor.GetChild(1);
+            Transform volumeBoxGrabbable = volumeAnchor.GetChild(0);
+            Transform sliceBoxGrabbable = sliceAnchor.GetChild(0);
+            SetVisibility(anchor, false);
+            volumeBoxGrabbable.position = volumeAnchor.position;
+            volumeBoxGrabbable.rotation = volumeAnchor.rotation;
+            sliceBoxGrabbable.position = sliceAnchor.position;
+            sliceBoxGrabbable.rotation = sliceAnchor.rotation;
+        }
+        //Delete temporary Objects
+        foreach (var temporaryObject in temporaryObjects)
+        {
+            Destroy(temporaryObject);
         }
     }
 

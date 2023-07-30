@@ -51,7 +51,6 @@ public class GameManager : MonoBehaviour
     {
         SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
-        ResetComponents();
         levelInformationScript.SetLevelInformation(levelList[currentLevelID].levelType);
         yield return volGenMan.GenerateLevel(levelList[currentLevelID], winningAnswerId, answerAnchors, compareAnchor);
         enabled = true;
@@ -61,25 +60,7 @@ public class GameManager : MonoBehaviour
         activeRound = true;
     }
 
-    private void ResetComponents()
-    {
-        //Resets all grabbable boxes to their respective anchor
-        Transform[] anchors = {answerAnchors[0],answerAnchors[1],answerAnchors[2],answerAnchors[3],compareAnchor};
-        foreach (var anchor in anchors)
-        {
-            //TODO: Will fail if object is currently grabbed, need to fix!
-            Transform volumeAnchor = anchor.GetChild(0);
-            Transform sliceAnchor = anchor.GetChild(1);
-            Transform volumeBoxGrabbable = volumeAnchor.GetChild(0);
-            Transform sliceBoxGrabbable = sliceAnchor.GetChild(0);
-            volGenMan.SetVisibility(anchor, false);
-            volumeBoxGrabbable.position = volumeAnchor.position;
-            volumeBoxGrabbable.rotation = volumeAnchor.rotation;
-            sliceBoxGrabbable.position = sliceAnchor.position;
-            sliceBoxGrabbable.rotation = sliceAnchor.rotation;
-        }
-        Debug.Log("Loading level " + currentLevelID + " with " + levelList[currentLevelID].volumeList.Count + "Volumes");
-    }
+    
 
     //Sets the layer of every child to either the default or an invisible layer
 

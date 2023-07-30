@@ -49,19 +49,14 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator InitLevel()
     {
+        SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
         ResetComponents();
         levelInformationScript.SetLevelInformation(levelList[currentLevelID].levelType);
-        yield return volGenMan.GenerateVolumesWithVolumeManager(levelList[currentLevelID]);
-        volGenMan.SetupVolumes(answerAnchors);
+        yield return volGenMan.GenerateLevel(levelList[currentLevelID], winningAnswerId, answerAnchors, compareAnchor);
         enabled = true;
-        SetWinningAnswerVolume();
-        if (levelList[currentLevelID].levelType.compareObject == ObjectType.Slice)
-        {
-            yield return volGenMan.GetStillDefaultSlice(winningAnswerId, answerAnchors[winningAnswerId],
-                compareAnchor.GetComponentInChildren<RawImage>());
-            volGenMan.SetVisibility(compareAnchor, true);
-        }
+        
+        
 
         activeRound = true;
     }
@@ -83,7 +78,6 @@ public class GameManager : MonoBehaviour
             sliceBoxGrabbable.position = sliceAnchor.position;
             sliceBoxGrabbable.rotation = sliceAnchor.rotation;
         }
-
         Debug.Log("Loading level " + currentLevelID + " with " + levelList[currentLevelID].volumeList.Count + "Volumes");
     }
 

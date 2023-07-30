@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Classes;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,12 +13,12 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
-    
+
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
     /// </summary>
     [Header("Scene")] public Transform sliceCopyTransform;
-    
+
     /// <summary>
     /// 2D slice views (on Unity quad mesh) that shows current activeSlice
     /// </summary>
@@ -33,6 +34,9 @@ public class VolumeGenerationManager : MonoBehaviour
         foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
         {
             trans.gameObject.layer = visible ? 0 : 3;
+
+            //TODO: Later change to variation of:
+            //trans.gameObject.SetActive(visible);
         }
     }
 
@@ -48,13 +52,50 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #region Generation & Configuration of Volume and Slice
 
-    internal IEnumerator GenerateVolumesWithVolumeManager(Level currentLevel)
+    internal IEnumerator GenerateLevel(Level currentLevel, int winningAnswerID, Transform[] answerAnchors,
+        Transform compareAnchor)
     {
+        yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID);
+        SetupVolumes(answerAnchors);
+        //Sets visible volume to compareAnchor while mKitVolume stays on answer
+        if (currentLevel.levelType.compareObject == ObjectType.Volume)
+        {
+            Transform mKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
+            Transform compareVolumeGrabBox = compareAnchor.GetChild(0).GetChild(0);
+            List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
+            for (var i = 0; i < mKitVolume.childCount; i++)
+            {
+                mKitVolumeVisibleObjects.Add(mKitVolume.GetChild(i));
+            }
+            //TODO: Needs to be deleted on Level change!
+            Transform compareAnchorVisibleVolume = Instantiate(new GameObject("mKitVolumeVisibleObjects"), compareVolumeGrabBox).transform;
+            foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
+            {
+                mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
+                mKitVolumeVisibleObject.Translate(compareAnchor.GetChild(0).position- mKitVolume.position);
+            }
+            compareAnchorVisibleVolume.localRotation= compareAnchor.rotation;
+            //mKitVolume.SetParent(compareVolumeGrabBox);
+        }
+        
+        if (currentLevel.levelType.compareObject == ObjectType.Slice)
+        {
+            yield return GetStillDefaultSlice(winningAnswerID, answerAnchors[winningAnswerID],
+                compareAnchor.GetComponentInChildren<RawImage>());
+            SetVisibility(compareAnchor, true);
+        }
+    }
+
+    internal IEnumerator GenerateVolumesWithVolumeManager(Level currentLevel, int winningAnswerID)
+    {
+        ObjectType ao = currentLevel.levelType.answerOptions;
+        ObjectType co = currentLevel.levelType.compareObject;
         for (int i = 0; i < currentLevel.volumeList.Count; i++)
         {
             yield return VolumeManager.Instance.GenerateArtificialVolume(currentLevel.volumeList[i],
                 volumeSlot: i,
-                addObjectModels: true);
+                //Make Model visible if answerOptions are volumes or if compareObject is Volume and this is the winningAnswer
+                addObjectModels: ao == ObjectType.Volume || co == ObjectType.Volume && winningAnswerID == i);
         }
 
         Debug.Log("GenerateArtificialVolume finished");
@@ -103,7 +144,8 @@ public class VolumeGenerationManager : MonoBehaviour
         //sliceCopyTransform.SetSliceMask(scannerType);
     }
 
-    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, int index, Transform answerAnchor)
+    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, int index,
+        Transform answerAnchor)
     {
         v.SliceMaskingTexture = AppConfig.assets.GetScannerMask(scannerType);
         v.UseSliceMasking = scannerType != UltrasoundScannerTypeEnum.LINEAR;

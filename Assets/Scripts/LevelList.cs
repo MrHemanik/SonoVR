@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using mKit;
 using SonoGame;
 using UnityEngine;
@@ -21,7 +20,7 @@ public class LevelList
         levelList = new List<Level>
         {
             //Level 1
-            new Level(LevelType.levelTypes[0],
+            new Level(LevelType.LevelTypes[0],
                 new List<ShapeConfig> //Shapes in every Volume
                     {LevelHelper.GenerateBasicCube(materialConfig.map[4].color)},
                 new List<List<ShapeConfig>> //Unique Shapes
@@ -42,7 +41,7 @@ public class LevelList
                 }
             ),
             //Level 2
-            new Level(LevelType.levelTypes[0],
+            new Level(LevelType.LevelTypes[0],
                 new List<ShapeConfig> //Shapes in every Volume
                 {
                     LevelHelper.GenerateBasicCube(materialConfig.map[4].color),
@@ -82,7 +81,7 @@ public class LevelList
                     },
                 }),
             //Level 2
-            new Level(LevelType.levelTypes[0],
+            new Level(LevelType.LevelTypes[0],
                 LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 5),
                 new List<List<ShapeConfig>> //Unique Shapes
                 {
@@ -116,52 +115,6 @@ public enum ProbeType
 {
     CompareObject, //Type of object the player gets to compare to the answerOptions, so always the right answer
     AnswerOptions
-}
-
-public class LevelType
-{
-    public ObjectType
-        compareObject; //Type of object the player gets to compare to the answerOptions to idenfity the right answer
-
-    public ObjectType answerOptions; // What type of answerOption it is
-    public ProbeType toProbe; //What is probable with the Sonoprobe
-    public string description;
-    public LevelType(ObjectType iCompareObject, ObjectType iAnswerOption, string iDescription)
-    {
-        compareObject = iCompareObject;
-        answerOptions = iAnswerOption;
-        description = iDescription;
-        toProbe = new Func<ProbeType>(() =>
-        {
-            //Priority over Probe: HiddenVolume -> Volume -> Slice
-            switch (compareObject)
-            {
-                case ObjectType.HiddenVolume:
-                case ObjectType.HiddenVolumeAfterglow:
-                    return ProbeType.CompareObject;
-                case ObjectType.Volume:
-                    return answerOptions == ObjectType.Slice ? ProbeType.CompareObject : ProbeType.AnswerOptions;
-                case ObjectType.Slice: //Included for readability
-                    return ProbeType.AnswerOptions;
-                default:
-                    return ProbeType.AnswerOptions;
-            }
-        })();
-    }
-
-    public static LevelType[] levelTypes = new LevelType[]
-    {
-        new LevelType(ObjectType.Slice,ObjectType.Volume, "Untersuche die Volumen und finde heraus, welches der Volumen das Schnittbild darstellt!"),
-        new LevelType(ObjectType.Volume,ObjectType.Slice, "Untersuche das Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
-        new LevelType(ObjectType.HiddenVolumeAfterglow,ObjectType.Volume, "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!"),
-        new LevelType(ObjectType.HiddenVolumeAfterglow,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
-        new LevelType(ObjectType.HiddenVolume,ObjectType.Volume, "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!"),
-        new LevelType(ObjectType.HiddenVolume,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
-        new LevelType(ObjectType.Volume,ObjectType.HiddenVolumeAfterglow, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Volumen ist!"),
-        new LevelType(ObjectType.Slice,ObjectType.HiddenVolumeAfterglow, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Schnittbild ist!"),
-        new LevelType(ObjectType.Volume,ObjectType.HiddenVolume, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Volumen ist!"),
-        new LevelType(ObjectType.Slice,ObjectType.HiddenVolume, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Schnittbild ist!")
-    };
 }
 
 

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using SonoGame;
 using mKit;
 using UnityEngine.XR.Interaction.Toolkit;
+using Object = System.Object;
 
 // uses Assets/DemoApp/Scripts/DemoApp1.cs as base
 public class VolumeGenerationManager : MonoBehaviour
@@ -75,19 +76,20 @@ public class VolumeGenerationManager : MonoBehaviour
         }
         //Set
         if (currentLevel.levelType.compareObject == ObjectType.HiddenVolume ||
-            currentLevel.levelType.compareObject == ObjectType.HiddenVolume)
+            currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
         {
             foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
             {
                 mKitVolumeVisibleObject.SetParent(mKitVolume.parent);
-                mKitVolume.Translate(compareVolumeAnchor.position - mKitVolume.position);
             }
+            mKitVolume.SetParent(compareVolumeGrabBox);
+            mKitVolume.Translate(compareVolumeAnchor.position - mKitVolume.position);
+            mKitVolume.Rotate(Vector3.up,-90);
             SetVisibility(compareVolumeAnchor, true);
         }
         //Sets visible volume to compareAnchor while mKitVolume stays on answer
         if (currentLevel.levelType.compareObject == ObjectType.Volume)
         {
-            //TODO: Needs to be deleted on Level change!
             Transform compareAnchorVisibleVolume =
                 Instantiate(new GameObject("mKitVolumeVisibleObjects"), compareVolumeGrabBox).transform;
             temporaryObjects.Add(compareAnchorVisibleVolume.gameObject);

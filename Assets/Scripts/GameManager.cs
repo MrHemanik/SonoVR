@@ -111,25 +111,25 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CreateAfterglowStill()
     {
-        //Copies current Texture
-        List<Texture> sliceTextures = new List<Texture>();
-        for (int i = 0; i < Volume.Volumes.Count; i++)
-        {
-            //TODO Change everything to be assigned here, copytexture overwrites instead of merging, so needs rework
-            sliceTextures.Add(volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture("texArray_"+i));
-            if(i > 0) Graphics.CopyTexture(sliceTextures[i], sliceTextures[0]);
-        }
-        Texture2D texture = new Texture2D(sliceTextures[0].width, sliceTextures[0].height, TextureFormat.ARGB32, false);
-        Graphics.CopyTexture(sliceTextures[0], texture);
-        
-        //Create afterglowPrefab with that texture
+        //TODO: needs rework as it can't be parented like this
+        //Create afterglowPrefab
         GameObject movingScanArea = GameObject.Find("OsQuad");
         GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.transform.position,
             movingScanArea.transform.rotation);
-        //Create new material to use
         Material mat = newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial;
-        mat.SetTexture("_MainTex", texture);
-        newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial = new Material(mat);
+        mat.SetInt("texCount",Volume.Volumes.Count);
+        //Copies current Texture(s)
+        for (int i = 0; i < Volume.Volumes.Count; i++)
+        {
+            Texture sliceTexture = volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture("texArray_"+i);
+            Texture2D stillTexture = new Texture2D(sliceTexture.width, sliceTexture.height, TextureFormat.ARGB32, false);
+            Graphics.CopyTexture(sliceTexture, stillTexture);
+            //Create new material to use
+            mat.SetTexture("texArray_"+i, stillTexture);
+            newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial = new Material(mat);
+        }
+        
+        
         
         //newInstance.transform.SetParent(gameObject.transform);
         

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using mKit;
 using SonoGame;
 using UnityEngine;
@@ -8,12 +9,13 @@ namespace Classes
     public class LevelList
     {
         public readonly List<Level> levelList;
+
         public LevelList(MaterialConfig mc)
         {
             var materialConfig = mc;
             List<ShapeType> shapes = new List<ShapeType>()
             {
-                ShapeType.TUBE_X, ShapeType.TUBE_Y, ShapeType.TUBE_Z, ShapeType.CUBOID, ShapeType.SPLINE, ShapeType.ELIPSOID
+                ShapeType.TUBE_X, ShapeType.TUBE_Y, ShapeType.TUBE_Z, ShapeType.CUBOID, ShapeType.ELIPSOID
             };
             List<Color> shapeColors = new List<Color>();
             mc.map.ForEach(map => shapeColors.Add(map.color));
@@ -82,20 +84,20 @@ namespace Classes
                     }),
                 //Level 2
                 new Level(LevelType.LevelTypes[0],
-                    LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 5),
+                    LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 10),
                     new List<List<ShapeConfig>> //Unique Shapes
                     {
                         //Volume 1
                         new()
                         {
-                            LevelHelper.GenerateRandomizedShape(ShapeType.SPLINE, materialConfig.map[2].color,
+                            LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[2].color,
                                 usesSlices: true)
                         },
                         //Volume 2
                         new()
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.CUBOID, materialConfig.map[2].color,
-                                size: new Vector3(100, 100, 100), usesSlices: true, edgeWidth: 10)
+                                size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 10)
                         }
                     }
                 )
@@ -149,16 +151,23 @@ namespace Classes
             int amount)
         {
             var list = new List<ShapeConfig>();
-
-            //Add Shapes to List
+            List<ShapeType> shapesCopy = shapes.ToList();
+            List<Color> shapeColorsCopy = new List<Color>();
+            shapeColorsCopy.AddRange(shapeColors);
+            //Generate unique Shape with unique color and add to List. If either cant be unique refill possibilities
             for (int i = 0; i < amount; i++)
             {
-                ShapeType shape = shapes[Random.Range(0, shapes.Count)];
-                Color shapeColor = shapeColors[Random.Range(0, shapeColors.Count)];
-                shapes.Remove(shape);
-                shapeColors.Remove(shapeColor);
-                list.Add(GenerateRandomizedShape(shapes[Random.Range(0, shapes.Count)],
-                    shapeColors[Random.Range(0, shapeColors.Count)]));
+                ShapeType shape = shapesCopy[Random.Range(0, shapesCopy.Count - 1)];
+                Color shapeColor = shapeColors[Random.Range(1, shapeColorsCopy.Count)];
+                //Remove generated from list, if list is empty afterwards, refill list.
+                shapesCopy.Remove(shape);
+                if (shapesCopy.Count == 0) shapesCopy = shapes.ToList();
+                //Debug.Log("Shapes left: "+shapesCopy.Count);
+                shapeColorsCopy.Remove(shapeColor);
+                if (shapeColorsCopy.Count == 1)
+                    shapeColorsCopy.AddRange(shapeColors); //First color is black, will not be used for generation
+                //Debug.Log("Colors left: "+shapeColorsCopy.Count);
+                list.Add(GenerateRandomizedShape(shape, shapeColor));
             }
 
             return list;

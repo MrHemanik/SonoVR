@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     [Header("Open to other scripts")] public bool activeRound = true;
 
     public GameObject afterglowPrefab;
-    private IEnumerator afterglowCoroutine;
+    private Coroutine afterglowCoroutine;
 
     #endregion
 
@@ -62,7 +62,9 @@ public class GameManager : MonoBehaviour
         yield return null; //If yield return null it waits until generateLevel is fully finished //TODO: Rework
         if (currentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterglow ||
             currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
-            StartCoroutine(HiddenVolumeAfterglow());
+            afterglowCoroutine = StartCoroutine(HiddenVolumeAfterglow());
+
+
         enabled = true;
         //TODO Start Timer
         activeRound = true;
@@ -159,7 +161,8 @@ public class GameManager : MonoBehaviour
             GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
                 movingScanArea.rotation,
                 compareAnchor.GetChild(0).GetChild(0)); //Sets VolumeBoxGrabbable of compareObject as parent
-            CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
+            CreateAndAssignAfterglowMaterial(
+                newInstance.transform.GetChild(0), //TODO: Crashes when volumeBoxGrabbable gets picked up
                 newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
                 volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material
                     .GetTexture("texArray_" + winningAnswerId));

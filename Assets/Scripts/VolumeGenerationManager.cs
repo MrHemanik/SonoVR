@@ -58,7 +58,7 @@ public class VolumeGenerationManager : MonoBehaviour
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
         SetupVolumes(answerAnchors);
         enabled = true;
-        
+
         //Move LevelElements to their respective Anchor/Box
         Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
         Transform compareVolumeGrabBox = compareAnchor.GetChild(0).GetChild(0);
@@ -68,16 +68,18 @@ public class VolumeGenerationManager : MonoBehaviour
         {
             mKitVolumeVisibleObjects.Add(winningMKitVolume.GetChild(i));
         }
+
         //Setting Up rest of AnswerObjects
         if (currentLevel.levelType.answerOptions == ObjectType.Slice)
         {
             //Makes stillSlices for every Answeroption -- needs to be done before any mkitVolumes move
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                yield return GetStillDefaultSlice( answerAnchors[i].GetChild(1),
+                yield return GetStillDefaultSlice(answerAnchors[i].GetChild(1),
                     answerAnchors[i].GetChild(1));
             }
         }
+
         //Setting Up CompareObject
         if (currentLevel.levelType.compareObject == ObjectType.HiddenVolume ||
             currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
@@ -98,6 +100,7 @@ public class VolumeGenerationManager : MonoBehaviour
                     mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
                     mKitVolumeVisibleObject.Translate(compareVolumeAnchor.position - winningMKitVolume.position);
                 }
+
                 compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
                 SetVisibility(compareVolumeAnchor, true);
             }
@@ -127,6 +130,7 @@ public class VolumeGenerationManager : MonoBehaviour
                     mKitVolume.GetChild(0).SetParent(mKitVolume.parent); //Keeps visibleObject in answerOption
                 }
             }
+
             //Set winning mKitVolume into compareObject
             winningMKitVolume.SetParent(compareVolumeGrabBox);
             winningMKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -135,14 +139,17 @@ public class VolumeGenerationManager : MonoBehaviour
             {
                 Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(0);
                 //Instead of destroying it, move it to somewhere where it isn't examinable
-                if(volumeBoxGrabbable.childCount == 2) volumeBoxGrabbable.GetChild(1).position -=new Vector3(0,100,0);
+                if (volumeBoxGrabbable.childCount >= 2)
+                    volumeBoxGrabbable.GetChild(1).position -= new Vector3(0, 100, 0);
             }
+
             SetVisibility(compareVolumeAnchor, true);
         }
     }
 
 
-    internal IEnumerator GenerateVolumesWithVolumeManager(Level currentLevel, int winningAnswerID, Transform[] answerAnchors)
+    internal IEnumerator GenerateVolumesWithVolumeManager(Level currentLevel, int winningAnswerID,
+        Transform[] answerAnchors)
     {
         ObjectType ao = currentLevel.levelType.answerOptions;
         ObjectType co = currentLevel.levelType.compareObject;
@@ -152,7 +159,8 @@ public class VolumeGenerationManager : MonoBehaviour
                 volumeSlot: i,
                 //Make Model visible if answerOptions are volumes or if compareObject is Volume and this is the winningAnswer
                 addObjectModels: ao == ObjectType.Volume || co == ObjectType.Volume && winningAnswerID == i);
-            if(ao != ObjectType.Slice) SetVisibility(answerAnchors[i].GetChild(0), true); //Sets all elements of volumeanchor to visible
+            if (ao != ObjectType.Slice)
+                SetVisibility(answerAnchors[i].GetChild(0), true); //Sets all elements of volumeanchor to visible
         }
 
         Debug.Log("GenerateArtificialVolume finished");
@@ -212,7 +220,6 @@ public class VolumeGenerationManager : MonoBehaviour
         UltrasoundSimulation.Instance.Init(v);
         Transform volumeAnchor = answerAnchor.GetChild(0);
         v.VolumeProxy.position = volumeAnchor.position; // set volume position
-        //Only works the first time as it will be disabled on further level
         GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
             .SetParent(volumeAnchor.GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
     }
@@ -242,7 +249,10 @@ public class VolumeGenerationManager : MonoBehaviour
             null; //Needs yield return or else the SetPositionAndRotation will be executed after the sliceCamCapture
         yield return targetSliceAnchor.GetComponentInChildren<RawImage>().texture =
             VolumeManager.Instance
-                .GetSliceCamCapture(Volume.Volumes[sourceSliceAnchor.GetComponentInChildren<InteractableInformation>().answerId-1]); //Adds still shot of volume of volumeID to stillView
+                .GetSliceCamCapture(
+                    Volume.Volumes[
+                        sourceSliceAnchor.GetComponentInChildren<InteractableInformation>().answerId -
+                        1]); //Adds still shot of volume of volumeID to stillView
         sliceCopyTransform.SetParent(sliceCopyParent);
         sliceCopyTransform.SetLocalPositionAndRotation(defaultPosition, defaultRotation);
         yield return null; //needs yield return or else it will be executed after the foreach
@@ -271,6 +281,8 @@ public class VolumeGenerationManager : MonoBehaviour
             Transform sliceAnchor = anchor.GetChild(1);
             Transform volumeBoxGrabbable = volumeAnchor.GetChild(0);
             Transform sliceBoxGrabbable = sliceAnchor.GetChild(0);
+            if (volumeBoxGrabbable.childCount >= 2) //Detach mKitVolume is connected 
+                volumeBoxGrabbable.GetChild(1).parent = null;
             SetVisibility(volumeAnchor, false);
             SetVisibility(sliceAnchor, false);
             volumeBoxGrabbable.SetPositionAndRotation(volumeAnchor.position, volumeAnchor.rotation);

@@ -29,6 +29,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("Scene")] public Transform compareAnchor;
 
+    private Transform compareVolumeBoxGrabbable;
+    private Transform compareSliceBoxGrabbable;
+    private Transform[] answerVolumeBoxGrabbables;
+    private Transform[] answerSliceBoxGrabbables;
     private List<Level> levelList;
     private int currentLevelID;
     private int winningAnswerId;
@@ -48,6 +52,15 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator Start()
     {
+        compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(0);
+        compareSliceBoxGrabbable = compareAnchor.GetChild(1).GetChild(0);
+        answerVolumeBoxGrabbables = new Transform[answerAnchors.Length];
+        answerSliceBoxGrabbables = new Transform[answerAnchors.Length];
+        for (var i = 0; i < answerAnchors.Length; i++)
+        {
+            answerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(0);
+            answerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(0);
+        }
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         yield return InitLevel();
     }
@@ -111,32 +124,6 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
-
-    private IEnumerator CreateAfterglowStill1()
-    {
-        //TODO: needs rework as it can't be parented like this
-        //Create afterglowPrefab
-        Transform movingScanArea = volGenMan.sliceCopyTransform;
-        GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
-            movingScanArea.rotation);
-        Material mat = newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial;
-        mat.SetInt("texCount", Volume.Volumes.Count);
-        //Copies current Texture(s)
-        for (int i = 0; i < Volume.Volumes.Count; i++)
-        {
-            Texture sliceTexture = volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material
-                .GetTexture("texArray_" + i);
-            Texture2D stillTexture =
-                new Texture2D(sliceTexture.width, sliceTexture.height, TextureFormat.ARGB32, false);
-            Graphics.CopyTexture(sliceTexture, stillTexture);
-            mat.SetTexture("texArray_" + i, stillTexture);
-            newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial = new Material(mat);
-        }
-        //newInstance.transform.SetParent(gameObject.transform);
-
-        yield return null;
-    }
-
     private void CreateAfterglowStill()
     {
         Transform movingScanArea = volGenMan.sliceCopyTransform;
@@ -148,8 +135,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
                     movingScanArea.rotation,
-                    answerAnchors[i].GetChild(0)
-                        .GetChild(0)); //Sets VolumeBoxGrabbable of respective AnswerAnchor as parent
+                    answerVolumeBoxGrabbables[i]); //Sets VolumeBoxGrabbable of respective AnswerAnchor as parent
                 CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
                     newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
                     volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture("texArray_" + i));
@@ -160,7 +146,7 @@ public class GameManager : MonoBehaviour
         {
             GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
                 movingScanArea.rotation,
-                compareAnchor.GetChild(0).GetChild(0)); //Sets VolumeBoxGrabbable of compareObject as parent
+                compareVolumeBoxGrabbable); //Sets VolumeBoxGrabbable of compareObject as parent
             CreateAndAssignAfterglowMaterial(
                 newInstance.transform.GetChild(0), //TODO: Crashes when volumeBoxGrabbable gets picked up
                 newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,

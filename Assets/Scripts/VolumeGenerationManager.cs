@@ -58,14 +58,17 @@ public class VolumeGenerationManager : MonoBehaviour
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
         SetupVolumes(answerAnchors);
         enabled = true;
-        Transform mKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
+        
+        //Move LevelElements to their respective Anchor/Box
+        Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
         Transform compareVolumeGrabBox = compareAnchor.GetChild(0).GetChild(0);
         Transform compareVolumeAnchor = compareAnchor.GetChild(0);
         List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
-        for (var i = 0; i < mKitVolume.childCount; i++)
+        for (var i = 0; i < winningMKitVolume.childCount; i++)
         {
-            mKitVolumeVisibleObjects.Add(mKitVolume.GetChild(i));
+            mKitVolumeVisibleObjects.Add(winningMKitVolume.GetChild(i));
         }
+        //Setting Up rest of AnswerObjects
         if (currentLevel.levelType.answerOptions == ObjectType.Slice)
         {
             //Makes stillSlices for every Answeroption -- needs to be done before any mkitVolumes move
@@ -79,46 +82,29 @@ public class VolumeGenerationManager : MonoBehaviour
         if (currentLevel.levelType.compareObject == ObjectType.HiddenVolume ||
             currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
         {
-            //Set mKitVolume into compareObject
-            foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
-            {
-                temporaryObjects.Add(mKitVolumeVisibleObject.gameObject); //Deletes on new Level
-                mKitVolumeVisibleObject.SetParent(mKitVolume.parent);
-            }
-
-            mKitVolume.SetParent(compareVolumeGrabBox);
-            mKitVolume.Translate(compareVolumeAnchor.position - mKitVolume.position);
-            mKitVolume.Rotate(Vector3.up, -90);
-            SetVisibility(compareVolumeAnchor, true);
+            MoveWinningMKitVolumeToCompareObject();
         }
 
         else if (currentLevel.levelType.compareObject == ObjectType.Volume)
         {
             if (currentLevel.levelType.answerOptions != ObjectType.Slice)
-            {//Sets visible volume to compareAnchor while mKitVolume stays on answer
+            {
+                //Sets visible volume to compareAnchor while mKitVolume stays on answer
                 Transform compareAnchorVisibleVolume =
                     Instantiate(new GameObject("mKitVolumeVisibleObjects"), compareVolumeGrabBox).transform;
                 temporaryObjects.Add(compareAnchorVisibleVolume.gameObject);
                 foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
                 {
                     mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
-                    mKitVolumeVisibleObject.Translate(compareVolumeAnchor.position - mKitVolume.position);
+                    mKitVolumeVisibleObject.Translate(compareVolumeAnchor.position - winningMKitVolume.position);
                 }
-
                 compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
+                SetVisibility(compareVolumeAnchor, true);
             }
             else
             {
-                mKitVolume.SetParent(compareVolumeGrabBox);
-                mKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-                for (int i = 0; i < currentLevel.volumeList.Count; i++)
-                {
-                    Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(0);
-                    //Instead of destroying it, move it to somewhere where it isn't examinable
-                    if(volumeBoxGrabbable.childCount == 2) volumeBoxGrabbable.GetChild(1).position -=new Vector3(0,100,0);
-                }
+                MoveWinningMKitVolumeToCompareObject();
             }
-            SetVisibility(compareVolumeAnchor, true);
         }
 
         else if (currentLevel.levelType.compareObject == ObjectType.Slice)
@@ -126,6 +112,32 @@ public class VolumeGenerationManager : MonoBehaviour
             //Generate stillSlice for winningAnswer
             yield return GetStillDefaultSlice(answerAnchors[winningAnswerID].GetChild(1),
                 compareAnchor.GetChild(1));
+        }
+
+        void MoveWinningMKitVolumeToCompareObject()
+        {
+            //Parents winning mKitVolumes possible generated objects to corresponding answerOptions GrabBox
+            for (int i = 0; i < currentLevel.volumeList.Count; i++)
+            {
+                var mKitVolume = answerAnchors[i].GetChild(0).GetChild(0).GetChild(1);
+                int childCount = mKitVolume.childCount;
+                for (int j = 0; j < childCount; j++)
+                {
+                    temporaryObjects.Add(mKitVolume.GetChild(0).gameObject); //Deletes on new Level
+                    mKitVolume.GetChild(0).SetParent(mKitVolume.parent); //Keeps visibleObject in answerOption
+                }
+            }
+            //Set winning mKitVolume into compareObject
+            winningMKitVolume.SetParent(compareVolumeGrabBox);
+            winningMKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            //"Remove" every other mKitVolume
+            for (int i = 0; i < currentLevel.volumeList.Count; i++)
+            {
+                Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(0);
+                //Instead of destroying it, move it to somewhere where it isn't examinable
+                if(volumeBoxGrabbable.childCount == 2) volumeBoxGrabbable.GetChild(1).position -=new Vector3(0,100,0);
+            }
+            SetVisibility(compareVolumeAnchor, true);
         }
     }
 

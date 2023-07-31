@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Classes;
+using SonoGame;
 using TMPro;
 using UnityEngine;
 
@@ -9,7 +10,9 @@ public class LevelInformationScript : MonoBehaviour
     public TextMeshPro generalDescription;
     public TextMeshPro compareType;
     public TextMeshPro answerType;
-
+    public Renderer probeExamineInformation;
+    public Material compareMaterial;
+    public Material answerMaterial;
     public void SetLevelInformation(LevelType levelType)
     {
         generalDescription.text = levelType.description;
@@ -46,8 +49,16 @@ public class LevelInformationScript : MonoBehaviour
         }
 
         if (levelType.toProbe == ProbeType.CompareObject)
+        {
             compareType.text = "Untersuchbares " + compareType.text;
-        else answerType.text = "Untersuchbare " + answerType.text;
+            probeExamineInformation.material = compareMaterial;
+        }
+        else
+        {
+            answerType.text = "Untersuchbare " + answerType.text;
+            probeExamineInformation.material = answerMaterial;
+
+        }
     }
     
 }

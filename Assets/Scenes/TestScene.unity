@@ -136,17 +136,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   multiSliceMaterial: {fileID: 2100000, guid: c4adc988208514b4ba96f7b77a66a25f, type: 2}
---- !u!114 &3127481 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6451063716054007153, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-  m_PrefabInstance: {fileID: 8809950263013170566}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cbbb45f42bf00049b52211f09da49dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!43 &9972389
 Mesh:
   m_ObjectHideFlags: 0
@@ -485,89 +474,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1001 &56207632
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 200906878}
-    m_Modifications:
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.10000001
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.10000001
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.12500003
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5296318606405230905, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_Name
-      value: HTC Vive Controller (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6451063716054007166, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2247a4273ad5a2541831c6eb04d474c7, type: 2}
-    - target: {fileID: 6689990273945013674, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2247a4273ad5a2541831c6eb04d474c7, type: 2}
-    m_RemovedComponents:
-    - {fileID: 6451063716054007165, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-  m_SourcePrefab: {fileID: 100100000, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
---- !u!4 &56207633 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-  m_PrefabInstance: {fileID: 56207632}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &71629185
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,9 +533,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftController: {fileID: 1908378795}
-  sliceCopyTransform: {fileID: 1145044184}
+  sliceCopyTransform: {fileID: 1344140271}
   sliceViews:
-  - {fileID: 3127481}
+  - {fileID: 1344140273}
   - {fileID: 139803575}
   - {fileID: 1488926508}
 --- !u!1 &123450849
@@ -897,7 +803,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 56207633}
+  - {fileID: 1092175880}
   - {fileID: 416544370}
   - {fileID: 896839932}
   m_Father: {fileID: 266198846}
@@ -2517,7 +2423,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5378545086622930386, guid: 515c004b18fae1f48914bc86cee143de, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5378545086622930386, guid: 515c004b18fae1f48914bc86cee143de, type: 3}
       propertyPath: m_LocalScale.x
@@ -4512,7 +4418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 109434732395451517, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 109434732395451517, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5373,6 +5279,7 @@ GameObject:
   - component: {fileID: 1048120687}
   - component: {fileID: 1048120688}
   - component: {fileID: 1048120689}
+  - component: {fileID: 1048120691}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -5794,7 +5701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed222b10a5265b4428ee7e6f5620c1d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelInformationScript: {fileID: 1517555746}
+  levelInformationScript: {fileID: 1048120691}
   volGenMan: {fileID: 77948865}
   materialConfig: {fileID: 11400000, guid: 19e856ba8b799bd44a8993c6a09c7125, type: 2}
   answerAnchors:
@@ -5805,10 +5712,97 @@ MonoBehaviour:
   compareAnchor: {fileID: 903263588}
   activeRound: 1
   afterglowPrefab: {fileID: 1716590368601433990, guid: f6a2afe392e41224a9cd0989b50ea527, type: 3}
---- !u!4 &1145044184 stripped
+--- !u!114 &1048120691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048120683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0194ff0cb6dc4b64ca5257bb7027cde6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalDescription: {fileID: 1508069012}
+  compareType: {fileID: 426090363}
+  answerType: {fileID: 468791874}
+  probeExamineInformation: {fileID: 1344140272}
+  compareMaterial: {fileID: 2100000, guid: 75cc2b3658af1d945abd3ed10185fee7, type: 2}
+  answerMaterial: {fileID: 2100000, guid: 97fc5ff2f508d814982b44079eb437e8, type: 2}
+--- !u!1001 &1092175879
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 200906878}
+    m_Modifications:
+    - target: {fileID: 3363413009505783500, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2247a4273ad5a2541831c6eb04d474c7, type: 2}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.12500003
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7545378132645133875, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_Name
+      value: HTC Vive Controller With Sonoprobe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8063991287251570825, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2247a4273ad5a2541831c6eb04d474c7, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+--- !u!4 &1092175880 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 6689990273945013676, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-  m_PrefabInstance: {fileID: 8809950263013170566}
+  m_CorrespondingSourceObject: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+  m_PrefabInstance: {fileID: 1092175879}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1178106223
 GameObject:
@@ -6067,6 +6061,97 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!1001 &1344140269
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1385496450}
+    m_Modifications:
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0265
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.082
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7545378132645133875, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_Name
+      value: HTC Vive Controller With Sonoprobe
+      objectReference: {fileID: 0}
+    - target: {fileID: 8696473542286123638, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_Name
+      value: ActiveSliceView
+      objectReference: {fileID: 0}
+    - target: {fileID: 8696473542286123642, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+--- !u!4 &1344140270 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+  m_PrefabInstance: {fileID: 1344140269}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1344140271 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3363413009505783498, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+  m_PrefabInstance: {fileID: 1344140269}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1344140272 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7213350229010376027, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+  m_PrefabInstance: {fileID: 1344140269}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1344140273 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8063991287251570822, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+  m_PrefabInstance: {fileID: 1344140269}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cbbb45f42bf00049b52211f09da49dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1385496449
 GameObject:
   m_ObjectHideFlags: 0
@@ -6100,7 +6185,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1593140972}
+  - {fileID: 1344140270}
   - {fileID: 719642157}
   m_Father: {fileID: 1178106224}
   m_RootOrder: 2
@@ -7369,7 +7454,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1517555745}
-  - component: {fileID: 1517555746}
   m_Layer: 0
   m_Name: LevelInformation
   m_TagString: Untagged
@@ -7393,26 +7477,6 @@ Transform:
   m_Father: {fileID: 2063666108}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1517555746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1517555744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0194ff0cb6dc4b64ca5257bb7027cde6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  generalDescription: {fileID: 1508069012}
-  compareType: {fileID: 426090363}
-  answerType: {fileID: 468791874}
---- !u!4 &1593140972 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-  m_PrefabInstance: {fileID: 8809950263013170566}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1616121049
 Mesh:
   m_ObjectHideFlags: 0
@@ -13585,7 +13649,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Halte die Antwort in der Hand und dr\xFCcke die hintere Taste um diese
+  m_text: "Halte eine Antwort in der Hand und dr\xFCcke die hintere Taste um diese
     auszuw\xE4hlen"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: af0f05055fde7e8439feaca6d145e800, type: 2}
@@ -19238,64 +19302,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
---- !u!1001 &8809950263013170566
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1385496450}
-    m_Modifications:
-    - target: {fileID: 3817218962448279082, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.0265
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.082
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 4813113364901477251, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5296318606405230905, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}
-      propertyPath: m_Name
-      value: HTC Vive Controller
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}

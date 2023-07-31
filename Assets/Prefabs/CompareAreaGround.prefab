@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 7668270387783405002}
   - component: {fileID: 1681127194345411075}
   - component: {fileID: 736144012555720645}
-  - component: {fileID: 8110817310144190534}
   m_Layer: 0
-  m_Name: CompareHighlighter
+  m_Name: CompareAreaGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3012,18 +3011,4 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8655502394303951079}
-  m_Mesh: {fileID: 0}
---- !u!64 &8110817310144190534
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8655502394303951079}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
   m_Mesh: {fileID: 0}

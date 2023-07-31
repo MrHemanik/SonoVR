@@ -96,45 +96,86 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f); //TODO: Replace with some sort of check for the player
         yield return InitLevel();
     }
+
     #endregion
-    
+
     #region LevelType Custom Functions
 
     private IEnumerator HiddenVolumeAfterglow()
     {
         while (true)
         {
-            yield return CreateAfterglowStill();
+            CreateAfterglowStill();
             yield return new WaitForSeconds(0.1f);
         }
     }
 
-    private IEnumerator CreateAfterglowStill()
+    private IEnumerator CreateAfterglowStill1()
     {
         //TODO: needs rework as it can't be parented like this
         //Create afterglowPrefab
-        GameObject movingScanArea = GameObject.Find("OsQuad");
-        GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.transform.position,
-            movingScanArea.transform.rotation);
+        Transform movingScanArea = volGenMan.sliceCopyTransform;
+        GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
+            movingScanArea.rotation);
         Material mat = newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial;
-        mat.SetInt("texCount",Volume.Volumes.Count);
+        mat.SetInt("texCount", Volume.Volumes.Count);
         //Copies current Texture(s)
         for (int i = 0; i < Volume.Volumes.Count; i++)
         {
-            Texture sliceTexture = volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture("texArray_"+i);
-            Texture2D stillTexture = new Texture2D(sliceTexture.width, sliceTexture.height, TextureFormat.ARGB32, false);
+            Texture sliceTexture = volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material
+                .GetTexture("texArray_" + i);
+            Texture2D stillTexture =
+                new Texture2D(sliceTexture.width, sliceTexture.height, TextureFormat.ARGB32, false);
             Graphics.CopyTexture(sliceTexture, stillTexture);
-            //Create new material to use
-            mat.SetTexture("texArray_"+i, stillTexture);
+            mat.SetTexture("texArray_" + i, stillTexture);
             newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial = new Material(mat);
         }
-        
-        
-        
         //newInstance.transform.SetParent(gameObject.transform);
-        
+
         yield return null;
     }
-    
+
+    private void CreateAfterglowStill()
+    {
+        Transform movingScanArea = volGenMan.sliceCopyTransform;
+        LevelType levelType = levelList[currentLevelID].levelType;
+
+        if (levelType.answerOptions == ObjectType.HiddenVolumeAfterglow)
+        {
+            for (int i = 0; i < Volume.Volumes.Count; i++)
+            {
+                GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
+                    movingScanArea.rotation,
+                    answerAnchors[i].GetChild(0)
+                        .GetChild(0)); //Sets VolumeBoxGrabbable of respective AnswerAnchor as parent
+                CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
+                    newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
+                    volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture("texArray_" + i));
+                volGenMan.temporaryObjects.Add(newInstance); //Adds it to "Delete with new level" List
+            }
+        }
+        else
+        {
+            GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
+                movingScanArea.rotation,
+                compareAnchor.GetChild(0).GetChild(0)); //Sets VolumeBoxGrabbable of compareObject as parent
+            CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
+                newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
+                volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material
+                    .GetTexture("texArray_" + winningAnswerId));
+            volGenMan.temporaryObjects.Add(newInstance); //Adds it to "Delete with new level" List
+        }
+
+        static void CreateAndAssignAfterglowMaterial(Transform targetStillSlice, Material mat, Texture sliceTexture)
+        {
+            Texture2D stillTexture =
+                new Texture2D(sliceTexture.width, sliceTexture.height, TextureFormat.ARGB32, false);
+            Graphics.CopyTexture(sliceTexture, stillTexture);
+            //Create new material to use (so it won't be sync't to the others)
+            mat.SetTexture("_MainTex", stillTexture);
+            targetStillSlice.GetComponent<Renderer>().sharedMaterial = new Material(mat);
+        }
+    }
+
     #endregion
 }

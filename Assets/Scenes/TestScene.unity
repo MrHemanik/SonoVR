@@ -5459,7 +5459,7 @@ MonoBehaviour:
   - {fileID: 890630259}
   compareAnchor: {fileID: 903263588}
   activeRound: 1
-  afterglowPrefab: {fileID: 1716590368601433990, guid: 96c77c3788e0c224588065c0d7f59999, type: 3}
+  afterglowPrefab: {fileID: 1716590368601433990, guid: f6a2afe392e41224a9cd0989b50ea527, type: 3}
 --- !u!4 &1145044184 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6689990273945013676, guid: 3e93afad8cfb82c4dbb7e012bc84e836, type: 3}

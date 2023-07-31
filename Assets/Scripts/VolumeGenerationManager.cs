@@ -32,7 +32,7 @@ public class VolumeGenerationManager : MonoBehaviour
     /// <summary>
     /// List of objects that get deleted when a new level is loaded
     /// </summary>
-    private List<GameObject> temporaryObjects = new List<GameObject>();
+    internal List<GameObject> temporaryObjects = new List<GameObject>();
 
     #endregion
 

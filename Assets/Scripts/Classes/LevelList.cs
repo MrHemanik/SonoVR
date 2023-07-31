@@ -20,7 +20,7 @@ namespace Classes
             levelList = new List<Level>
             {
                 //Level 1
-                new Level(LevelType.LevelTypes[2],
+                new Level(LevelType.LevelTypes[3],
                     new List<ShapeConfig> //Shapes in every Volume
                         {LevelHelper.GenerateBasicCube(materialConfig.map[4].color)},
                     new List<List<ShapeConfig>> //Unique Shapes

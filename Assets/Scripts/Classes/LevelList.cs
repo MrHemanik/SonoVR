@@ -19,6 +19,7 @@ namespace Classes
             };
             List<Color> shapeColors = new List<Color>();
             mc.map.ForEach(map => shapeColors.Add(map.color));
+            shapeColors.RemoveAt(0); //The first color is black that isnt used for volumeGeneration
             levelList = new List<Level>
             {
                 //Level 1
@@ -158,15 +159,13 @@ namespace Classes
             for (int i = 0; i < amount; i++)
             {
                 ShapeType shape = shapesCopy[Random.Range(0, shapesCopy.Count - 1)];
-                Color shapeColor = shapeColors[Random.Range(1, shapeColorsCopy.Count)];
+                Color shapeColor = shapeColorsCopy[Random.Range(0, shapeColorsCopy.Count-1)];
                 //Remove generated from list, if list is empty afterwards, refill list.
                 shapesCopy.Remove(shape);
                 if (shapesCopy.Count == 0) shapesCopy = shapes.ToList();
-                //Debug.Log("Shapes left: "+shapesCopy.Count);
-                shapeColorsCopy.Remove(shapeColor);
-                if (shapeColorsCopy.Count == 1)
-                    shapeColorsCopy.AddRange(shapeColors); //First color is black, will not be used for generation
-                //Debug.Log("Colors left: "+shapeColorsCopy.Count);
+                shapeColorsCopy.Remove(shapeColor); 
+                if (shapeColorsCopy.Count == 0)
+                    shapeColorsCopy.AddRange(shapeColors);
                 list.Add(GenerateRandomizedShape(shape, shapeColor));
             }
 

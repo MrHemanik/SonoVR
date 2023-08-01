@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
             answerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(0);
             answerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(0);
         }
+
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         yield return InitLevel();
     }
@@ -124,8 +125,10 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
+
     private void CreateAfterglowStill()
     {
+        //TODO: Fix afterglow being set at the wrong position when moving the controller fast
         Transform movingScanArea = volGenMan.sliceCopyTransform;
         LevelType levelType = levelList[currentLevelID].levelType;
 
@@ -147,8 +150,7 @@ public class GameManager : MonoBehaviour
             GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
                 movingScanArea.rotation,
                 compareVolumeBoxGrabbable); //Sets VolumeBoxGrabbable of compareObject as parent
-            CreateAndAssignAfterglowMaterial(
-                newInstance.transform.GetChild(0), //TODO: Crashes when volumeBoxGrabbable gets picked up
+            CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
                 newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
                 volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material
                     .GetTexture("texArray_" + winningAnswerId));

@@ -35,15 +35,15 @@ namespace Classes
 
         public static readonly LevelType[] LevelTypes = new LevelType[]
         {
-            new LevelType(ObjectType.Slice,ObjectType.Volume, "Untersuche die Volumen und finde heraus, welches der Volumen das Schnittbild darstellt!"),
             new LevelType(ObjectType.Volume,ObjectType.Slice, "Untersuche das Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
+            new LevelType(ObjectType.Slice,ObjectType.Volume, "Untersuche die Volumen und finde heraus, welches der Volumen das Schnittbild darstellt!"),
             new LevelType(ObjectType.HiddenVolumeAfterglow,ObjectType.Volume, "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!"),
-            new LevelType(ObjectType.HiddenVolumeAfterglow,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
-            new LevelType(ObjectType.HiddenVolume,ObjectType.Volume, "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!"),
-            new LevelType(ObjectType.HiddenVolume,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
             new LevelType(ObjectType.Volume,ObjectType.HiddenVolumeAfterglow, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Volumen ist!"),
+            new LevelType(ObjectType.HiddenVolumeAfterglow,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
             new LevelType(ObjectType.Slice,ObjectType.HiddenVolumeAfterglow, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Schnittbild ist!"),
+            new LevelType(ObjectType.HiddenVolume,ObjectType.Volume, "Untersuche das unsichtbare Volumen und finde heraus, welches der sichtbaren Volumen identisch ist!"),
             new LevelType(ObjectType.Volume,ObjectType.HiddenVolume, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Volumen ist!"),
+            new LevelType(ObjectType.HiddenVolume,ObjectType.Slice, "Untersuche das unsichtbare Volumen und finde heraus, welches der Schnittbilder das Volumen darstellt!"),
             new LevelType(ObjectType.Slice,ObjectType.HiddenVolume, "Untersuche die unsichtbaren Volumen und finde heraus, welches identisch zum sichtbaren Schnittbild ist!")
         };
     }

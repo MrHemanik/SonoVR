@@ -23,18 +23,18 @@ namespace Classes
             levelList = new List<Level>
             {
                 //Level 1
-                new Level(LevelType.LevelTypes[3],
-                    new List<ShapeConfig> //Shapes in every Volume
+                new Level(LevelType.LevelTypes[0],
+                    new List<ShapeConfig> // Shapes in every Volume
                         {LevelHelper.GenerateBasicCube(materialConfig.map[4].color)},
-                    new List<List<ShapeConfig>> //Unique Shapes
+                    new List<List<ShapeConfig>> // Unique Shapes
                     {
-                        //Volume 1
+                        // Volume 1
                         new()
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
                                 usesSlices: true, rotation: Quaternion.identity)
                         },
-                        //Volume 2
+                        // Volume 2
                         new()
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
@@ -45,7 +45,7 @@ namespace Classes
                 ),
                 //Level 2
                 new Level(LevelType.LevelTypes[0],
-                    new List<ShapeConfig> //Shapes in every Volume
+                    new List<ShapeConfig> // Shapes in every Volume
                     {
                         LevelHelper.GenerateBasicCube(materialConfig.map[4].color),
                         LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[1].color,
@@ -60,11 +60,11 @@ namespace Classes
                                 100 + Random.Range(-20f, 20.0f), 100 + Random.Range(-20f, 20.0f)),
                             rotation: Quaternion.identity),
                     },
-                    new List<List<ShapeConfig>> //Unique Shapes
+                    new List<List<ShapeConfig>> // Unique Shapes
                     {
                         new List<ShapeConfig>
                         {
-                            //Volume 1
+                            // Volume 1
                             new ShapeConfigVoxel(ShapeType.TUBE_Y,
                                 color: materialConfig.map[3].color,
                                 edgeWidth: 20,
@@ -74,7 +74,7 @@ namespace Classes
                         },
                         new List<ShapeConfig>
                         {
-                            //Volume 2
+                            // Volume 2
                             new ShapeConfigVoxel(ShapeType.TUBE_Y,
                                 color: materialConfig.map[3].color,
                                 edgeWidth: 20,
@@ -83,21 +83,62 @@ namespace Classes
                                 rotation: Quaternion.Euler(0, 0, 90))
                         },
                     }),
-                //Level 2
-                new Level(LevelType.LevelTypes[0],
-                    LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 10),
-                    new List<List<ShapeConfig>> //Unique Shapes
+                //Level 3
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 2, true),
+                    new List<List<ShapeConfig>>
                     {
-                        //Volume 1
-                        new()
+                        new() // Volume 1
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[2].color,
                                 usesSlices: true)
                         },
-                        //Volume 2
-                        new()
+                        new() // Volume 2
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.CUBOID, materialConfig.map[2].color,
+                                size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 10)
+                        }
+                    }
+                ),
+                //Level 4
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 3, true),
+                    new List<List<ShapeConfig>>
+                    {
+                        new() // Volume 1
+                        {
+                            LevelHelper.GenerateRandomizedShape(ShapeType.TUBE_Y, materialConfig.map[1].color,
+                                size: new Vector3(50, 50, 50), usesSlices: true)
+                        },
+                        new() // Volume 2
+                        {
+                            LevelHelper.GenerateRandomizedShape(ShapeType.TUBE_Y, materialConfig.map[1].color,
+                                size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 10)
+                        }
+                    }
+                ),
+                //Level 4
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 4, true),
+                    new List<List<ShapeConfig>>
+                    {
+                        new() // Volume 1
+                        {
+                            LevelHelper.GenerateRandomizedShape(ShapeType.TUBE_Y, materialConfig.map[1].color,
+                                size: new Vector3(50, 50, 50), usesSlices: true)
+                        },
+                        new() // Volume 2
+                        {
+                            LevelHelper.GenerateRandomizedShape(ShapeType.TUBE_Y, materialConfig.map[1].color,
+                                size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 10)
+                        }
+                    }
+                ),
+                //Level 5
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 2, true),
+                    new List<List<ShapeConfig>>
+                    {
+                        new(),// Volume 1
+                        new() // Volume 2
+                        {
+                            LevelHelper.GenerateRandomizedShape(ShapeType.CUBOID, materialConfig.map[5].color,
                                 size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 10)
                         }
                     }
@@ -123,33 +164,27 @@ namespace Classes
 
     public static class LevelHelper
     {
+        private static Vector3 baseCenter = new Vector3(100, 100, 100);
+        private static Vector3 baseSize = new Vector3(50, 50, 50);
+
         public static ShapeConfigVoxel GenerateBasicCube(Color color, Vector3? size = null, Vector3? center = null,
-            Quaternion? rotation = null,
-            int edgeWidth = 20)
+            Quaternion? rotation = null, int edgeWidth = 20)
         {
-            return new ShapeConfigVoxel(ShapeType.CUBOID, edgeWidth, size ?? new Vector3(50, 50, 50), color,
-                center ?? new Vector3(100, 100, 100), rotation ?? Quaternion.identity);
+            return new ShapeConfigVoxel(ShapeType.CUBOID, edgeWidth, size ?? baseSize, color,
+                center ?? baseCenter, rotation ?? Quaternion.identity);
         }
 
         public static ShapeConfigVoxel GenerateRandomizedShape(ShapeType shape, Color color, Vector3? size = null,
-            Vector3? center = null,
-            Quaternion? rotation = null,
-            int edgeWidth = 100, bool usesSlices = false)
-
+            Vector3? center = null, Quaternion? rotation = null, int edgeWidth = 100, bool usesSlices = false)
         {
-            //usesSlices is relevant when Slice is generated automatically to make sure that every shape is visible
-            var zPositionOffset = usesSlices ? 0 : Random.Range(-40f, 40.0f);
-
             return new ShapeConfigVoxel(shape, edgeWidth,
-                (size ?? new Vector3(50, 50, 50)) + new Vector3(20, 20, 20) * Random.Range(-0.5f, 1f),
-                color,
-                center ?? new Vector3(100 + Random.Range(-40f, 40.0f),
-                    100 + Random.Range(-40f, 40.0f), 100 + zPositionOffset),
-                rotation ?? Quaternion.identity);
+                size ?? baseSize + new Vector3(30, 30, 30) * Random.Range(-0.3f, 1f),
+                color, center ?? baseCenter + new Vector3(Random.Range(-50f, 50.0f), Random.Range(-50f, 50.0f),
+                    usesSlices ? 0 : Random.Range(-50f, 50.0f)), rotation ?? Quaternion.identity);
         }
 
         public static List<ShapeConfig> GenerateRandomizedShapes(List<ShapeType> shapes, List<Color> shapeColors,
-            int amount)
+            int amount, bool usesSlices = false)
         {
             var list = new List<ShapeConfig>();
             List<ShapeType> shapesCopy = shapes.ToList();
@@ -159,14 +194,14 @@ namespace Classes
             for (int i = 0; i < amount; i++)
             {
                 ShapeType shape = shapesCopy[Random.Range(0, shapesCopy.Count - 1)];
-                Color shapeColor = shapeColorsCopy[Random.Range(0, shapeColorsCopy.Count-1)];
+                Color shapeColor = shapeColorsCopy[Random.Range(0, shapeColorsCopy.Count - 1)];
                 //Remove generated from list, if list is empty afterwards, refill list.
                 shapesCopy.Remove(shape);
                 if (shapesCopy.Count == 0) shapesCopy = shapes.ToList();
-                shapeColorsCopy.Remove(shapeColor); 
+                shapeColorsCopy.Remove(shapeColor);
                 if (shapeColorsCopy.Count == 0)
                     shapeColorsCopy.AddRange(shapeColors);
-                list.Add(GenerateRandomizedShape(shape, shapeColor));
+                list.Add(GenerateRandomizedShape(shape, shapeColor, usesSlices: usesSlices));
             }
 
             return list;

@@ -53,7 +53,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        levelList = new LevelList(materialConfig).levelList;
+        VolumeManager.Instance.SetMaterialConfig(materialConfig);
+        levelList = new LevelList().levelList;
     }
 
     private IEnumerator Start()
@@ -67,8 +68,6 @@ public class GameManager : MonoBehaviour
             answerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(0);
             answerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(0);
         }
-
-        VolumeManager.Instance.SetMaterialConfig(materialConfig);
         yield return InitLevel();
     }
 

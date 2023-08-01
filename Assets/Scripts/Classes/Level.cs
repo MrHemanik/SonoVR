@@ -17,5 +17,10 @@ namespace Classes
             }
             volumeList = volList;
         }
+        public Level(LevelType lt, List<List<ShapeConfig>> volList)
+        {
+            levelType = lt;
+            volumeList = volList;
+        }
     }
 }

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using Classes;
-using SonoGame;
 using TMPro;
 using UnityEngine;
 
@@ -13,8 +10,15 @@ public class LevelInformationScript : MonoBehaviour
     public Renderer probeExamineInformation;
     public Material compareMaterial;
     public Material answerMaterial;
-    public void SetLevelInformation(LevelType levelType)
+    private GameManager gm;
+    private void Start()
     {
+        gm = FindObjectOfType<GameManager>();
+        gm.initLevelEvent.AddListener(SetLevelInformation);
+    }
+    void SetLevelInformation()
+    {
+        var levelType = gm.currentLevel.levelType;
         generalDescription.text = levelType.description;
         switch (levelType.compareObject)
         {

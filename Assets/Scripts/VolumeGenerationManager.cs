@@ -6,9 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using SonoGame;
 using mKit;
-using Unity.Mathematics;
-using UnityEngine.XR.Interaction.Toolkit;
-using Object = System.Object;
 
 // uses Assets/DemoApp/Scripts/DemoApp1.cs as base
 public class VolumeGenerationManager : MonoBehaviour
@@ -17,7 +14,6 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private EVisualization visualization = EVisualization.Colored;
     private UltrasoundScannerTypeEnum scannerType = UltrasoundScannerTypeEnum.CURVED;
-    public XRDirectInteractor leftController;
 
     /// <summary>
     /// Probe-attached visual placeholder for the mKit slice
@@ -54,7 +50,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Transform compareAnchor)
     {
         enabled = false; // will be re-enabled after generating artificials
-        yield return ResetComponents(answerAnchors, compareAnchor);
+        ResetComponents(answerAnchors, compareAnchor);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
         SetupVolumes(answerAnchors);
         enabled = true;
@@ -270,9 +266,9 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #endregion
 
-    private IEnumerator ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
+    private void ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
     {
-        yield return leftController.allowSelect = false; //If there is an object currently grabbed it will cancel it.
+        
         //Resets all grabbable boxes to their respective anchor
         Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
         foreach (var anchor in anchors)
@@ -294,8 +290,6 @@ public class VolumeGenerationManager : MonoBehaviour
         {
             Destroy(temporaryObject);
         }
-
-        yield return leftController.allowSelect = true;
     }
 
     //Sets the layer of every child to either the default or an invisible layer and set active state

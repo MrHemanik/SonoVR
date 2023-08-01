@@ -5,14 +5,17 @@ using Classes;
 using mKit;
 using SonoGame;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     #region Variables
 
-    [Header("Scripts")] public LevelInformationScript levelInformationScript;
-    public VolumeGenerationManager volGenMan;
+    [Header("Scripts")] public VolumeGenerationManager volGenMan;
+
+    
+    private Coroutine afterglowCoroutine;
 
     /// <summary>
     /// MaterialConfig for different visualizations
@@ -27,19 +30,22 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Position anchor for compare placement ObjectType
     /// </summary>
-    [Header("Scene")] public Transform compareAnchor;
-
+    public Transform compareAnchor;
     private Transform compareVolumeBoxGrabbable;
     private Transform compareSliceBoxGrabbable;
     private Transform[] answerVolumeBoxGrabbables;
     private Transform[] answerSliceBoxGrabbables;
-    private List<Level> levelList;
-    private int currentLevelID;
-    private int winningAnswerId;
-    [Header("Open to other scripts")] public bool activeRound = true;
-
     public GameObject afterglowPrefab;
-    private Coroutine afterglowCoroutine;
+    
+
+    [HideInInspector] public List<Level> levelList;
+    [HideInInspector] public Level currentLevel;
+    [HideInInspector] public int currentLevelID;
+    [HideInInspector] public int winningAnswerId;
+    [HideInInspector] public bool activeRound = true;
+    [HideInInspector] public UnityEvent initLevelEvent = new UnityEvent();
+    [HideInInspector] public UnityEvent endLevelEvent = new UnityEvent();
+    
 
     #endregion
 
@@ -68,20 +74,18 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator InitLevel()
     {
-        var currentLevel = levelList[currentLevelID];
+        currentLevel = levelList[currentLevelID];
         SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
-        levelInformationScript.SetLevelInformation(currentLevel.levelType);
         yield return volGenMan.GenerateLevel(currentLevel, winningAnswerId, answerAnchors, compareAnchor);
         yield return null; //If yield return null it waits until generateLevel is fully finished //TODO: Rework
         if (currentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterglow ||
             currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
             afterglowCoroutine = StartCoroutine(HiddenVolumeAfterglow());
-
-
         enabled = true;
-        //TODO Start Timer
         activeRound = true;
+        initLevelEvent.Invoke();
+        //TODO Start Timer via listener
     }
 
 

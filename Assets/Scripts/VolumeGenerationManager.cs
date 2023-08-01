@@ -140,7 +140,8 @@ public class VolumeGenerationManager : MonoBehaviour
                 Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(0);
                 //Instead of destroying it, move it to somewhere where it isn't examinable
                 if (volumeBoxGrabbable.childCount >= 2)
-                    volumeBoxGrabbable.GetChild(1).position -= new Vector3(0, 100, 0);
+                    if (volumeBoxGrabbable.GetChild(1).name.Contains("mKitVolume"))
+                        volumeBoxGrabbable.GetChild(1).position -= new Vector3(0, 100, 0);
             }
 
             SetVisibility(compareVolumeAnchor, true);
@@ -297,7 +298,7 @@ public class VolumeGenerationManager : MonoBehaviour
         yield return leftController.allowSelect = true;
     }
 
-    //Sets the layer of every child to either the default or an invisible layer
+    //Sets the layer of every child to either the default or an invisible layer and set active state
     internal void SetVisibility(Transform obj, bool visible)
     {
         foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))

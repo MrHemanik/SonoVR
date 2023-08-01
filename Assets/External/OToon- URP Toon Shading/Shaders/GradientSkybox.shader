@@ -80,5 +80,5 @@ Shader "Skybox/Gradient Skybox"
 
         }
     }
-    CustomEditor "GradientSkyboxInspector"
+    //CustomEditor "GradientSkyboxInspector"
 }

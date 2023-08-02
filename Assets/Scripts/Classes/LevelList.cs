@@ -308,7 +308,6 @@ namespace Classes
 
         private static Vector3 RandomPosition(bool usesSlices)
         {
-            Debug.Log(usesSlices);
             return baseCenter + new Vector3(Random.Range(-50f, 50.0f), Random.Range(-50f, 50.0f),
                 usesSlices ? 0 : Random.Range(-50f, 50.0f));
         }

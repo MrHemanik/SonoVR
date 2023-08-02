@@ -111,6 +111,11 @@ public class VolumeGenerationManager : MonoBehaviour
             //Generate stillSlice for winningAnswer
             yield return GetStillDefaultSlice(answerAnchors[winningAnswerID].GetChild(1),
                 compareAnchor.GetChild(1));
+            for (int i = 0; i < currentLevel.volumeList.Count; i++)
+            {
+                //sets scale of mKitVolume to 1, filling out the grabbable box
+                answerAnchors[i].GetChild(0).GetChild(0).GetChild(1).localScale = Vector3.one;
+            }
         }
 
         //Parents winning mKitVolumes possible generated objects to corresponding answerOptions GrabBox
@@ -120,6 +125,7 @@ public class VolumeGenerationManager : MonoBehaviour
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
                 var mKitVolume = answerAnchors[i].GetChild(0).GetChild(0).GetChild(1);
+                mKitVolume.localScale = Vector3.one; //sets scale to 1, filling out the grabbable box
                 if (withVisibleVolume && mKitVolume == winningMKitVolume) break; //doesn't detach from winMKitVolume
                 int childCount = mKitVolume.childCount;
                 for (int j = 0; j < childCount; j++)
@@ -132,7 +138,6 @@ public class VolumeGenerationManager : MonoBehaviour
             //Set winning mKitVolume into compareObject
             winningMKitVolume.SetParent(compareVolumeGrabBox);
             winningMKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            winningMKitVolume.localScale = Vector3.one;
             //"Remove" every other mKitVolume
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {

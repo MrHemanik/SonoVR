@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3536932, g: 0.62623227, b: 0.99999905, a: 1}
+  m_IndirectSpecularColor: {r: 0.35369322, g: 0.62623227, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -532,7 +532,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 917f3d415a532f54890abbda5a51c65f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftController: {fileID: 1908378795}
   sliceCopyTransform: {fileID: 1344140271}
   sliceViews:
   - {fileID: 1344140273}
@@ -3012,6 +3011,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2068113200538826353, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 2263651703991321471, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -4290,6 +4293,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 360560433}
+    - target: {fileID: 2068113200538826353, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 2670438764299036030, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: answerId
       value: 4
@@ -4589,6 +4596,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1700569475}
+    - target: {fileID: 2068113200538826353, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068113200538826353, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 4850355430934367206, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -4608,6 +4623,18 @@ PrefabInstance:
     - target: {fileID: 5292621029105472215, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_SelectedVertices.Array.size
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399554249558369802, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5940774984892498561, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6190475344428699975, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7145167929015505336, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_RootOrder
@@ -4656,6 +4683,14 @@ PrefabInstance:
     - target: {fileID: 7145167929015505339, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Name
       value: CompareAnchor
+      objectReference: {fileID: 0}
+    - target: {fileID: 7990289450884088237, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7990289450884088237, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8244622247305374677, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
@@ -5475,7 +5510,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e73058fead12d4c43b9cad036e363f34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gm: {fileID: 1048120690}
 --- !u!114 &1048120688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5849,7 +5883,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed222b10a5265b4428ee7e6f5620c1d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelInformationScript: {fileID: 1048120691}
   volGenMan: {fileID: 77948865}
   materialConfig: {fileID: 11400000, guid: 19e856ba8b799bd44a8993c6a09c7125, type: 2}
   answerAnchors:
@@ -5858,8 +5891,16 @@ MonoBehaviour:
   - {fileID: 1717678003}
   - {fileID: 890630259}
   compareAnchor: {fileID: 903263588}
-  activeRound: 1
   afterglowPrefab: {fileID: 1716590368601433990, guid: f6a2afe392e41224a9cd0989b50ea527, type: 3}
+  currentLevelID: 0
+  winningAnswerId: 0
+  activeRound: 1
+  initLevelEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  endLevelEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1048120691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9403,6 +9444,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 360560433}
+    - target: {fileID: 2068113200538826353, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 2670438764299036030, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: answerId
       value: 3
@@ -13607,6 +13652,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2068113200538826353, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 2263651703991321471, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
       value: 

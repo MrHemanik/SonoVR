@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using Classes;
 using mKit;
 using SonoGame;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {

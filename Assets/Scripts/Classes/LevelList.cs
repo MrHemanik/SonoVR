@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using mKit;
 using SonoGame;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
 using Random = UnityEngine.Random;
 
 namespace Classes
@@ -27,7 +25,7 @@ namespace Classes
             shapeColors.RemoveAt(0); //The first color is black that isnt used for volumeGeneration
             levelList = new List<Level>
             {
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, shapes,shapeColors,1,3),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[2], GenerationType.DifferentShape, shapes,shapeColors,1,3),
                 //Level 1
                 new Level(LevelType.LevelTypes[0],
                     new List<ShapeConfig> // Shapes in every Volume

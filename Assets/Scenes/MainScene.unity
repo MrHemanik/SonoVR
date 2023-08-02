@@ -4580,6 +4580,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1643163876}
     m_Modifications:
+    - target: {fileID: 20189189291672425, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.b
+      value: 0.039215688
+      objectReference: {fileID: 0}
+    - target: {fileID: 20189189291672425, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.g
+      value: 0.83137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 20189189291672425, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 743250448094162008, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -4660,6 +4672,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1700569475}
+    - target: {fileID: 1878833629171885482, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.b
+      value: 0.039215688
+      objectReference: {fileID: 0}
+    - target: {fileID: 1878833629171885482, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.g
+      value: 0.8313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 1878833629171885482, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2068113200538826353, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -4675,6 +4699,10 @@ PrefabInstance:
     - target: {fileID: 2073050986133690948, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: hover.r
       value: 0.81960785
+      objectReference: {fileID: 0}
+    - target: {fileID: 3945067480052116122, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4850355430934367206, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
@@ -4696,8 +4724,16 @@ PrefabInstance:
       propertyPath: m_SelectedVertices.Array.size
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 5399554249558369802, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
-      propertyPath: m_Enabled
+    - target: {fileID: 5516276233142803981, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.b
+      value: 0.039215688
+      objectReference: {fileID: 0}
+    - target: {fileID: 5516276233142803981, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.g
+      value: 0.83137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5516276233142803981, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.r
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5940774984892498561, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
@@ -4776,10 +4812,6 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7990289450884088237, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8244622247305374677, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -4796,6 +4828,22 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 937398984}
+    - target: {fileID: 8297932567476142808, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8297932567476142815, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.b
+      value: 0.039215688
+      objectReference: {fileID: 0}
+    - target: {fileID: 8297932567476142815, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.g
+      value: 0.83137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 8297932567476142815, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: hover.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
 --- !u!4 &903263588 stripped

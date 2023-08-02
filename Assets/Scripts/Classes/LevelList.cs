@@ -25,7 +25,7 @@ namespace Classes
             shapeColors.RemoveAt(0); //The first color is black that isnt used for volumeGeneration
             levelList = new List<Level>
             {
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, shapes,shapeColors,1,3),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, shapes,shapeColors,1,3),
                 //Level 1
                 new Level(LevelType.LevelTypes[0],
                     new List<ShapeConfig> // Shapes in every Volume

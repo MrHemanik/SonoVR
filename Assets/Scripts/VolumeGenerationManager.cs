@@ -80,7 +80,7 @@ public class VolumeGenerationManager : MonoBehaviour
         if (currentLevel.levelType.compareObject == ObjectType.HiddenVolume ||
             currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
         {
-            MoveWinningMKitVolumeToCompareObject();
+            MoveWinningMKitVolumeToCompareObject(false);
         }
 
         else if (currentLevel.levelType.compareObject == ObjectType.Volume)
@@ -102,7 +102,7 @@ public class VolumeGenerationManager : MonoBehaviour
             }
             else
             {
-                MoveWinningMKitVolumeToCompareObject();
+                MoveWinningMKitVolumeToCompareObject(true);
             }
         }
 
@@ -113,12 +113,14 @@ public class VolumeGenerationManager : MonoBehaviour
                 compareAnchor.GetChild(1));
         }
 
-        void MoveWinningMKitVolumeToCompareObject()
+        //Parents winning mKitVolumes possible generated objects to corresponding answerOptions GrabBox
+        void MoveWinningMKitVolumeToCompareObject(bool withVisibleVolume)
         {
-            //Parents winning mKitVolumes possible generated objects to corresponding answerOptions GrabBox
+            //Detach childen of mKitVolumes from them
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
                 var mKitVolume = answerAnchors[i].GetChild(0).GetChild(0).GetChild(1);
+                if (withVisibleVolume && mKitVolume == winningMKitVolume) break; //doesn't detach from winMKitVolume
                 int childCount = mKitVolume.childCount;
                 for (int j = 0; j < childCount; j++)
                 {
@@ -268,7 +270,6 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private void ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
     {
-        
         //Resets all grabbable boxes to their respective anchor
         Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
         foreach (var anchor in anchors)

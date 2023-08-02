@@ -132,6 +132,7 @@ public class VolumeGenerationManager : MonoBehaviour
             //Set winning mKitVolume into compareObject
             winningMKitVolume.SetParent(compareVolumeGrabBox);
             winningMKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            winningMKitVolume.localScale = Vector3.one;
             //"Remove" every other mKitVolume
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {

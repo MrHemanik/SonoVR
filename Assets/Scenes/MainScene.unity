@@ -3051,6 +3051,10 @@ PrefabInstance:
       propertyPath: m_SelectedVertices.Array.size
       value: 24
       objectReference: {fileID: 0}
+    - target: {fileID: 6088179763362664781, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 7145167929015505336, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -4313,6 +4317,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 360560433}
+    - target: {fileID: 6088179763362664781, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 7145167929015505336, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -4632,6 +4640,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6088179763362664781, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 6190475344428699975, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -9532,6 +9544,10 @@ PrefabInstance:
       propertyPath: m_SelectedVertices.Array.data[3]
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 6088179763362664781, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 6111304081344764859, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -18628,6 +18644,10 @@ PrefabInstance:
       propertyPath: m_SelectedVertices.Array.size
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6088179763362664781, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 71629186}
     - target: {fileID: 7145167929015505336, guid: ffdf8134aca9cff4fa29330d5ffac0e8, type: 3}
       propertyPath: m_RootOrder
       value: 0

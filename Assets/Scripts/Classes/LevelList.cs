@@ -11,7 +11,7 @@ namespace Classes
     {
         public readonly List<Level> levelList;
 
-        public static List<ShapeType> shapes = new List<ShapeType>()
+        private static readonly List<ShapeType> Shapes = new List<ShapeType>()
         {
             ShapeType.TUBE_X, ShapeType.TUBE_Y, ShapeType.TUBE_Z, ShapeType.CUBOID, ShapeType.ELIPSOID
         };
@@ -25,7 +25,8 @@ namespace Classes
             shapeColors.RemoveAt(0); //The first color is black that isnt used for volumeGeneration
             levelList = new List<Level>
             {
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, shapes,shapeColors,1,3),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,shapeColors,1,3),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,shapeColors,1,3),
                 //Level 1
                 new Level(LevelType.LevelTypes[0],
                     new List<ShapeConfig> // Shapes in every Volume
@@ -88,7 +89,7 @@ namespace Classes
                         },
                     }),
                 //Level 3
-                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 2, true),
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 2, true),
                     new List<List<ShapeConfig>>
                     {
                         new() // Volume 1
@@ -104,7 +105,7 @@ namespace Classes
                     }
                 ),
                 //Level 4
-                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 3, true),
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 3, true),
                     new List<List<ShapeConfig>>
                     {
                         new() // Volume 1
@@ -120,7 +121,7 @@ namespace Classes
                     }
                 ),
                 //Level 4
-                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 4, true),
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 4, true),
                     new List<List<ShapeConfig>>
                     {
                         new() // Volume 1
@@ -136,7 +137,7 @@ namespace Classes
                     }
                 ),
                 //Level 5
-                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(shapes, shapeColors, 2, true),
+                new Level(LevelType.LevelTypes[0], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 2, true),
                     new List<List<ShapeConfig>>
                     {
                         new(), // Volume 1
@@ -147,7 +148,7 @@ namespace Classes
                         }
                     }
                 ),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, shapes,shapeColors,3,2)
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,shapeColors,3,2)
             };
         }
     }
@@ -189,8 +190,7 @@ namespace Classes
             var (commonShapes, remainingShapes, remainingColors) =
                 GenerateRandomizedShapesOutputLists(shapes, shapeColors, extraShapes, usesSlices: usesSlices);
             var distinctShapeColor = remainingColors[Random.Range(0, remainingColors.Count - 1)];
-            
-            
+
             //TODO: rework this part to use GenerateRandomizedShapes or variation of it.
             //Case for when GenerationType is DifferentShape
             if (remainingShapes.Count < volumes)
@@ -276,7 +276,7 @@ namespace Classes
                     usesSlices: usesSlices));
             }
 
-            return (list, shapes, shapeColors);
+            return (list, shapesCopy, shapeColorsCopy);
         }
 
         /// <summary>

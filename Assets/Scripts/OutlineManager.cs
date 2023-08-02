@@ -29,11 +29,12 @@ public class OutlineManager : MonoBehaviour
     {
         outline.OutlineColor = grab;
         outline.enabled = true;
+        outline.OutlineMode = Outline.Mode.OutlineVisible;
     }
     public void StopGrab(SelectExitEventArgs args)
     {
         outline.OutlineColor = hover; //sets color to interactable due to it still being in range of hover
-        outline.enabled = true;
+        outline.OutlineMode = Outline.Mode.OutlineAll;
     }
     
 }

@@ -6028,7 +6028,7 @@ MonoBehaviour:
   - {fileID: 1717678003}
   - {fileID: 890630259}
   compareAnchor: {fileID: 903263588}
-  afterglowPrefab: {fileID: 1716590368601433990, guid: f6a2afe392e41224a9cd0989b50ea527, type: 3}
+  afterimagePrefab: {fileID: 0}
   currentLevelID: 0
   winningAnswerId: 0
   activeRound: 1
@@ -6069,7 +6069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToPool: {fileID: 1716590368601433990, guid: f6a2afe392e41224a9cd0989b50ea527, type: 3}
-  maxPoolSize: 50
+  maxPoolSize: 40
 --- !u!1001 &1092175879
 PrefabInstance:
   m_ObjectHideFlags: 0

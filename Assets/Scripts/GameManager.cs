@@ -33,8 +33,7 @@ public class GameManager : MonoBehaviour
     private Transform compareSliceBoxGrabbable;
     private Transform[] answerVolumeBoxGrabbables;
     private Transform[] answerSliceBoxGrabbables;
-    public GameObject afterimagePrefab;
-    
+
 
     [HideInInspector] public List<Level> levelList;
     [HideInInspector] public Level currentLevel;

@@ -42,8 +42,6 @@ namespace Classes
             levelList = new List<Level>
             {
                 //LevelType 0: compare Volume, answer Slices
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 5, 2, false,true),
                 //Fixed starter level to better explain the basics
                 new Level(LevelType.LevelTypes[0],
                     new List<ShapeConfig> // Shapes in every Volume

@@ -8,9 +8,12 @@ public class LevelInformationScript : MonoBehaviour
     public TextMeshPro compareType;
     public TextMeshPro answerType;
     public Renderer probeExamineInformation;
+    public Light probeExamineInformationLight;
     public Material compareMaterial;
     public Material answerMaterial;
     private GameManager gm;
+    private static readonly Color CompareColor = new Color(1f,0.83f,0.04f);
+    private static readonly Color AnswerColor = new Color(0,0.525f,0.819f);
     private void Start()
     {
         gm = FindObjectOfType<GameManager>();
@@ -56,11 +59,13 @@ public class LevelInformationScript : MonoBehaviour
         {
             compareType.text = "Untersuchbares " + compareType.text;
             probeExamineInformation.material = compareMaterial;
+            probeExamineInformationLight.color = CompareColor;
         }
         else
         {
             answerType.text = "Untersuchbare " + answerType.text;
             probeExamineInformation.material = answerMaterial;
+            probeExamineInformationLight.color = AnswerColor;
 
         }
     }

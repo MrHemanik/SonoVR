@@ -280,31 +280,33 @@ namespace Classes
         {
             return GenerateRandomizedShapesOutputLists(shapes, shapeColors, amount, rotation, usesSlices).Item1;
         }
-
+        
         /// <summary>
         /// Generates a list of randomized ShapeConfigs. Leftover shapes and colors will be returned as well
         /// </summary>
-        /// <param name="shapes">List of shapes that are allowed </param>
-        /// <param name="shapeColors">List of shapeColors that are allowed</param>
+        /// <param name="allShapes">List of shapes that are allowed </param>
+        /// <param name="allShapeColors">List of shapeColors that are allowed</param>
         /// <param name="amount">amount of shapes that should be generated</param>
         /// <param name="rotation">if shapes should have a random rotation</param>
         /// <param name="usesSlices">if slices will be generated from them</param>
+        /// <param name="remainingShapes">Optional: List of shapes that are allowed, modified to not all shapes</param>
+        /// <param name="remainingShapeColors">Optional: List of shapeColors that are allowed, modified to not all shapeColors</param>
         /// <returns></returns>
         private static (List<ShapeConfig>, List<ShapeType>, List<Color>) GenerateRandomizedShapesOutputLists(
-            List<ShapeType> shapes, List<Color> shapeColors, int amount, bool rotation = false, bool usesSlices = false)
+            List<ShapeType> allShapes, List<Color> allShapeColors, int amount, bool rotation = false, bool usesSlices = false, List<ShapeType> remainingShapes = null, List<Color> remainingShapeColors = null)
         {
             var list = new List<ShapeConfig>();
-            List<ShapeType> shapesCopy = shapes.ToList();
-            List<Color> shapeColorsCopy = shapeColors.ToList();
+            if (remainingShapes == null) remainingShapes = allShapes.ToList();
+            if (remainingShapeColors == null) remainingShapeColors = allShapeColors.ToList();
             //Generate unique Shape with unique color and add to List. If either cant be unique refill possibilities
             for (int i = 0; i < amount; i++)
             {
-                ShapeType shape = GetRandomShape(shapes, ref shapesCopy);
-                Color shapeColor = GetRandomShapeColor(shapeColors, ref shapeColorsCopy);
+                ShapeType shape = GetRandomShape(allShapes, ref remainingShapes);
+                Color shapeColor = GetRandomShapeColor(allShapeColors, ref remainingShapeColors);
                 list.Add(GenerateRandomizedShape(shape, shapeColor, rotation: rotation ? null : Quaternion.identity,
                     usesSlices: usesSlices));
             }
-            return (list, shapesCopy, shapeColorsCopy);
+            return (list, remainingShapes, remainingShapeColors);
         }
 
         /// <summary>

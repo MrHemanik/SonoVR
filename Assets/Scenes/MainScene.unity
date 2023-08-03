@@ -5599,6 +5599,7 @@ GameObject:
   - component: {fileID: 1048120688}
   - component: {fileID: 1048120689}
   - component: {fileID: 1048120691}
+  - component: {fileID: 1048120692}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -6055,6 +6056,20 @@ MonoBehaviour:
   probeExamineInformation: {fileID: 1344140272}
   compareMaterial: {fileID: 2100000, guid: 669769dc500ca874ba931530404bc438, type: 2}
   answerMaterial: {fileID: 2100000, guid: 199cfbea84d79c64da5737998a9dae4c, type: 2}
+--- !u!114 &1048120692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048120683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2f2a6993067dc74f966f411b2a1600c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToPool: {fileID: 1716590368601433990, guid: f6a2afe392e41224a9cd0989b50ea527, type: 3}
+  maxPoolSize: 50
 --- !u!1001 &1092175879
 PrefabInstance:
   m_ObjectHideFlags: 0

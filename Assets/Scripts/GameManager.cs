@@ -43,8 +43,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool activeRound = true;
     [HideInInspector] public UnityEvent initLevelEvent = new UnityEvent();
     [HideInInspector] public UnityEvent endLevelEvent = new UnityEvent();
-    
 
+    private ObjectPool afterglowPool;
     #endregion
 
     #region Initiation
@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator Start()
     {
+        afterglowPool = gameObject.GetComponent<ObjectPool>();
         compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(0);
         compareSliceBoxGrabbable = compareAnchor.GetChild(1).GetChild(0);
         answerVolumeBoxGrabbables = new Transform[answerAnchors.Length];
@@ -109,6 +110,7 @@ public class GameManager : MonoBehaviour
         Debug.Log(winning ? "Richtige Antwort abgegeben!" : "Falsche Antwort abgegeben!");
         StopCoroutine(afterglowCoroutine);
         //TODO: Stop Timer
+        System.GC.Collect(); //Manual Garbage Collect, as this runs in 1 scene which can lead to some garbage
         currentLevelID++;
         yield return new WaitForSeconds(1f); //TODO: Replace with some sort of check for the player
         yield return InitLevel();
@@ -120,44 +122,42 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator HiddenVolumeAfterglow()
     {
+        Transform movingScanArea = volGenMan.sliceCopyTransform;
+        LevelType levelType = currentLevel.levelType;
         while (true)
         {
-            CreateAfterglowStill();
-            yield return new WaitForSeconds(0.1f);
+            CreateAfterglowStill(movingScanArea,levelType);
+            yield return new WaitForSeconds(0.05f);
         }
     }
 
-    private void CreateAfterglowStill()
+    private void CreateAfterglowStill(Transform movingScanArea, LevelType levelType)
     {
-        //TODO: Fix afterglow being set at the wrong position when moving the controller fast
-        Transform movingScanArea = volGenMan.sliceCopyTransform;
-        LevelType levelType = levelList[currentLevelID].levelType;
-
         if (levelType.answerOptions == ObjectType.HiddenVolumeAfterglow)
         {
             for (int i = 0; i < Volume.Volumes.Count; i++)
             {
-                GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
-                    movingScanArea.rotation,
-                    answerVolumeBoxGrabbables[i]); //Sets VolumeBoxGrabbable of respective AnswerAnchor as parent
-                CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
-                    newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
-                    volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture("texArray_" + i));
-                volGenMan.temporaryObjects.Add(newInstance); //Adds it to "Delete with new level" List
+                CreateAfterglowStillBody(answerVolumeBoxGrabbables[i],i);
             }
         }
         else
         {
-            GameObject newInstance = Instantiate(afterglowPrefab, movingScanArea.position,
-                movingScanArea.rotation,
-                compareVolumeBoxGrabbable); //Sets VolumeBoxGrabbable of compareObject as parent
-            CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
-                newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
-                volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material
-                    .GetTexture("texArray_" + winningAnswerId));
-            volGenMan.temporaryObjects.Add(newInstance); //Adds it to "Delete with new level" List
+            CreateAfterglowStillBody(compareVolumeBoxGrabbable,winningAnswerId);
         }
 
+        void CreateAfterglowStillBody(Transform parent, int id)
+        {
+            GameObject newInstance = afterglowPool.GetObjectFromPool();
+            newInstance.transform.SetPositionAndRotation(movingScanArea.position,movingScanArea.rotation);
+            newInstance.transform.parent = parent; //Sets VolumeBoxGrabbable of respective AnswerAnchor or CompareAnchor as parent
+            newInstance.transform.localScale = Vector3.one;
+            CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
+                newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
+                volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture($"texArray_{id}"));
+            //volGenMan.temporaryObjects.Add(newInstance); //Adds it to "Delete with new level" List
+            StartCoroutine(afterglowPool.ReturnObjectToPoolAfterTime(newInstance, 0.5f));
+        }
+        
         static void CreateAndAssignAfterglowMaterial(Transform targetStillSlice, Material mat, Texture sliceTexture)
         {
             Texture2D stillTexture =

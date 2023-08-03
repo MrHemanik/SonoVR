@@ -25,8 +25,10 @@ namespace Classes
             shapeColors.RemoveAt(0); //The first color is black that isnt used for volumeGeneration
             levelList = new List<Level>
             {
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,shapeColors,1,3),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,shapeColors,1,3),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
+                    shapeColors, 1, 3),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
+                    shapeColors, 1, 3),
                 //Level 1
                 new Level(LevelType.LevelTypes[0],
                     new List<ShapeConfig> // Shapes in every Volume
@@ -148,12 +150,14 @@ namespace Classes
                         }
                     }
                 ),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,shapeColors,3,2)
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
+                    shapeColors, 3, 2)
             };
         }
     }
+
     /// <summary>
-    /// Type of Volume differentiation 
+    /// Type of Volume generation differentiation 
     /// </summary>
     public enum GenerationType
     {
@@ -189,15 +193,17 @@ namespace Classes
             var usesSlices = lt.answerOptions == ObjectType.Slice || lt.compareObject == ObjectType.Slice;
             var (commonShapes, remainingShapes, remainingColors) =
                 GenerateRandomizedShapesOutputLists(shapes, shapeColors, extraShapes, usesSlices: usesSlices);
-            var distinctShapeColor = remainingColors[Random.Range(0, remainingColors.Count - 1)];
 
-            //TODO: rework this part to use GenerateRandomizedShapes or variation of it.
+
+            //TODO: Implement GenerationType SameShape with different colors (just use all colors again)+(take 1 remaining shape)
             //Case for when GenerationType is DifferentShape
+            var distinctShapeColor = remainingColors[Random.Range(0, remainingColors.Count - 1)];
             if (remainingShapes.Count < volumes)
             {
                 var missingShapesAmount = volumes - remainingShapes.Count;
                 //All shapes that are not in the remaining shapes
-                var missingShapes = new List<ShapeType>(from shape in shapes where !remainingShapes.Contains(shape) select shape);
+                var missingShapes =
+                    new List<ShapeType>(from shape in shapes where !remainingShapes.Contains(shape) select shape);
                 //Add a shape that is missing until there
                 for (int i = 0; i < missingShapesAmount; i++)
                 {
@@ -205,21 +211,50 @@ namespace Classes
                     remainingShapes.Add(missingShape);
                     missingShapes.Remove(missingShape);
                 }
+
                 remainingShapes = shapes;
             }
+
             var volList = new List<List<ShapeConfig>>();
             //Generates one unique shape per volume
             for (int i = 0; i < volumes; i++)
             {
                 var shapeConfig = new List<ShapeConfig>();
                 var shape = remainingShapes[Random.Range(0, remainingShapes.Count - 1)];
-                shapeConfig.Add(GenerateRandomizedShape(shape,distinctShapeColor, usesSlices:usesSlices));
+                shapeConfig.Add(GenerateRandomizedShape(shape, distinctShapeColor, usesSlices: usesSlices));
                 shapeConfig.AddRange(commonShapes);
                 remainingShapes.Remove(shape);
                 volList.Add(shapeConfig);
             }
-            
+
             return new Level(lt, volList);
+        }
+
+        /// <summary>
+        /// Outputs a random shape from remainingShapes. generated shape will be removed from the reference of remainingShapes. If no shapes are left, all possible shapes will be put back in remainingShapes
+        /// </summary>
+        /// <param name="allShapes">List of shapes that are allowed in general</param>
+        /// <param name="remainingShapes">Reference of list of shapes that can be currently generated. Will get modified to remove generated shape from list</param>
+        /// <returns></returns>
+        private static ShapeType GetRandomShape(List<ShapeType> allShapes, ref List<ShapeType> remainingShapes)
+        {
+            var shape = remainingShapes[Random.Range(0, remainingShapes.Count - 1)];
+            remainingShapes.Remove(shape);
+            if (remainingShapes.Count == 0) remainingShapes.AddRange(allShapes);
+            return shape;
+        }
+        /// <summary>
+        /// Outputs a random shapeColor from remainingShapeColors. generated shapeColor will be removed from the reference of remainingShapeColors. If no shapeColors are left, all possible shapeColors will be put back in remainingShapeColors
+        /// </summary>
+        /// <param name="allShapes">List of shapeColors that are allowed in general</param>
+        /// <param name="remainingShapes">Reference of list of shapeColors that can be currently generated. Will get modified to remove generated shapeColor from list</param>
+        /// <returns></returns>
+        private static Color GetRandomShapeColor(List<Color> allShapeColors, ref List<Color> remainingShapeColors)
+        {
+            var shapeColor = remainingShapeColors[Random.Range(0, remainingShapeColors.Count - 1)];
+            remainingShapeColors.Remove(shapeColor);
+            if (remainingShapeColors.Count == 0) remainingShapeColors.AddRange(allShapeColors);
+            return shapeColor;
         }
 
         #region Shape generation
@@ -264,18 +299,11 @@ namespace Classes
             //Generate unique Shape with unique color and add to List. If either cant be unique refill possibilities
             for (int i = 0; i < amount; i++)
             {
-                ShapeType shape = shapesCopy[Random.Range(0, shapesCopy.Count - 1)];
-                Color shapeColor = shapeColorsCopy[Random.Range(0, shapeColorsCopy.Count - 1)];
-                //Remove generated from list, if list is empty afterwards, refill list.
-                shapesCopy.Remove(shape);
-                if (shapesCopy.Count == 0) shapesCopy.AddRange(shapes);
-                shapeColorsCopy.Remove(shapeColor);
-                if (shapeColorsCopy.Count == 0)
-                    shapeColorsCopy.AddRange(shapeColors);
+                ShapeType shape = GetRandomShape(shapes, ref shapesCopy);
+                Color shapeColor = GetRandomShapeColor(shapeColors, ref shapeColorsCopy);
                 list.Add(GenerateRandomizedShape(shape, shapeColor, rotation: rotation ? null : Quaternion.identity,
                     usesSlices: usesSlices));
             }
-
             return (list, shapesCopy, shapeColorsCopy);
         }
 

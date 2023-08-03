@@ -42,7 +42,8 @@ namespace Classes
             levelList = new List<Level>
             {
                 //LevelType 0: compare Volume, answer Slices
-
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
+                    shapeColors, 5, 2, false,true),
                 //Fixed starter level to better explain the basics
                 new Level(LevelType.LevelTypes[0],
                     new List<ShapeConfig> // Shapes in every Volume
@@ -67,7 +68,7 @@ namespace Classes
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 2),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 2, 2),
+                    shapeColors, 2, 2, false, true),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3, true),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.SameShape, Shapes,
@@ -86,13 +87,13 @@ namespace Classes
                         new() // Volume 2
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.TUBE_Y, materialConfig.map[1].color,
-                                size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 1)
+                                size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 2)
                         }
                     }
                 ),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3, true),
-                //Level where one one volume has an extra shape
+                //Level where one one volume misses a shape
                 new Level(LevelType.LevelTypes[1], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 2),
                     new List<List<ShapeConfig>>
                     {
@@ -124,12 +125,12 @@ namespace Classes
     public enum GenerationType
     {
         /// <summary>
-        /// Same Shape, different Color
+        /// Same Shape, different Color, same width
         /// </summary>
         SameShape,
 
         /// <summary>
-        /// Different Shape, same Color
+        /// Different Shape, same Color, same width
         /// </summary>
         DifferentShape,
     }
@@ -198,9 +199,10 @@ namespace Classes
         /// <param name="extraShapes">Amount of same shapes each volume should have</param>
         /// <param name="volumes">Amount of volumes the level should have</param>
         /// <param name="randomRotation">If Shapes should be randomly rotated</param>
+        /// <param name="randomEdgeWidth">If shapes should be randomly filled or not</param>
         /// <returns>Level based on input parameter</returns>
         public static Level GenerateRandomizedLevel(LevelType lt, GenerationType gt, List<ShapeType> shapes,
-            List<Color> shapeColors, int extraShapes, int volumes, bool randomRotation = false)
+            List<Color> shapeColors, int extraShapes, int volumes, bool randomRotation = false, bool randomEdgeWidth = false)
         {
             var usesSlices = lt.answerOptions == ObjectType.Slice || lt.compareObject == ObjectType.Slice;
             if (randomRotation)
@@ -213,7 +215,7 @@ namespace Classes
             }
 
             var (commonShapes, remainingShapes, remainingColors) =
-                GenerateRandomizedShapesOutputLists(shapes, shapeColors, extraShapes, randomRotation, usesSlices);
+                GenerateRandomizedShapesOutputLists(shapes, shapeColors, extraShapes, randomRotation, usesSlices, randomEdgeWidth);
 
             var volList = new List<List<ShapeConfig>>();
             if (gt == GenerationType.DifferentShape)
@@ -223,8 +225,8 @@ namespace Classes
                 for (int i = 0; i < volumes; i++)
                 {
                     List<ShapeConfig> volume;
-                    (volume, remainingShapes, remainingColors) = GenerateRandomizedShapesOutputLists(
-                        shapes, distinctShapeColor, 1, randomRotation, usesSlices, remainingShapes);
+                    (volume, remainingShapes, _) = GenerateRandomizedShapesOutputLists(
+                        shapes, distinctShapeColor, 1, randomRotation, usesSlices, randomEdgeWidth,remainingShapes);
                     volume.AddRange(commonShapes);
                     volList.Add(volume);
                 }
@@ -236,8 +238,8 @@ namespace Classes
                 for (int i = 0; i < volumes; i++)
                 {
                     List<ShapeConfig> volume;
-                    (volume, remainingShapes, remainingColors) = GenerateRandomizedShapesOutputLists(distinctShape,
-                        shapeColors, 1, randomRotation, usesSlices, remainingShapeColors: remainingColors);
+                    (volume, _, remainingColors) = GenerateRandomizedShapesOutputLists(distinctShape,
+                        shapeColors, 1, randomRotation, usesSlices, randomEdgeWidth, remainingShapeColors: remainingColors);
                     volume.AddRange(commonShapes);
                     volList.Add(volume);
                 }
@@ -254,7 +256,7 @@ namespace Classes
         /// <returns>Random Shape</returns>
         private static ShapeType GetRandomShape(List<ShapeType> allShapes, ref List<ShapeType> remainingShapes)
         {
-            var shape = remainingShapes[Random.Range(0, remainingShapes.Count - 1)];
+            var shape = remainingShapes[Random.Range(0, remainingShapes.Count)];
             remainingShapes.Remove(shape);
             if (remainingShapes.Count == 0) remainingShapes.AddRange(allShapes);
             return shape;
@@ -263,12 +265,12 @@ namespace Classes
         /// <summary>
         /// Outputs a random shapeColor from remainingShapeColors. Generated shapeColor will be removed from the reference of remainingShapeColors. If no shapeColors are left, all possible shapeColors will be put back in remainingShapeColors
         /// </summary>
-        /// <param name="allShapes">List of shapeColors that are allowed in general</param>
-        /// <param name="remainingShapes">Reference of list of shapeColors that can be currently generated. Will get modified to remove generated shapeColor from list</param>
+        /// <param name="allShapeColors">List of shapeColors that are allowed in general</param>
+        /// <param name="remainingShapeColors">Reference of list of shapeColors that can be currently generated. Will get modified to remove generated shapeColor from list</param>
         /// <returns>Random Color</returns>
         private static Color GetRandomShapeColor(List<Color> allShapeColors, ref List<Color> remainingShapeColors)
         {
-            var shapeColor = remainingShapeColors[Random.Range(0, remainingShapeColors.Count - 1)];
+            var shapeColor = remainingShapeColors[Random.Range(0, remainingShapeColors.Count)];
             remainingShapeColors.Remove(shapeColor);
             if (remainingShapeColors.Count == 0) remainingShapeColors.AddRange(allShapeColors);
             return shapeColor;
@@ -291,11 +293,12 @@ namespace Classes
         /// <param name="amount">amount of shapes that should be generated</param>
         /// <param name="rotation">if shapes should have a random rotation</param>
         /// <param name="usesSlices">if slices will be generated from them</param>
+        /// <param name="randomEdgeWidth">If shapes should be randomly filled or not</param>
         /// <returns>List of randomized shapes</returns>
         public static List<ShapeConfig> GenerateRandomizedShapes(List<ShapeType> shapes, List<Color> shapeColors,
-            int amount, bool rotation = false, bool usesSlices = false)
+            int amount, bool rotation = false, bool usesSlices = false, bool randomEdgeWidth = false)
         {
-            return GenerateRandomizedShapesOutputLists(shapes, shapeColors, amount, rotation, usesSlices).Item1;
+            return GenerateRandomizedShapesOutputLists(shapes, shapeColors, amount, rotation, usesSlices, randomEdgeWidth).Item1;
         }
 
         /// <summary>
@@ -306,12 +309,13 @@ namespace Classes
         /// <param name="amount">amount of shapes that should be generated</param>
         /// <param name="rotation">if shapes should have a random rotation</param>
         /// <param name="usesSlices">if slices will be generated from them</param>
+        /// <param name="randomEdgeWidth">If shapes should be randomly filled or not</param>
         /// <param name="remainingShapes">Optional: List of shapes that are allowed, modified to not all shapes</param>
         /// <param name="remainingShapeColors">Optional: List of shapeColors that are allowed, modified to not all shapeColors</param>
         /// <returns>Tuple with List of random shapeConfigs, shapes that were not used/remain and shapeColors that were not used/remain</returns>
         private static (List<ShapeConfig>, List<ShapeType>, List<Color>) GenerateRandomizedShapesOutputLists(
             List<ShapeType> allShapes, List<Color> allShapeColors, int amount, bool rotation = false,
-            bool usesSlices = false, List<ShapeType> remainingShapes = null, List<Color> remainingShapeColors = null)
+            bool usesSlices = false, bool randomEdgeWidth = false, List<ShapeType> remainingShapes = null, List<Color> remainingShapeColors = null)
         {
             var list = new List<ShapeConfig>();
             if (remainingShapes == null) remainingShapes = allShapes.ToList();
@@ -322,7 +326,7 @@ namespace Classes
                 ShapeType shape = GetRandomShape(allShapes, ref remainingShapes);
                 Color shapeColor = GetRandomShapeColor(allShapeColors, ref remainingShapeColors);
                 list.Add(GenerateRandomizedShape(shape, shapeColor, rotation: rotation ? null : Quaternion.identity,
-                    usesSlices: usesSlices));
+                    edgeWidth:randomEdgeWidth && Random.Range(0, 2) == 1 ? 10 : 100, usesSlices: usesSlices));
             }
 
             return (list, remainingShapes, remainingShapeColors);
@@ -363,8 +367,7 @@ namespace Classes
 
         private static Quaternion RandomRotation()
         {
-            return Quaternion.Euler(new Vector3(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f),
-                Random.Range(0.0f, 360.0f)));
+            return Random.rotation;
         }
 
         #endregion

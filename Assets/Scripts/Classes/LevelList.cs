@@ -3,21 +3,37 @@ using System.Linq;
 using mKit;
 using SonoGame;
 using UnityEngine;
+using UnityEngine.ProBuilder.Shapes;
 using Random = UnityEngine.Random;
 
 namespace Classes
 {
+    /// <summary>
+    /// Class that contains all levels
+    /// </summary>
     public class LevelList
     {
+        /// <summary>
+        /// List of all levels used
+        /// </summary>
         public readonly List<Level> levelList;
 
+        /// <summary>
+        /// List of all allowed shapes that can generate
+        /// </summary>
         private static readonly List<ShapeType> Shapes = new List<ShapeType>()
         {
             ShapeType.TUBE_X, ShapeType.TUBE_Y, ShapeType.TUBE_Z, ShapeType.CUBOID, ShapeType.ELIPSOID
         };
 
+        /// <summary>
+        /// List of all allowed shapeColors for the shapes that can generate
+        /// </summary>
         public List<Color> shapeColors = new List<Color>();
 
+        /// <summary>
+        /// Base Constructor filling levelList and shapeColors
+        /// </summary>
         public LevelList()
         {
             var materialConfig = VolumeManager.Instance.materialConfig;
@@ -25,10 +41,10 @@ namespace Classes
             shapeColors.RemoveAt(0); //The first color is black that isnt used for volumeGeneration
             levelList = new List<Level>
             {
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.SameShape, Shapes,
                     shapeColors, 1, 3),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 1, 3),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
+                    shapeColors, 1, 3, true),
                 //Level 1
                 new Level(LevelType.LevelTypes[0],
                     new List<ShapeConfig> // Shapes in every Volume
@@ -157,85 +173,139 @@ namespace Classes
     }
 
     /// <summary>
-    /// Type of Volume generation differentiation 
+    /// Type of Volume generation differentiation. They always have different Position, different Rotation, different Size
     /// </summary>
     public enum GenerationType
     {
-        SameShape, //Different size
-        DifferentShape, //Different shape + different size
-        ExtraShape // One volume will not be having an extra shape
+        /// <summary>
+        /// Same Shape, different Color
+        /// </summary>
+        SameShape,
+
+        /// <summary>
+        /// Different Shape, same Color
+        /// </summary>
+        DifferentShape,
     }
 
+    /// <summary>
+    /// Type of object used for answers or compare object
+    /// </summary>
     public enum ObjectType
     {
-        Slice, //Probable = never
-        Volume, //Probable if answer = slice
-        HiddenVolume, //Probable if answer = slice or volume
+        /// <summary>
+        /// A Slice is a two-dimensional image from a volume.
+        /// It is never examinable with a probe
+        /// </summary>
+        Slice,
+
+        /// <summary>
+        /// A Volume is a three-dimensional object with visible content
+        /// It is only examinable with a probe if the other ObjectType is slice
+        /// </summary>
+        Volume,
+
+        /// <summary>
+        /// A HiddenVolume is a three-dimensional object with invisible content
+        /// It it always examinable with a probe, as it is the only way to see the content
+        /// </summary>
+        HiddenVolume,
+
+        /// <summary>
+        /// A HiddenVolumeAfterglow is a three-dimensional object with invisible content that reconstructs with examining
+        /// It it always examinable with a probe
+        /// </summary>
         HiddenVolumeAfterglow
     }
 
+    /// <summary>
+    /// Defines what object group is examinable with the probe
+    /// </summary>
     public enum ProbeType
     {
-        CompareObject, //Type of object the player gets to compare to the answerOptions, so always the right answer
+        /// <summary>
+        /// Type of object the player gets to compare to the answerOptions, so always the right answer
+        /// </summary>
+        CompareObject,
+
+        /// <summary>
+        /// Objects that can be chosen as an answer
+        /// </summary>
         AnswerOptions
     }
 
-
+    /// <summary>
+    /// Class with all Level generation functions
+    /// </summary>
     public static class LevelHelper
     {
         private static Vector3 baseCenter = new Vector3(100, 100, 100);
         private static Vector3 baseSize = new Vector3(50, 50, 50);
 
-
+        /// <summary>
+        /// Generates a Level based on parameter inputs
+        /// </summary>
+        /// <param name="lt">LevelType the Level will have</param>
+        /// <param name="gt">GenerationType the unique Shapes in each volume will have</param>
+        /// <param name="shapes">List of shapes that can generate</param>
+        /// <param name="shapeColors">List of colors the shapes can have</param>
+        /// <param name="extraShapes">Amount of same shapes each volume should have</param>
+        /// <param name="volumes">Amount of volumes the level should have</param>
+        /// <param name="randomRotation">If Shapes should be randomly rotated</param>
+        /// <returns>Level based on input parameter</returns>
         public static Level GenerateRandomizedLevel(LevelType lt, GenerationType gt, List<ShapeType> shapes,
-            List<Color> shapeColors, int extraShapes, int volumes)
+            List<Color> shapeColors, int extraShapes, int volumes, bool randomRotation = false)
         {
             var usesSlices = lt.answerOptions == ObjectType.Slice || lt.compareObject == ObjectType.Slice;
-            var (commonShapes, remainingShapes, remainingColors) =
-                GenerateRandomizedShapesOutputLists(shapes, shapeColors, extraShapes, usesSlices: usesSlices);
-
-
-            //TODO: Implement GenerationType SameShape with different colors (just use all colors again)+(take 1 remaining shape)
-            //Case for when GenerationType is DifferentShape
-            var distinctShapeColor = remainingColors[Random.Range(0, remainingColors.Count - 1)];
-            if (remainingShapes.Count < volumes)
+            if (randomRotation)
             {
-                var missingShapesAmount = volumes - remainingShapes.Count;
-                //All shapes that are not in the remaining shapes
-                var missingShapes =
-                    new List<ShapeType>(from shape in shapes where !remainingShapes.Contains(shape) select shape);
-                //Add a shape that is missing until there
-                for (int i = 0; i < missingShapesAmount; i++)
-                {
-                    var missingShape = missingShapes[Random.Range(0, missingShapes.Count - 1)];
-                    remainingShapes.Add(missingShape);
-                    missingShapes.Remove(missingShape);
-                }
-
-                remainingShapes = shapes;
+                //If randomRotation is active, the amount of tubes will be lessend to only 1, as *_X,*_Y,*_Z are the same then disregarding rotation
+                shapes = shapes
+                    .ToList(); //If not done it will overwrite the STATIC READONLY shapes. I don't know why it does that in the first place though
+                shapes.Remove(ShapeType.TUBE_Y);
+                shapes.Remove(ShapeType.TUBE_Z);
             }
 
+            var (commonShapes, remainingShapes, remainingColors) =
+                GenerateRandomizedShapesOutputLists(shapes, shapeColors, extraShapes, randomRotation, usesSlices);
+
             var volList = new List<List<ShapeConfig>>();
-            //Generates one unique shape per volume
-            for (int i = 0; i < volumes; i++)
+            if (gt == GenerationType.DifferentShape)
             {
-                var shapeConfig = new List<ShapeConfig>();
-                var shape = remainingShapes[Random.Range(0, remainingShapes.Count - 1)];
-                shapeConfig.Add(GenerateRandomizedShape(shape, distinctShapeColor, usesSlices: usesSlices));
-                shapeConfig.AddRange(commonShapes);
-                remainingShapes.Remove(shape);
-                volList.Add(shapeConfig);
+                //Generate a different distinct shape with the same color for every volume (Position/Rotation is also different)
+                var distinctShapeColor = new List<Color>() {GetRandomShapeColor(shapeColors, ref remainingColors)};
+                for (int i = 0; i < volumes; i++)
+                {
+                    List<ShapeConfig> volume;
+                    (volume, remainingShapes, remainingColors) = GenerateRandomizedShapesOutputLists(
+                        shapes, distinctShapeColor, 1, randomRotation, usesSlices, remainingShapes);
+                    volume.AddRange(commonShapes);
+                    volList.Add(volume);
+                }
+            }
+            else if (gt == GenerationType.SameShape)
+            {
+                //Generate the same shape with a different distinct color for every volume (Position/Rotation is also different)
+                var distinctShape = new List<ShapeType>() {GetRandomShape(shapes, ref remainingShapes)};
+                for (int i = 0; i < volumes; i++)
+                {
+                    List<ShapeConfig> volume;
+                    (volume, remainingShapes, remainingColors) = GenerateRandomizedShapesOutputLists(distinctShape,
+                        shapeColors, 1, randomRotation, usesSlices, remainingShapeColors: remainingColors);
+                    volume.AddRange(commonShapes);
+                    volList.Add(volume);
+                }
             }
 
             return new Level(lt, volList);
         }
 
         /// <summary>
-        /// Outputs a random shape from remainingShapes. generated shape will be removed from the reference of remainingShapes. If no shapes are left, all possible shapes will be put back in remainingShapes
+        /// Outputs a random shape from remainingShapes. Generated shape will be removed from the reference of remainingShapes. If no shapes are left, all possible shapes will be put back in remainingShapes
         /// </summary>
         /// <param name="allShapes">List of shapes that are allowed in general</param>
         /// <param name="remainingShapes">Reference of list of shapes that can be currently generated. Will get modified to remove generated shape from list</param>
-        /// <returns></returns>
+        /// <returns>Random Shape</returns>
         private static ShapeType GetRandomShape(List<ShapeType> allShapes, ref List<ShapeType> remainingShapes)
         {
             var shape = remainingShapes[Random.Range(0, remainingShapes.Count - 1)];
@@ -243,12 +313,13 @@ namespace Classes
             if (remainingShapes.Count == 0) remainingShapes.AddRange(allShapes);
             return shape;
         }
+
         /// <summary>
-        /// Outputs a random shapeColor from remainingShapeColors. generated shapeColor will be removed from the reference of remainingShapeColors. If no shapeColors are left, all possible shapeColors will be put back in remainingShapeColors
+        /// Outputs a random shapeColor from remainingShapeColors. Generated shapeColor will be removed from the reference of remainingShapeColors. If no shapeColors are left, all possible shapeColors will be put back in remainingShapeColors
         /// </summary>
         /// <param name="allShapes">List of shapeColors that are allowed in general</param>
         /// <param name="remainingShapes">Reference of list of shapeColors that can be currently generated. Will get modified to remove generated shapeColor from list</param>
-        /// <returns></returns>
+        /// <returns>Random Color</returns>
         private static Color GetRandomShapeColor(List<Color> allShapeColors, ref List<Color> remainingShapeColors)
         {
             var shapeColor = remainingShapeColors[Random.Range(0, remainingShapeColors.Count - 1)];
@@ -274,13 +345,13 @@ namespace Classes
         /// <param name="amount">amount of shapes that should be generated</param>
         /// <param name="rotation">if shapes should have a random rotation</param>
         /// <param name="usesSlices">if slices will be generated from them</param>
-        /// <returns></returns>
+        /// <returns>List of randomized shapes</returns>
         public static List<ShapeConfig> GenerateRandomizedShapes(List<ShapeType> shapes, List<Color> shapeColors,
             int amount, bool rotation = false, bool usesSlices = false)
         {
             return GenerateRandomizedShapesOutputLists(shapes, shapeColors, amount, rotation, usesSlices).Item1;
         }
-        
+
         /// <summary>
         /// Generates a list of randomized ShapeConfigs. Leftover shapes and colors will be returned as well
         /// </summary>
@@ -291,9 +362,10 @@ namespace Classes
         /// <param name="usesSlices">if slices will be generated from them</param>
         /// <param name="remainingShapes">Optional: List of shapes that are allowed, modified to not all shapes</param>
         /// <param name="remainingShapeColors">Optional: List of shapeColors that are allowed, modified to not all shapeColors</param>
-        /// <returns></returns>
+        /// <returns>Tuple with List of random shapeConfigs, shapes that were not used/remain and shapeColors that were not used/remain</returns>
         private static (List<ShapeConfig>, List<ShapeType>, List<Color>) GenerateRandomizedShapesOutputLists(
-            List<ShapeType> allShapes, List<Color> allShapeColors, int amount, bool rotation = false, bool usesSlices = false, List<ShapeType> remainingShapes = null, List<Color> remainingShapeColors = null)
+            List<ShapeType> allShapes, List<Color> allShapeColors, int amount, bool rotation = false,
+            bool usesSlices = false, List<ShapeType> remainingShapes = null, List<Color> remainingShapeColors = null)
         {
             var list = new List<ShapeConfig>();
             if (remainingShapes == null) remainingShapes = allShapes.ToList();
@@ -306,6 +378,7 @@ namespace Classes
                 list.Add(GenerateRandomizedShape(shape, shapeColor, rotation: rotation ? null : Quaternion.identity,
                     usesSlices: usesSlices));
             }
+
             return (list, remainingShapes, remainingShapeColors);
         }
 
@@ -319,7 +392,7 @@ namespace Classes
         /// <param name="rotation">Rotation of the shape. Will be random if not declared</param>
         /// <param name="edgeWidth">Thickness of the shape</param>
         /// <param name="usesSlices">If slices will be generated from the shape</param>
-        /// <returns></returns>
+        /// <returns>ShapeConfig of a random shape</returns>
         public static ShapeConfigVoxel GenerateRandomizedShape(ShapeType shape, Color color, Vector3? size = null,
             Vector3? center = null, Quaternion? rotation = null, int edgeWidth = 100, bool usesSlices = false)
         {

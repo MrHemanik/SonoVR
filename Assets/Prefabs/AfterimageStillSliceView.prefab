@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5266042630739938940}
   m_Layer: 0
-  m_Name: AfterglowStillSliceView
+  m_Name: AfterimageStillSliceView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

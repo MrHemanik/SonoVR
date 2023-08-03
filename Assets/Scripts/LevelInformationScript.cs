@@ -31,8 +31,8 @@ public class LevelInformationScript : MonoBehaviour
             case (ObjectType.HiddenVolume):
                 compareType.text = "Verstecktes Volumen";
                 break;
-            case (ObjectType.HiddenVolumeAfterglow):
-                compareType.text = "Verstecktes Volumen mit Rekonstruktion";
+            case (ObjectType.HiddenVolumeAfterimage):
+                compareType.text = "Verstecktes Volumen mit Nachbild";
                 break;
         }
 
@@ -47,8 +47,8 @@ public class LevelInformationScript : MonoBehaviour
             case (ObjectType.HiddenVolume):
                 answerType.text = "Versteckte Volumen";
                 break;
-            case (ObjectType.HiddenVolumeAfterglow):
-                answerType.text = "Versteckte Volumen mit Rekonstruktion";
+            case (ObjectType.HiddenVolumeAfterimage):
+                answerType.text = "Versteckte Volumen mit Nachbild";
                 break;
         }
 

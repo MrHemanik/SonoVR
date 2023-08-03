@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [Header("Scripts")] public VolumeGenerationManager volGenMan;
 
     
-    private Coroutine afterglowCoroutine;
+    private Coroutine afterimageCoroutine;
 
     /// <summary>
     /// MaterialConfig for different visualizations
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     private Transform compareSliceBoxGrabbable;
     private Transform[] answerVolumeBoxGrabbables;
     private Transform[] answerSliceBoxGrabbables;
-    public GameObject afterglowPrefab;
+    public GameObject afterimagePrefab;
     
 
     [HideInInspector] public List<Level> levelList;
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UnityEvent initLevelEvent = new UnityEvent();
     [HideInInspector] public UnityEvent endLevelEvent = new UnityEvent();
 
-    private ObjectPool afterglowPool;
+    private ObjectPool afterimagePool;
     #endregion
 
     #region Initiation
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        afterglowPool = gameObject.GetComponent<ObjectPool>();
+        afterimagePool = gameObject.GetComponent<ObjectPool>();
         compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(0);
         compareSliceBoxGrabbable = compareAnchor.GetChild(1).GetChild(0);
         answerVolumeBoxGrabbables = new Transform[answerAnchors.Length];
@@ -77,9 +77,9 @@ public class GameManager : MonoBehaviour
         enabled = false; // will be re-enabled after generating artificials
         yield return volGenMan.GenerateLevel(currentLevel, winningAnswerId, answerAnchors, compareAnchor);
         yield return null; //If yield return null it waits until generateLevel is fully finished //TODO: Rework
-        if (currentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterglow ||
-            currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
-            afterglowCoroutine = StartCoroutine(HiddenVolumeAfterglow());
+        if (currentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
+            currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)
+            afterimageCoroutine = StartCoroutine(HiddenVolumeAfterimage());
         enabled = true;
         activeRound = true;
         initLevelEvent.Invoke();
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator EndLevel(bool winning)
     {
         Debug.Log(winning ? "Richtige Antwort abgegeben!" : "Falsche Antwort abgegeben!");
-        StopCoroutine(afterglowCoroutine);
+        StopCoroutine(afterimageCoroutine);
         //TODO: Stop Timer
         System.GC.Collect(); //Manual Garbage Collect, as this runs in 1 scene which can lead to some garbage
         currentLevelID++;
@@ -120,45 +120,45 @@ public class GameManager : MonoBehaviour
 
     #region LevelType Custom Functions
 
-    private IEnumerator HiddenVolumeAfterglow()
+    private IEnumerator HiddenVolumeAfterimage()
     {
         Transform movingScanArea = volGenMan.sliceCopyTransform;
         LevelType levelType = currentLevel.levelType;
         while (true)
         {
-            CreateAfterglowStill(movingScanArea,levelType);
+            CreateAfterimageStill(movingScanArea,levelType);
             yield return new WaitForSeconds(0.05f);
         }
     }
 
-    private void CreateAfterglowStill(Transform movingScanArea, LevelType levelType)
+    private void CreateAfterimageStill(Transform movingScanArea, LevelType levelType)
     {
-        if (levelType.answerOptions == ObjectType.HiddenVolumeAfterglow)
+        if (levelType.answerOptions == ObjectType.HiddenVolumeAfterimage)
         {
             for (int i = 0; i < Volume.Volumes.Count; i++)
             {
-                CreateAfterglowStillBody(answerVolumeBoxGrabbables[i],i);
+                CreateAfterimageStillBody(answerVolumeBoxGrabbables[i],i);
             }
         }
         else
         {
-            CreateAfterglowStillBody(compareVolumeBoxGrabbable,winningAnswerId);
+            CreateAfterimageStillBody(compareVolumeBoxGrabbable,winningAnswerId);
         }
 
-        void CreateAfterglowStillBody(Transform parent, int id)
+        void CreateAfterimageStillBody(Transform parent, int id)
         {
-            GameObject newInstance = afterglowPool.GetObjectFromPool();
+            GameObject newInstance = afterimagePool.GetObjectFromPool();
             newInstance.transform.SetPositionAndRotation(movingScanArea.position,movingScanArea.rotation);
             newInstance.transform.parent = parent; //Sets VolumeBoxGrabbable of respective AnswerAnchor or CompareAnchor as parent
             newInstance.transform.localScale = Vector3.one;
-            CreateAndAssignAfterglowMaterial(newInstance.transform.GetChild(0),
+            CreateAndAssignAfterimageMaterial(newInstance.transform.GetChild(0),
                 newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,
                 volGenMan.sliceViews[0].GetComponent<MeshRenderer>().material.GetTexture($"texArray_{id}"));
             //volGenMan.temporaryObjects.Add(newInstance); //Adds it to "Delete with new level" List
-            StartCoroutine(afterglowPool.ReturnObjectToPoolAfterTime(newInstance, 0.5f));
+            StartCoroutine(afterimagePool.ReturnObjectToPoolAfterTime(newInstance, 0.5f));
         }
         
-        static void CreateAndAssignAfterglowMaterial(Transform targetStillSlice, Material mat, Texture sliceTexture)
+        static void CreateAndAssignAfterimageMaterial(Transform targetStillSlice, Material mat, Texture sliceTexture)
         {
             Texture2D stillTexture =
                 new Texture2D(sliceTexture.width, sliceTexture.height, TextureFormat.ARGB32, false);

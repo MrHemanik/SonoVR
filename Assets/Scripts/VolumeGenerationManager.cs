@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Classes;
@@ -78,7 +77,7 @@ public class VolumeGenerationManager : MonoBehaviour
 
         //Setting Up CompareObject
         if (currentLevel.levelType.compareObject == ObjectType.HiddenVolume ||
-            currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterglow)
+            currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)
         {
             MoveWinningMKitVolumeToCompareObject(false);
         }

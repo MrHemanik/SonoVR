@@ -41,7 +41,7 @@ namespace Classes
             shapeColors.RemoveAt(0); //The first color is black that isnt used for volumeGeneration
             levelList = new List<Level>
             {
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.SameShape, Shapes,
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[3], GenerationType.SameShape, Shapes,
                     shapeColors, 1, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3, true),
@@ -212,10 +212,10 @@ namespace Classes
         HiddenVolume,
 
         /// <summary>
-        /// A HiddenVolumeAfterglow is a three-dimensional object with invisible content that reconstructs with examining
+        /// A HiddenVolumeAfterimage is a three-dimensional object with invisible content that reconstructs with examining
         /// It it always examinable with a probe
         /// </summary>
-        HiddenVolumeAfterglow
+        HiddenVolumeAfterimage
     }
 
     /// <summary>

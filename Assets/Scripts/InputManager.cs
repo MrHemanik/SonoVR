@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -21,10 +20,17 @@ public class InputManager : MonoBehaviour
     public void OnLeftTrigger(InputAction.CallbackContext context)
     {
         if (!context.started || gm.ActiveRound==false) return; //Only work when initial click & round active
-        int answerId = leftController.interactablesSelected[0]
-            .transform.GetComponent<InteractableInformation>().answerId;
-        if (answerId == 0) return;
-        gm.CheckAnswer(answerId-1);
+        if (leftController.hasSelection)
+        {
+            int answerId = leftController.interactablesSelected[0]
+                .transform.GetComponent<InteractableInformation>().answerId;
+            if (answerId == 0) return;
+            gm.CheckAnswer(answerId - 1);
+        }
+        else
+        {
+            //Push screen info that you cant
+        }
     }
 
     private void ActivateObjectPickUp()

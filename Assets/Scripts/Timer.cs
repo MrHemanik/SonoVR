@@ -6,7 +6,8 @@ using UnityEngine;
 public class Timer : MonoBehaviour
 {
     public float Time { get; private set; }
-    void Start()
+
+    private void Awake()
     {
         enabled = false;
     }

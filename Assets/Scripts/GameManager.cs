@@ -31,14 +31,15 @@ public class GameManager : MonoBehaviour
 
     private Transform compareVolumeBoxGrabbable;
     private Transform compareSliceBoxGrabbable;
-    private Transform[] answerVolumeBoxGrabbables;
-    private Transform[] answerSliceBoxGrabbables;
+    public Transform[] AnswerVolumeBoxGrabbables { get; private set; }
+    public Transform[] AnswerSliceBoxGrabbables { get; private set; }
 
 
     [HideInInspector] private List<Level> levelList;
 
-    [HideInInspector] private int winningAnswerId;
+    [HideInInspector] public int WinningAnswerId { get; private set; }
     [HideInInspector] public Level CurrentLevel { get; private set; }
+
 
     /// <summary>
     /// Variable that is null when currently playing and either true or false after level completion
@@ -47,9 +48,21 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public int CurrentLevelID { get; private set; }
     [HideInInspector] public bool ActiveRound { get; private set; } = true;
-
+    /// <summary>
+    /// Everything that should be done before the level gets loaded, and after the player wants to load the next level
+    /// </summary>
+    [HideInInspector] public UnityEvent resetComponentsEvent = new UnityEvent();
+    /// <summary>
+    /// Everything that should be done after the volumes and slices are generated and placed
+    /// </summary>
     [HideInInspector] public UnityEvent initLevelEvent = new UnityEvent();
+    /// <summary>
+    /// Everything that should be done after an answer was selected
+    /// </summary>
     [HideInInspector] public UnityEvent endLevelEvent = new UnityEvent();
+    /// <summary>
+    /// Everything that should be done after every level has been played
+    /// </summary>
     [HideInInspector] public UnityEvent endGameEvent = new UnityEvent();
 
     private ObjectPool afterimagePool;
@@ -69,12 +82,12 @@ public class GameManager : MonoBehaviour
         afterimagePool = gameObject.GetComponent<ObjectPool>();
         compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(1);
         compareSliceBoxGrabbable = compareAnchor.GetChild(1).GetChild(1);
-        answerVolumeBoxGrabbables = new Transform[answerAnchors.Length];
-        answerSliceBoxGrabbables = new Transform[answerAnchors.Length];
+        AnswerVolumeBoxGrabbables = new Transform[answerAnchors.Length];
+        AnswerSliceBoxGrabbables = new Transform[answerAnchors.Length];
         for (var i = 0; i < answerAnchors.Length; i++)
         {
-            answerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(1);
-            answerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(1);
+            AnswerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(1);
+            AnswerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(1);
         }
 
         yield return InitLevel();
@@ -82,12 +95,13 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator InitLevel()
     {
+        resetComponentsEvent.Invoke();
         Debug.Log(CurrentLevelID);
         CurrentLevel = levelList[CurrentLevelID];
         LevelWon = null;
         SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
-        yield return volGenMan.GenerateLevel(CurrentLevel, winningAnswerId, answerAnchors, compareAnchor);
+        yield return volGenMan.GenerateLevel(CurrentLevel, WinningAnswerId, answerAnchors, compareAnchor);
         yield return null; //If yield return null it waits until generateLevel is fully finished //TODO: Rework
         if (CurrentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
             CurrentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)
@@ -106,14 +120,14 @@ public class GameManager : MonoBehaviour
 
     private void SetWinningAnswerVolume()
     {
-        winningAnswerId = Random.Range(0, Volume.Volumes.Count);
-        Debug.Log(winningAnswerId);
+        WinningAnswerId = Random.Range(0, Volume.Volumes.Count);
+        Debug.Log(WinningAnswerId);
     }
 
     public void CheckAnswer(int answerID)
     {
         ActiveRound = false;
-        StartCoroutine(EndLevel(winningAnswerId == answerID));
+        StartCoroutine(EndLevel(WinningAnswerId == answerID));
     }
 
     private IEnumerator EndLevel(bool winning)
@@ -159,12 +173,12 @@ public class GameManager : MonoBehaviour
         {
             for (int i = 0; i < Volume.Volumes.Count; i++)
             {
-                CreateAfterimageStillBody(answerVolumeBoxGrabbables[i], i);
+                CreateAfterimageStillBody(AnswerVolumeBoxGrabbables[i], i);
             }
         }
         else
         {
-            CreateAfterimageStillBody(compareVolumeBoxGrabbable, winningAnswerId);
+            CreateAfterimageStillBody(compareVolumeBoxGrabbable, WinningAnswerId);
         }
 
         void CreateAfterimageStillBody(Transform parent, int id)

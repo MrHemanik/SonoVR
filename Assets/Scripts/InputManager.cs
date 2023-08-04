@@ -14,7 +14,6 @@ public class InputManager : MonoBehaviour
     {
         gm = FindObjectOfType<GameManager>();
         gm.initLevelEvent.AddListener(ActivateObjectPickUp);
-        gm.endLevelEvent.AddListener(DeactivateObjectPickUp);
 
         leftController = GameObject.Find("Left Controller").GetComponent<XRDirectInteractor>();
     }
@@ -27,6 +26,7 @@ public class InputManager : MonoBehaviour
             int answerId = leftController.interactablesSelected[0]
                 .transform.GetComponent<InteractableInformation>().answerId;
             if (answerId == 0) return;
+            leftController.allowSelect = false; //Will cancel the pickup, returning the answer to their anchor
             gm.CheckAnswer(answerId - 1);
         }
         else
@@ -47,10 +47,5 @@ public class InputManager : MonoBehaviour
     private void ActivateObjectPickUp()
     {
         leftController.allowSelect = true;
-    }
-
-    private void DeactivateObjectPickUp()
-    {
-        leftController.allowSelect = false; //If there is an object currently grabbed it will cancel it.
     }
 }

@@ -6,7 +6,9 @@ using UnityEngine.UI;
 using SonoGame;
 using mKit;
 
-// uses Assets/DemoApp/Scripts/DemoApp1.cs as base
+/// <summary>
+/// Generates and configures Volumes and Slices
+/// </summary>
 public class VolumeGenerationManager : MonoBehaviour
 {
     #region Variables

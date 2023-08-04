@@ -41,6 +41,7 @@ public class ObjectPool : MonoBehaviour {
     public void ReturnObjectToPool(GameObject objectToDeactivate) {
         if (objectToDeactivate != null) {
             objectToDeactivate.SetActive(false);
+            objectToDeactivate.transform.parent = null;
             inactiveObjects.Push(objectToDeactivate);
         }
     }

@@ -74,7 +74,7 @@ namespace Classes
                 //LevelType 1: compare Slice, answer Volumes
 
                 //Level that plays with different edgeWidth
-                new Level(LevelType.LevelTypes[1], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 4, true),
+                new Level(LevelType.LevelTypes[1], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 4, usesSlices: true),
                     new List<List<ShapeConfig>>
                     {
                         new() // Volume 1
@@ -92,7 +92,7 @@ namespace Classes
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3, true),
                 //Level where one one volume misses a shape
-                new Level(LevelType.LevelTypes[1], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 2),
+                new Level(LevelType.LevelTypes[1], LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 2, usesSlices: true),
                     new List<List<ShapeConfig>>
                     {
                         new(), // Volume 1

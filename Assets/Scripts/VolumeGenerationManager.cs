@@ -112,8 +112,7 @@ public class VolumeGenerationManager : MonoBehaviour
                 compareAnchor.GetChild(1));
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                //sets scale of mKitVolume to 1, filling out the grabbable box
-                answerAnchors[i].GetChild(0).GetChild(1).GetChild(1).localScale = Vector3.one;
+                GameObject.Find($"mKitVolume #{i} (ArtificialVolume.vm2)").transform.localScale = Vector3.one;
             }
         }
 
@@ -275,6 +274,11 @@ public class VolumeGenerationManager : MonoBehaviour
 
     private void ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
     {
+        //Delete temporary Objects
+        foreach (var temporaryObject in temporaryObjects)
+        {
+            Destroy(temporaryObject);
+        }
         //Resets all grabbable boxes to their respective anchor
         Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
         foreach (var anchor in anchors)
@@ -289,12 +293,6 @@ public class VolumeGenerationManager : MonoBehaviour
             SetVisibility(sliceAnchor, false);
             volumeBoxGrabbable.SetPositionAndRotation(volumeAnchor.position, volumeAnchor.rotation);
             sliceBoxGrabbable.SetPositionAndRotation(sliceAnchor.position, sliceAnchor.rotation);
-        }
-
-        //Delete temporary Objects
-        foreach (var temporaryObject in temporaryObjects)
-        {
-            Destroy(temporaryObject);
         }
     }
 

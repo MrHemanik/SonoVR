@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
     private void Start()
     {
         gm = FindObjectOfType<GameManager>();
-        gm.initLevelEvent.AddListener(ActivateObjectPickUp);
+        gm.resetComponentsEvent.AddListener(ActivateObjectPickUp);
 
         leftController = GameObject.Find("Left Controller").GetComponent<XRDirectInteractor>();
     }

@@ -5859,6 +5859,7 @@ GameObject:
   - component: {fileID: 1048120692}
   - component: {fileID: 1048120693}
   - component: {fileID: 1048120694}
+  - component: {fileID: 1048120695}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -6357,6 +6358,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6729a914a2eba84b89832e846f1979f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1048120695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048120683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca400c14ece55c24ea63d073747d5428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: RightAnswer
+    clip: {fileID: 8300000, guid: e565c0fb1cae38b4691c4ca4b6652532, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: WrongAnswer
+    clip: {fileID: 8300000, guid: e565c0fb1cae38b4691c4ca4b6652532, type: 3}
+    volume: 1
+    pitch: 0.8
+    source: {fileID: 0}
 --- !u!1001 &1092175879
 PrefabInstance:
   m_ObjectHideFlags: 0

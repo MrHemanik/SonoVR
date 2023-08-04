@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     #region Variables
 
     [Header("Scripts")] public VolumeGenerationManager volGenMan;
-
+    private AudioManager am;
+    private ObjectPool afterimagePool;
     private Coroutine afterimageCoroutine;
 
     /// <summary>
@@ -48,24 +49,26 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public int CurrentLevelID { get; private set; }
     [HideInInspector] public bool ActiveRound { get; private set; } = true;
+
     /// <summary>
     /// Everything that should be done before the level gets loaded, and after the player wants to load the next level
     /// </summary>
     [HideInInspector] public UnityEvent resetComponentsEvent = new UnityEvent();
+
     /// <summary>
     /// Everything that should be done after the volumes and slices are generated and placed
     /// </summary>
     [HideInInspector] public UnityEvent initLevelEvent = new UnityEvent();
+
     /// <summary>
     /// Everything that should be done after an answer was selected
     /// </summary>
     [HideInInspector] public UnityEvent endLevelEvent = new UnityEvent();
+
     /// <summary>
     /// Everything that should be done after every level has been played
     /// </summary>
     [HideInInspector] public UnityEvent endGameEvent = new UnityEvent();
-
-    private ObjectPool afterimagePool;
 
     #endregion
 
@@ -79,7 +82,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        afterimagePool = gameObject.GetComponent<ObjectPool>();
+        afterimagePool = GetComponent<ObjectPool>();
+        am = GetComponent<AudioManager>();
         compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(1);
         compareSliceBoxGrabbable = compareAnchor.GetChild(1).GetChild(1);
         AnswerVolumeBoxGrabbables = new Transform[answerAnchors.Length];
@@ -96,7 +100,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator InitLevel()
     {
         resetComponentsEvent.Invoke();
-        Debug.Log(CurrentLevelID);
+        Debug.Log($"Loading Level {CurrentLevelID}");
         CurrentLevel = levelList[CurrentLevelID];
         LevelWon = null;
         SetWinningAnswerVolume();
@@ -110,9 +114,6 @@ public class GameManager : MonoBehaviour
         ActiveRound = true;
         initLevelEvent.Invoke();
     }
-
-
-    //Sets the layer of every child to either the default or an invisible layer
 
     #endregion
 
@@ -133,6 +134,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator EndLevel(bool winning)
     {
         LevelWon = winning;
+        am.Play(winning ? "RightAnswer" : "WrongAnswer");
         Debug.Log(winning ? "Richtige Antwort abgegeben!" : "Falsche Antwort abgegeben!");
         if (CurrentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
             CurrentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)

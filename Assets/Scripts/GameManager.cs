@@ -35,15 +35,21 @@ public class GameManager : MonoBehaviour
     private Transform[] answerSliceBoxGrabbables;
 
 
-    [HideInInspector] public List<Level> levelList;
-    [HideInInspector] public Level currentLevel;
-    [HideInInspector] public int currentLevelID;
-    [HideInInspector] public int winningAnswerId;
-    [HideInInspector] public bool activeRound = true;
+    [HideInInspector] private List<Level> levelList;
+    [HideInInspector] private int currentLevelID;
+    [HideInInspector] private int winningAnswerId;
+    [HideInInspector] public Level CurrentLevel { get; private set; }
+    /// <summary>
+    /// Variable that is null when currently playing and either true or false after level completion
+    /// </summary>
+    public bool? LevelWon { get; private set; } = null;
+    [HideInInspector] public bool ActiveRound { get; private set; } = true;
     [HideInInspector] public UnityEvent initLevelEvent = new UnityEvent();
     [HideInInspector] public UnityEvent endLevelEvent = new UnityEvent();
-
+    [HideInInspector] public UnityEvent endGameEvent = new UnityEvent();
+    
     private ObjectPool afterimagePool;
+
     #endregion
 
     #region Initiation
@@ -71,18 +77,18 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator InitLevel()
     {
-        currentLevel = levelList[currentLevelID];
+        CurrentLevel = levelList[currentLevelID];
+        LevelWon = null;
         SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
-        yield return volGenMan.GenerateLevel(currentLevel, winningAnswerId, answerAnchors, compareAnchor);
+        yield return volGenMan.GenerateLevel(CurrentLevel, winningAnswerId, answerAnchors, compareAnchor);
         yield return null; //If yield return null it waits until generateLevel is fully finished //TODO: Rework
-        if (currentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
-            currentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)
+        if (CurrentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
+            CurrentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)
             afterimageCoroutine = StartCoroutine(HiddenVolumeAfterimage());
         enabled = true;
-        activeRound = true;
+        ActiveRound = true;
         initLevelEvent.Invoke();
-        //TODO Start Timer via listener
     }
 
 
@@ -100,19 +106,27 @@ public class GameManager : MonoBehaviour
 
     public void CheckAnswer(int answerID)
     {
-        activeRound = false;
+        ActiveRound = false;
         StartCoroutine(EndLevel(winningAnswerId == answerID));
     }
 
     private IEnumerator EndLevel(bool winning)
     {
+        LevelWon = winning;
         Debug.Log(winning ? "Richtige Antwort abgegeben!" : "Falsche Antwort abgegeben!");
         StopCoroutine(afterimageCoroutine);
-        //TODO: Stop Timer
+        endLevelEvent.Invoke();
         System.GC.Collect(); //Manual Garbage Collect, as this runs in 1 scene which can lead to some garbage
+        
+        //Part of loading new level
         currentLevelID++;
         yield return new WaitForSeconds(1f); //TODO: Replace with some sort of check for the player
-        yield return InitLevel();
+        if (currentLevelID >= levelList.Count) EndGame();
+        else yield return InitLevel();
+    }
+    private void EndGame()
+    {
+        endGameEvent.Invoke();
     }
 
     #endregion
@@ -122,7 +136,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator HiddenVolumeAfterimage()
     {
         Transform movingScanArea = volGenMan.sliceCopyTransform;
-        LevelType levelType = currentLevel.levelType;
+        LevelType levelType = CurrentLevel.levelType;
         while (true)
         {
             CreateAfterimageStill(movingScanArea,levelType);

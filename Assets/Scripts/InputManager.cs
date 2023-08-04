@@ -20,7 +20,7 @@ public class InputManager : MonoBehaviour
 
     public void OnLeftTrigger(InputAction.CallbackContext context)
     {
-        if (!context.started || gm.activeRound==false) return; //Only work when initial click & round active
+        if (!context.started || gm.ActiveRound==false) return; //Only work when initial click & round active
         int answerId = leftController.interactablesSelected[0]
             .transform.GetComponent<InteractableInformation>().answerId;
         if (answerId == 0) return;

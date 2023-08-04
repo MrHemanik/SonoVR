@@ -21,7 +21,7 @@ public class LevelInformationScript : MonoBehaviour
     }
     void SetLevelInformation()
     {
-        var levelType = gm.currentLevel.levelType;
+        var levelType = gm.CurrentLevel.levelType;
         generalDescription.text = levelType.description;
         switch (levelType.compareObject)
         {

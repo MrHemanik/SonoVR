@@ -55,9 +55,9 @@ public class VolumeGenerationManager : MonoBehaviour
         enabled = true;
 
         //Move LevelElements to their respective Anchor/Box
-        Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(0).GetChild(1);
-        Transform compareVolumeGrabBox = compareAnchor.GetChild(0).GetChild(0);
+        Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(1).GetChild(1);
         Transform compareVolumeAnchor = compareAnchor.GetChild(0);
+        Transform compareVolumeGrabBox = compareVolumeAnchor.GetChild(1);
         List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
         for (var i = 0; i < winningMKitVolume.childCount; i++)
         {
@@ -113,7 +113,7 @@ public class VolumeGenerationManager : MonoBehaviour
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
                 //sets scale of mKitVolume to 1, filling out the grabbable box
-                answerAnchors[i].GetChild(0).GetChild(0).GetChild(1).localScale = Vector3.one;
+                answerAnchors[i].GetChild(0).GetChild(1).GetChild(1).localScale = Vector3.one;
             }
         }
 
@@ -123,7 +123,7 @@ public class VolumeGenerationManager : MonoBehaviour
             //Detach childen of mKitVolumes from them
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                var mKitVolume = answerAnchors[i].GetChild(0).GetChild(0).GetChild(1);
+                var mKitVolume = answerAnchors[i].GetChild(0).GetChild(1).GetChild(1);
                 mKitVolume.localScale = Vector3.one; //sets scale to 1, filling out the grabbable box
                 if (withVisibleVolume && mKitVolume == winningMKitVolume) break; //doesn't detach from winMKitVolume
                 int childCount = mKitVolume.childCount;
@@ -140,7 +140,7 @@ public class VolumeGenerationManager : MonoBehaviour
             //"Remove" every other mKitVolume
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(0);
+                Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(1);
                 //Instead of destroying it, move it to somewhere where it isn't examinable
                 if (volumeBoxGrabbable.childCount >= 2)
                     if (volumeBoxGrabbable.GetChild(1).name.Contains("mKitVolume"))
@@ -225,7 +225,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Transform volumeAnchor = answerAnchor.GetChild(0);
         v.VolumeProxy.position = volumeAnchor.position; // set volume position
         GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
-            .SetParent(volumeAnchor.GetChild(0)); //set volumeAnchor's grabbable box as parent of volume
+            .SetParent(volumeAnchor.GetChild(1)); //set volumeAnchor's grabbable box as parent of volume
     }
 
     /// <summary>
@@ -281,8 +281,8 @@ public class VolumeGenerationManager : MonoBehaviour
         {
             Transform volumeAnchor = anchor.GetChild(0);
             Transform sliceAnchor = anchor.GetChild(1);
-            Transform volumeBoxGrabbable = volumeAnchor.GetChild(0);
-            Transform sliceBoxGrabbable = sliceAnchor.GetChild(0);
+            Transform volumeBoxGrabbable = volumeAnchor.GetChild(1);
+            Transform sliceBoxGrabbable = sliceAnchor.GetChild(1);
             if (volumeBoxGrabbable.childCount >= 2) //Detach mKitVolume is connected 
                 volumeBoxGrabbable.GetChild(1).parent = null;
             SetVisibility(volumeAnchor, false);

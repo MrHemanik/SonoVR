@@ -67,14 +67,14 @@ public class GameManager : MonoBehaviour
     private IEnumerator Start()
     {
         afterimagePool = gameObject.GetComponent<ObjectPool>();
-        compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(0);
-        compareSliceBoxGrabbable = compareAnchor.GetChild(1).GetChild(0);
+        compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(1);
+        compareSliceBoxGrabbable = compareAnchor.GetChild(1).GetChild(1);
         answerVolumeBoxGrabbables = new Transform[answerAnchors.Length];
         answerSliceBoxGrabbables = new Transform[answerAnchors.Length];
         for (var i = 0; i < answerAnchors.Length; i++)
         {
-            answerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(0);
-            answerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(0);
+            answerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(1);
+            answerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(1);
         }
 
         yield return InitLevel();
@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator InitLevel()
     {
+        Debug.Log(CurrentLevelID);
         CurrentLevel = levelList[CurrentLevelID];
         LevelWon = null;
         SetWinningAnswerVolume();

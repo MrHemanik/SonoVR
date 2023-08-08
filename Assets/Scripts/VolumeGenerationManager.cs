@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using SonoGame;
 using mKit;
-
 /// <summary>
 /// Generates and configures Volumes and Slices
 /// </summary>
@@ -99,7 +98,7 @@ public class VolumeGenerationManager : MonoBehaviour
                 }
                 compareAnchorVisibleVolume.Translate(compareVolumeAnchor.position - winningMKitVolume.position);
                 compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
-                SetVisibility(compareVolumeAnchor, true);
+                GameHelper.SetVisibility(compareVolumeAnchor, true);
             }
             else
             {
@@ -152,7 +151,7 @@ public class VolumeGenerationManager : MonoBehaviour
                         volumeBoxGrabbable.GetChild(1).position -= new Vector3(0, 100, 0);
             }
 
-            SetVisibility(compareVolumeAnchor, true);
+            GameHelper.SetVisibility(compareVolumeAnchor, true);
         }
     }
 
@@ -169,7 +168,7 @@ public class VolumeGenerationManager : MonoBehaviour
                 //Make Model visible if answerOptions are volumes or if compareObject is Volume and this is the winningAnswer
                 addObjectModels: ao == ObjectType.Volume || co == ObjectType.Volume && winningAnswerID == i);
             if (ao != ObjectType.Slice)
-                SetVisibility(answerAnchors[i].GetChild(0), true); //Sets all elements of volumeanchor to visible
+                GameHelper.SetVisibility(answerAnchors[i].GetChild(0), true); //Sets all elements of volumeanchor to visible
         }
 
         Debug.Log("GenerateArtificialVolume finished");
@@ -252,7 +251,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Quaternion defaultRotation = sliceCopyTransform.localRotation;
         sliceCopyTransform.SetPositionAndRotation(sourceSliceAnchor.position, Quaternion.identity);
         sliceCopyTransform.parent = null;
-        SetVisibility(targetSliceAnchor,
+        GameHelper.SetVisibility(targetSliceAnchor,
             true); //Needs to be done before GetSliceCamCapture, as it will not work without being active
         yield return
             null; //Needs yield return or else the SetPositionAndRotation will be executed after the sliceCamCapture
@@ -295,21 +294,10 @@ public class VolumeGenerationManager : MonoBehaviour
             Transform sliceBoxGrabbable = sliceAnchor.GetChild(1);
             if (volumeBoxGrabbable.childCount >= 2) //Detach mKitVolume is connected 
                 volumeBoxGrabbable.GetChild(1).parent = null;
-            SetVisibility(volumeAnchor, false);
-            SetVisibility(sliceAnchor, false);
+            GameHelper.SetVisibility(volumeAnchor, false);
+            GameHelper.SetVisibility(sliceAnchor, false);
             volumeBoxGrabbable.SetPositionAndRotation(volumeAnchor.position, volumeAnchor.rotation);
             sliceBoxGrabbable.SetPositionAndRotation(sliceAnchor.position, sliceAnchor.rotation);
         }
-    }
-
-    //Sets the layer of every child to either the default or an invisible layer and set active state
-    internal void SetVisibility(Transform obj, bool visible)
-    {
-        foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
-        {
-            trans.gameObject.layer = visible ? 0 : 3;
-        }
-
-        obj.gameObject.SetActive(visible);
     }
 }

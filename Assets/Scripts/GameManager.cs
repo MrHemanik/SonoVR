@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public bool? LevelWon { get; private set; } = null;
 
-    [HideInInspector] public int CurrentLevelID { get; private set; }
+    [HideInInspector] public int CurrentLevelID { get; private set; } = 13;
     [HideInInspector] public bool ActiveRound { get; private set; } = true;
 
     /// <summary>

@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     public Transform[] AnswerVolumeBoxGrabbables { get; private set; }
     public Transform[] AnswerSliceBoxGrabbables { get; private set; }
 
-
+    public Transform[] MKitVolumes { get; private set; } = new Transform[4];
     [HideInInspector] private List<Level> levelList;
 
     [HideInInspector] public int WinningAnswerId { get; private set; }
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public bool? LevelWon { get; private set; } = null;
 
-    [HideInInspector] public int CurrentLevelID { get; private set; } = 13;
+    [HideInInspector] public int CurrentLevelID { get; private set; } = 0;
     [HideInInspector] public bool ActiveRound { get; private set; } = true;
 
     /// <summary>
@@ -94,18 +94,26 @@ public class GameManager : MonoBehaviour
             AnswerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(1);
         }
 
+        //Instantiate all mKitVolumes so they can be found easier later
+        for (int i = 0; i < 4; i++)
+        {
+            yield return VolumeManager.Instance.GenerateArtificialVolume(new ShapeConfig(), i);
+            MKitVolumes[i] = GameObject.Find($"mKitVolume #{i} (ArtificialVolume.vm2)").transform;
+        }
+
         yield return InitLevel();
     }
 
     private IEnumerator InitLevel()
     {
         resetComponentsEvent.Invoke();
-        Debug.Log($"Loading Level {CurrentLevelID}");
         CurrentLevel = levelList[CurrentLevelID];
+        Debug.Log(
+            $"Loading Level {CurrentLevelID} of with compare:{CurrentLevel.levelType.compareObject} and answer:{CurrentLevel.levelType.answerOptions}");
         LevelWon = null;
         SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
-        yield return volGenMan.GenerateLevel(CurrentLevel, WinningAnswerId, answerAnchors, compareAnchor);
+        yield return volGenMan.GenerateLevel(CurrentLevel, WinningAnswerId, answerAnchors, compareAnchor, MKitVolumes);
         yield return null; //If yield return null it waits until generateLevel is fully finished //TODO: Rework
         if (CurrentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
             CurrentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)

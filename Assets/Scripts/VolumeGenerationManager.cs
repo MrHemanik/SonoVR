@@ -47,16 +47,16 @@ public class VolumeGenerationManager : MonoBehaviour
     #region Generation & Configuration of Volume and Slice
 
     internal IEnumerator GenerateLevel(Level currentLevel, int winningAnswerID, Transform[] answerAnchors,
-        Transform compareAnchor)
+        Transform compareAnchor, Transform[] mKitVolumes)
     {
         enabled = false; // will be re-enabled after generating artificials
         ResetComponents(answerAnchors, compareAnchor);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
-        SetupVolumes(answerAnchors, currentLevel.volumeList.Count);
+        SetupVolumes(answerAnchors, mKitVolumes,currentLevel.volumeList.Count);
         enabled = true;
 
         //Move LevelElements to their respective Anchor/Box
-        Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(1).Find($"mKitVolume #{winningAnswerID} (ArtificialVolume.vm2)");
+        Transform winningMKitVolume = mKitVolumes[winningAnswerID];
         Debug.Log("Winning MKitVolume Name: "+winningMKitVolume.name);
         Transform compareVolumeAnchor = compareAnchor.GetChild(0);
         Transform compareVolumeGrabBox = compareVolumeAnchor.GetChild(1);
@@ -113,7 +113,7 @@ public class VolumeGenerationManager : MonoBehaviour
                 compareAnchor.GetChild(1));
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                GameObject.Find($"mKitVolume #{i} (ArtificialVolume.vm2)").transform.localScale = Vector3.one;
+                mKitVolumes[i].localScale = Vector3.one;
             }
         }
 
@@ -123,8 +123,7 @@ public class VolumeGenerationManager : MonoBehaviour
             //Detach childen of mKitVolumes from them
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                var mKitVolume = answerAnchors[i].GetChild(0).GetChild(1)
-                    .Find($"mKitVolume #{i} (ArtificialVolume.vm2)");
+                var mKitVolume = mKitVolumes[i];
                 Debug.Log("MkitVolume with i = "+i+" is" +mKitVolume.name);
                 mKitVolume.localScale = Vector3.one; //sets scale to 1, filling out the grabbable box
                 if (withVisibleVolume && mKitVolume == winningMKitVolume) break; //doesn't detach from winMKitVolume
@@ -174,7 +173,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Debug.Log("GenerateArtificialVolume finished");
     }
 
-    internal void SetupVolumes(Transform[] answerAnchors,int volumeCount)
+    internal void SetupVolumes(Transform[] answerAnchors,Transform[] mKitVolumes, int volumeCount)
     {
         //position of volume toolgroup needs to be set before configuration. only for toolgroup 1 as it is used as multiview
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
@@ -185,7 +184,7 @@ public class VolumeGenerationManager : MonoBehaviour
         //Configuration of Volumes
         for (int i = 0; i < volumeCount; i++)
         {
-            ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i, answerAnchors[i]);
+            ConfigureVolume(Volume.Volumes[i], scannerType, visualization, answerAnchors[i], mKitVolumes[i]);
             ConfigureSliceViews(Volume.Volumes[i], scannerType, visualization);
 
             //Bugfix: problem where render is flickering, Gets temporarily fixed when clicking on OsCamera, even when it is inactive at the time. Changing the CameraType also works
@@ -217,8 +216,8 @@ public class VolumeGenerationManager : MonoBehaviour
         //sliceCopyTransform.SetSliceMask(scannerType);
     }
 
-    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, int index,
-        Transform answerAnchor)
+    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, 
+        Transform answerAnchor, Transform mKitVolume)
     {
         v.SliceMaskingTexture = AppConfig.assets.GetScannerMask(scannerType);
         v.UseSliceMasking = scannerType != UltrasoundScannerTypeEnum.LINEAR;
@@ -228,7 +227,7 @@ public class VolumeGenerationManager : MonoBehaviour
         UltrasoundSimulation.Instance.Init(v);
         Transform volumeAnchor = answerAnchor.GetChild(0);
         v.VolumeProxy.position = volumeAnchor.position; // set volume position
-        GameObject.Find("mKitVolume #" + index + " (ArtificialVolume.vm2)").transform
+        mKitVolume.transform
             .SetParent(volumeAnchor.GetChild(1)); //set volumeAnchor's grabbable box as parent of volume
     }
 

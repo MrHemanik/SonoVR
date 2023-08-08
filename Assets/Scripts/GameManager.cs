@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
             AnswerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(1);
             AnswerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(1);
         }
+
         yield return InitLevel();
     }
 
@@ -121,7 +122,7 @@ public class GameManager : MonoBehaviour
     private void SetWinningAnswerVolume()
     {
         WinningAnswerId = Random.Range(0, Volume.Volumes.Count);
-        Debug.Log(WinningAnswerId);
+        Debug.Log($"The winning volume is: {WinningAnswerId}");
     }
 
     public void CheckAnswer(int answerID)
@@ -176,12 +177,12 @@ public class GameManager : MonoBehaviour
         {
             for (int i = 0; i < Volume.Volumes.Count; i++)
             {
-                CreateAfterimageStillBody(AnswerVolumeBoxGrabbables[i], i);
+                CreateAfterimageStillBody(AnswerVolumeBoxGrabbables[i].GetChild(0), i);
             }
         }
         else
         {
-            CreateAfterimageStillBody(compareVolumeBoxGrabbable, WinningAnswerId);
+            CreateAfterimageStillBody(compareVolumeBoxGrabbable.GetChild(0), WinningAnswerId);
         }
 
         void CreateAfterimageStillBody(Transform parent, int id)
@@ -189,7 +190,7 @@ public class GameManager : MonoBehaviour
             GameObject newInstance = afterimagePool.GetObjectFromPool();
             newInstance.transform.SetPositionAndRotation(movingScanArea.position, movingScanArea.rotation);
             newInstance.transform.parent =
-                parent; //Sets VolumeBoxGrabbable of respective AnswerAnchor or CompareAnchor as parent
+                parent; //Sets VolumeBoxGrabbable "visualComponents" of respective AnswerAnchor or CompareAnchor as parent
             newInstance.transform.localScale = Vector3.one;
             CreateAndAssignAfterimageMaterial(newInstance.transform.GetChild(0),
                 newInstance.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial,

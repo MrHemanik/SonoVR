@@ -57,7 +57,7 @@ public class VolumeGenerationManager : MonoBehaviour
         enabled = true;
 
         //Move LevelElements to their respective Anchor/Box
-        Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(1).GetChild(1);
+        Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(1).Find($"mKitVolume #{winningAnswerID} (ArtificialVolume.vm2)");
         Transform compareVolumeAnchor = compareAnchor.GetChild(0);
         Transform compareVolumeGrabBox = compareVolumeAnchor.GetChild(1);
         List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
@@ -124,7 +124,9 @@ public class VolumeGenerationManager : MonoBehaviour
             //Detach childen of mKitVolumes from them
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                var mKitVolume = answerAnchors[i].GetChild(0).GetChild(1).GetChild(1);
+                var mKitVolume = answerAnchors[i].GetChild(0).GetChild(1)
+                    .Find($"mKitVolume #{i} (ArtificialVolume.vm2)");
+                Debug.Log("MkitVolume with i = "+i+" is" +mKitVolume.name);
                 mKitVolume.localScale = Vector3.one; //sets scale to 1, filling out the grabbable box
                 if (withVisibleVolume && mKitVolume == winningMKitVolume) break; //doesn't detach from winMKitVolume
                 int childCount = mKitVolume.childCount;
@@ -132,12 +134,14 @@ public class VolumeGenerationManager : MonoBehaviour
                 {
                     temporaryObjects.Add(mKitVolume.GetChild(0).gameObject); //Deletes on new Level
                     mKitVolume.GetChild(0).SetParent(mKitVolume.parent); //Keeps visibleObject in answerOption
+                    
                 }
             }
 
             //Set winning mKitVolume into compareObject
             winningMKitVolume.SetParent(compareVolumeGrabBox);
             winningMKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            winningMKitVolume.localScale = Vector3.one; //Should be unnesessary as it should be done in the for loop above, but to be safe, as there are some bugs regarding scale
             //"Remove" every other mKitVolume
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {

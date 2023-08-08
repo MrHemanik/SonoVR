@@ -93,7 +93,6 @@ public class GameManager : MonoBehaviour
             AnswerVolumeBoxGrabbables[i] = answerAnchors[i].GetChild(0).GetChild(1);
             AnswerSliceBoxGrabbables[i] = answerAnchors[i].GetChild(1).GetChild(1);
         }
-
         yield return InitLevel();
     }
 
@@ -152,6 +151,8 @@ public class GameManager : MonoBehaviour
     private void EndGame()
     {
         endGameEvent.Invoke();
+        am.Play("RightAnswer");
+        am.Play("WrongAnswer");
     }
 
     #endregion

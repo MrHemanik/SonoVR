@@ -96,9 +96,8 @@ public class VolumeGenerationManager : MonoBehaviour
                 foreach (var mKitVolumeVisibleObject in mKitVolumeVisibleObjects)
                 {
                     mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
-                    mKitVolumeVisibleObject.Translate(compareVolumeAnchor.position - winningMKitVolume.position);
                 }
-
+                compareAnchorVisibleVolume.Translate(compareVolumeAnchor.position - winningMKitVolume.position);
                 compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
                 SetVisibility(compareVolumeAnchor, true);
             }

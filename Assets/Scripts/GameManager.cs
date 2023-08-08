@@ -148,7 +148,6 @@ public class GameManager : MonoBehaviour
             CurrentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)
             StopCoroutine(afterimageCoroutine);
         endLevelEvent.Invoke();
-        System.GC.Collect(); //Manual Garbage Collect, as this runs in 1 scene which can lead to some garbage
 
         //Part of loading new level
         CurrentLevelID++;

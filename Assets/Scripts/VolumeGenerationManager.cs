@@ -53,11 +53,12 @@ public class VolumeGenerationManager : MonoBehaviour
         enabled = false; // will be re-enabled after generating artificials
         ResetComponents(answerAnchors, compareAnchor);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
-        SetupVolumes(answerAnchors);
+        SetupVolumes(answerAnchors, currentLevel.volumeList.Count);
         enabled = true;
 
         //Move LevelElements to their respective Anchor/Box
         Transform winningMKitVolume = answerAnchors[winningAnswerID].GetChild(0).GetChild(1).Find($"mKitVolume #{winningAnswerID} (ArtificialVolume.vm2)");
+        Debug.Log("Winning MKitVolume Name: "+winningMKitVolume.name);
         Transform compareVolumeAnchor = compareAnchor.GetChild(0);
         Transform compareVolumeGrabBox = compareVolumeAnchor.GetChild(1);
         List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
@@ -175,7 +176,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Debug.Log("GenerateArtificialVolume finished");
     }
 
-    internal void SetupVolumes(Transform[] answerAnchors)
+    internal void SetupVolumes(Transform[] answerAnchors,int volumeCount)
     {
         //position of volume toolgroup needs to be set before configuration. only for toolgroup 1 as it is used as multiview
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
@@ -184,7 +185,7 @@ public class VolumeGenerationManager : MonoBehaviour
             .SetToolSize(new Vector2(sliceCopyTransform.transform.localScale.x, sliceCopyTransform.localScale.y));
 
         //Configuration of Volumes
-        for (int i = 0; i < Volume.Volumes.Count; i++)
+        for (int i = 0; i < volumeCount; i++)
         {
             ConfigureVolume(Volume.Volumes[i], scannerType, visualization, i, answerAnchors[i]);
             ConfigureSliceViews(Volume.Volumes[i], scannerType, visualization);

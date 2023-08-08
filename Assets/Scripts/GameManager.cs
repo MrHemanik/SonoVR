@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour
 
     private void SetWinningAnswerVolume()
     {
-        WinningAnswerId = Random.Range(0, Volume.Volumes.Count);
+        WinningAnswerId = Random.Range(0, CurrentLevel.volumeList.Count);
         Debug.Log($"The winning volume is: {WinningAnswerId}");
     }
 
@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
     {
         if (levelType.answerOptions == ObjectType.HiddenVolumeAfterimage)
         {
-            for (int i = 0; i < Volume.Volumes.Count; i++)
+            for (int i = 0; i < CurrentLevel.volumeList.Count; i++)
             {
                 CreateAfterimageStillBody(AnswerVolumeBoxGrabbables[i].GetChild(0), i);
             }

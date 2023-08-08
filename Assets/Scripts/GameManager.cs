@@ -113,8 +113,8 @@ public class GameManager : MonoBehaviour
         LevelWon = null;
         SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
-        yield return volGenMan.GenerateLevel(CurrentLevel, WinningAnswerId, answerAnchors, compareAnchor, MKitVolumes);
-        yield return null; //If yield return null it waits until generateLevel is fully finished //TODO: Rework
+        yield return volGenMan.GenerateLevel(CurrentLevel, WinningAnswerId, answerAnchors, compareAnchor, MKitVolumes, AnswerVolumeBoxGrabbables);
+        yield return null; //If yield return null it waits until generateLevel is fully finished
         if (CurrentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
             CurrentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)
             afterimageCoroutine = StartCoroutine(HiddenVolumeAfterimage());

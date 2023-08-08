@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SonoGame;
 using mKit;
+
 /// <summary>
 /// Generates and configures Volumes and Slices
 /// </summary>
@@ -47,17 +48,17 @@ public class VolumeGenerationManager : MonoBehaviour
     #region Generation & Configuration of Volume and Slice
 
     internal IEnumerator GenerateLevel(Level currentLevel, int winningAnswerID, Transform[] answerAnchors,
-        Transform compareAnchor, Transform[] mKitVolumes)
+        Transform compareAnchor, Transform[] mKitVolumes, Transform[] answerVolumeBoxGrabbables)
     {
         enabled = false; // will be re-enabled after generating artificials
         ResetComponents(answerAnchors, compareAnchor);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
-        SetupVolumes(answerAnchors, mKitVolumes,currentLevel.volumeList.Count);
+        SetupVolumes(answerAnchors, mKitVolumes, answerVolumeBoxGrabbables, currentLevel.volumeList.Count);
         enabled = true;
 
         //Move LevelElements to their respective Anchor/Box
         Transform winningMKitVolume = mKitVolumes[winningAnswerID];
-        Debug.Log("Winning MKitVolume Name: "+winningMKitVolume.name);
+        Debug.Log("Winning MKitVolume Name: " + winningMKitVolume.name);
         Transform compareVolumeAnchor = compareAnchor.GetChild(0);
         Transform compareVolumeGrabBox = compareVolumeAnchor.GetChild(1);
         List<Transform> mKitVolumeVisibleObjects = new List<Transform>();
@@ -96,6 +97,7 @@ public class VolumeGenerationManager : MonoBehaviour
                 {
                     mKitVolumeVisibleObject.SetParent(compareAnchorVisibleVolume);
                 }
+
                 compareAnchorVisibleVolume.Translate(compareVolumeAnchor.position - winningMKitVolume.position);
                 compareAnchorVisibleVolume.localRotation = compareAnchor.rotation;
                 GameHelper.SetVisibility(compareVolumeAnchor, true);
@@ -124,7 +126,6 @@ public class VolumeGenerationManager : MonoBehaviour
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
                 var mKitVolume = mKitVolumes[i];
-                Debug.Log("MkitVolume with i = "+i+" is" +mKitVolume.name);
                 mKitVolume.localScale = Vector3.one; //sets scale to 1, filling out the grabbable box
                 if (withVisibleVolume && mKitVolume == winningMKitVolume) break; //doesn't detach from winMKitVolume
                 int childCount = mKitVolume.childCount;
@@ -132,22 +133,19 @@ public class VolumeGenerationManager : MonoBehaviour
                 {
                     temporaryObjects.Add(mKitVolume.GetChild(0).gameObject); //Deletes on new Level
                     mKitVolume.GetChild(0).SetParent(mKitVolume.parent); //Keeps visibleObject in answerOption
-                    
                 }
             }
 
             //Set winning mKitVolume into compareObject
             winningMKitVolume.SetParent(compareVolumeGrabBox);
             winningMKitVolume.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            winningMKitVolume.localScale = Vector3.one; //Should be unnesessary as it should be done in the for loop above, but to be safe, as there are some bugs regarding scale
+            winningMKitVolume.localScale =
+                Vector3.one; //Should be unnesessary as it should be done in the for loop above, but to be safe, as there are some bugs regarding scale
             //"Remove" every other mKitVolume
             for (int i = 0; i < currentLevel.volumeList.Count; i++)
             {
-                Transform volumeBoxGrabbable = answerAnchors[i].GetChild(0).GetChild(1);
-                //Instead of destroying it, move it to somewhere where it isn't examinable
-                if (volumeBoxGrabbable.childCount >= 2)
-                    if (volumeBoxGrabbable.GetChild(1).name.Contains("mKitVolume"))
-                        volumeBoxGrabbable.GetChild(1).position -= new Vector3(0, 100, 0);
+                if (i != winningAnswerID)
+                    mKitVolumes[i].position -= new Vector3(0, 100, 0);
             }
 
             GameHelper.SetVisibility(compareVolumeAnchor, true);
@@ -167,13 +165,15 @@ public class VolumeGenerationManager : MonoBehaviour
                 //Make Model visible if answerOptions are volumes or if compareObject is Volume and this is the winningAnswer
                 addObjectModels: ao == ObjectType.Volume || co == ObjectType.Volume && winningAnswerID == i);
             if (ao != ObjectType.Slice)
-                GameHelper.SetVisibility(answerAnchors[i].GetChild(0), true); //Sets all elements of volumeanchor to visible
+                GameHelper.SetVisibility(answerAnchors[i].GetChild(0),
+                    true); //Sets all elements of volumeanchor to visible
         }
 
         Debug.Log("GenerateArtificialVolume finished");
     }
 
-    internal void SetupVolumes(Transform[] answerAnchors,Transform[] mKitVolumes, int volumeCount)
+    internal void SetupVolumes(Transform[] answerAnchors, Transform[] mKitVolumes,
+        Transform[] answerVolumeBoxGrabbables, int volumeCount)
     {
         //position of volume toolgroup needs to be set before configuration. only for toolgroup 1 as it is used as multiview
         Volume.Volumes[0].ToolTransform.SetPositionAndRotation(sliceCopyTransform.position,
@@ -184,7 +184,8 @@ public class VolumeGenerationManager : MonoBehaviour
         //Configuration of Volumes
         for (int i = 0; i < volumeCount; i++)
         {
-            ConfigureVolume(Volume.Volumes[i], scannerType, visualization, answerAnchors[i], mKitVolumes[i]);
+            ConfigureVolume(Volume.Volumes[i], scannerType, visualization, answerAnchors[i], mKitVolumes[i],
+                answerVolumeBoxGrabbables[i]);
             ConfigureSliceViews(Volume.Volumes[i], scannerType, visualization);
 
             //Bugfix: problem where render is flickering, Gets temporarily fixed when clicking on OsCamera, even when it is inactive at the time. Changing the CameraType also works
@@ -216,8 +217,8 @@ public class VolumeGenerationManager : MonoBehaviour
         //sliceCopyTransform.SetSliceMask(scannerType);
     }
 
-    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization, 
-        Transform answerAnchor, Transform mKitVolume)
+    void ConfigureVolume(Volume v, UltrasoundScannerTypeEnum scannerType, EVisualization visualization,
+        Transform answerAnchor, Transform mKitVolume, Transform answerVolumeBoxGrabbable)
     {
         v.SliceMaskingTexture = AppConfig.assets.GetScannerMask(scannerType);
         v.UseSliceMasking = scannerType != UltrasoundScannerTypeEnum.LINEAR;
@@ -228,7 +229,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Transform volumeAnchor = answerAnchor.GetChild(0);
         v.VolumeProxy.position = volumeAnchor.position; // set volume position
         mKitVolume.transform
-            .SetParent(volumeAnchor.GetChild(1)); //set volumeAnchor's grabbable box as parent of volume
+            .SetParent(answerVolumeBoxGrabbable); //set volumeAnchor's grabbable box as parent of volume
     }
 
     /// <summary>
@@ -283,6 +284,7 @@ public class VolumeGenerationManager : MonoBehaviour
         {
             Destroy(temporaryObject);
         }
+
         //Resets all grabbable boxes to their respective anchor
         Transform[] anchors = {answerAnchors[0], answerAnchors[1], answerAnchors[2], answerAnchors[3], compareAnchor};
         foreach (var anchor in anchors)

@@ -27,6 +27,7 @@ public class InputManager : MonoBehaviour
                 .transform.GetComponent<InteractableInformation>().answerId;
             if (answerId == 0) return;
             leftController.allowSelect = false; //Will cancel the pickup, returning the answer to their anchor
+            popupCanvas.SetActive(false);
             gm.CheckAnswer(answerId - 1);
         }
         else

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class StatisticsManager : MonoBehaviour
 {
-    private readonly string dateTimeFormat = "yyyyMMdd_HHmmss";
+    private readonly string dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     private GameManager gm;
     private Timer overallTimer;
     private Timer levelTimer;
@@ -14,7 +14,7 @@ public class StatisticsManager : MonoBehaviour
 
     void Start()
     {
-        filePath = Application.persistentDataPath;
+        filePath = $"{Application.persistentDataPath}/SonoVR_StatisticData.csv";
         data = new StatisticsData(dateTimeFormat);
         overallTimer = gameObject.AddComponent<Timer>();
         overallTimer.StartTimer();
@@ -33,15 +33,26 @@ public class StatisticsManager : MonoBehaviour
 
     private void EndLevel()
     {
-        data.levelData.Add(new LevelData(gm.CurrentLevelID, gm.CurrentLevel.levelType.compareObject,
-            gm.CurrentLevel.levelType.answerOptions, (bool) gm.LevelWon, levelTimer.StopTimer()));
+        data.levelData.Add(new LevelData(gm.CurrentLevel.levelType.compareObject,
+            gm.CurrentLevel.levelType.answerOptions, gm.LevelWon != null && (bool) gm.LevelWon,
+            levelTimer.StopTimer()));
     }
 
     private void EndGame()
     {
         data.overallTime = overallTimer.StopTimer();
         data.endDate = DateTime.Now.ToString(dateTimeFormat);
-        File.WriteAllText($"{filePath}/SonoVR_StatisticData_{DateTime.Now.ToString(dateTimeFormat)}.json",
-            JsonUtility.ToJson(data));
+        //In case where the statisticsData file is accidently open, put the data in a different file 
+        try
+        {
+            if (!File.Exists(filePath)) File.WriteAllText(filePath, data.ToCsvHeaderString());
+            File.AppendAllText(filePath, data.ToCsvString());
+        }
+        catch (Exception e)
+        {
+            File.WriteAllText(
+                filePath.Insert(filePath.Length - 4, DateTime.Now.ToString("yyyyMMdd_HHmmss")),
+                data.ToCsvString());
+        }
     }
 }

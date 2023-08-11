@@ -4,6 +4,7 @@ using Classes;
 using mKit;
 using SonoGame;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -65,6 +66,8 @@ namespace Tutorial
             ObjectHidden(sonoProbeInformation.transform, true);
             GameHelper.SetVisibility(rightController.GetChild(0), false);
             rightHandCollider.enabled = false;
+            
+            
         }
 
         private void ChangeLevelListToTutorialLevel()
@@ -126,7 +129,7 @@ namespace Tutorial
                     }
                 ),
 
-                new Level(LevelType.LevelTypes[0], new List<ShapeConfig>(), new List<List<ShapeConfig>>())
+                new Level(LevelType.LevelTypes[1], new List<ShapeConfig>(), new List<List<ShapeConfig>>())
             };
         }
 
@@ -204,6 +207,11 @@ namespace Tutorial
             }
             else if (CurrentTutorialTextId == 7 && args.interactableObject.transform.name == "StartButton")
             {
+                foreach (var gmMKitVolume in gm.MKitVolumes)
+                {
+                    DontDestroyOnLoad(gmMKitVolume);
+                }
+                Debug.Log("Loading MainScene");
                 SceneManager.LoadScene("Scenes/MainScene");
             }
         }

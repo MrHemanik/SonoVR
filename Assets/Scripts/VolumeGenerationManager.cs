@@ -277,7 +277,7 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #endregion
 
-    private void ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
+    public void ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
     {
         //Delete temporary Objects
         foreach (var temporaryObject in temporaryObjects)

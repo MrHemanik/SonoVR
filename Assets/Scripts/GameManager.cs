@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     public Transform[] AnswerSliceBoxGrabbables { get; private set; }
 
     public Transform[] MKitVolumes { get; private set; } = new Transform[4];
-    [HideInInspector] public List<Level> LevelList { private get;  set; }
+    [HideInInspector] public List<Level> LevelList { private get; set; }
 
     [HideInInspector] public int WinningAnswerId { get; private set; }
     [HideInInspector] public Level CurrentLevel { get; private set; }
@@ -74,14 +74,11 @@ public class GameManager : MonoBehaviour
 
     #region Initiation
 
-    private void Awake()
+    private IEnumerator Start()
     {
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         LevelList = new LevelList().levelList;
-    }
 
-    private IEnumerator Start()
-    {
         afterimagePool = GetComponent<ObjectPool>();
         am = GetComponent<AudioManager>();
         compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(1);
@@ -97,8 +94,16 @@ public class GameManager : MonoBehaviour
         //Instantiate all mKitVolumes so they can be found easier later
         for (int i = 0; i < 4; i++)
         {
-            yield return VolumeManager.Instance.GenerateArtificialVolume(new ShapeConfig(), i);
-            MKitVolumes[i] = GameObject.Find($"mKitVolume #{i} (ArtificialVolume.vm2)").transform;
+            var mKitVolume = GameObject.Find($"mKitVolume #{i} (ArtificialVolume.vm2)");
+            if (mKitVolume == null)
+            {
+                yield return VolumeManager.Instance.GenerateArtificialVolume(new ShapeConfig(), i);
+                mKitVolume = GameObject.Find($"mKitVolume #{i} (ArtificialVolume.vm2)");
+                DontDestroyOnLoad(GameObject.Find($"mKitToolgroup #{i} (ArtificialVolume.vm2)"));
+                DontDestroyOnLoad(mKitVolume);
+            }
+            MKitVolumes[i] = mKitVolume.transform;
+            
         }
 
         yield return InitLevel();
@@ -113,7 +118,8 @@ public class GameManager : MonoBehaviour
         LevelWon = null;
         SetWinningAnswerVolume();
         enabled = false; // will be re-enabled after generating artificials
-        yield return volGenMan.GenerateLevel(CurrentLevel, WinningAnswerId, answerAnchors, compareAnchor, MKitVolumes, AnswerVolumeBoxGrabbables);
+        yield return volGenMan.GenerateLevel(CurrentLevel, WinningAnswerId, answerAnchors, compareAnchor, MKitVolumes,
+            AnswerVolumeBoxGrabbables);
         yield return null; //If yield return null it waits until generateLevel is fully finished
         if (CurrentLevel.levelType.answerOptions == ObjectType.HiddenVolumeAfterimage ||
             CurrentLevel.levelType.compareObject == ObjectType.HiddenVolumeAfterimage)

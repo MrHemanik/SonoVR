@@ -61,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1140781833399841914, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: m_Name
-      value: Manager
+      value: TutorialManager
       objectReference: {fileID: 0}
     - target: {fileID: 1140781833399841916, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: m_RootOrder
@@ -109,7 +109,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1140781833399841918, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1140781833399841918, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: popupCanvas
@@ -117,11 +117,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1140781834051280592, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1140781834051280592, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: sliceCopyTransform
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1140781834051280592, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
+      propertyPath: sliceViews.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1140781834051280592, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: sliceViews.Array.data[0]
@@ -137,3 +141,76 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
+--- !u!1 &2019136942058009256 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1140781833399841914, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
+  m_PrefabInstance: {fileID: 1428121917729556178}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1261080012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019136942058009256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34074c829af94522a52ae9a44128766d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volGenMan: {fileID: 2019136942236506114}
+  materialConfig: {fileID: 11400000, guid: 19e856ba8b799bd44a8993c6a09c7125, type: 2}
+  answerAnchors: []
+  compareAnchor: {fileID: 0}
+  resetComponentsEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  initLevelEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  endLevelEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  endGameEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  shownText: {fileID: 0}
+  frontArea: {fileID: 0}
+  compareAnchor: {fileID: 0}
+  compareArea: {fileID: 0}
+  sonoProbeStand: {fileID: 0}
+  sonoProbeInformation: {fileID: 0}
+  popupCanvas: {fileID: 0}
+  tutorialTexts:
+  - "Willkommen zu SonoVR!\nDr\xFCcke den Trigger links um loszulegen.\nFalls deine
+    Position nicht ganz stimmt dr\xFCcke links auf die Men\xFC Taste.\nWo welche
+    Taste ist, siehst du zu deiner Linken."
+  - "Der Tisch vor dir ist h\xF6henverstellbar. Greif den Griff und ziehe ihn nach
+    belieben nach oben und unten"
+  - "Bevor du starten kannst brauchst du noch das richtige Werkzeug um Volumen zu
+    untersuchen.\nDaf\xFCr ist dir eine SonoSonde\u2122 bereitgestellt.\nMit ihr
+    kannst du Schnittbilder erzeugen.\nGreif sie mit deiner rechten Hand auf um weiter
+    zu machen."
+  - "Vor dir ist nun ein untersuchbares Volumen. Halte die Sonde auf das Volumen
+    um ein Schnittbild zu erzeugen.\nDas Schnittbild der Sonde siehst du auf der
+    SonoSonde\u2122 selbst und auf der Anzeige hinter diesem Text."
+  - "Gut gemacht!\nGreif das Volumen mit deiner linken Hand um es hin und her zu
+    bewegen. Greif es und dr\xFCcke den linken Trigger um es als Antwort abzugeben."
+  - "Zu deiner linken ist nun ein gesuchtes Objekt zugekommen.\nUntersuche die beiden
+    Volumen und w\xE4hle die dazugeh\xF6rige Antwort aus"
+  - "Super! Ob die Antwort richtig war oder nicht, h\xF6rst du am Ton und siehst
+    du an dem Farbrand.\nJetzt musst du das gesuchte Objekt untersuchen. Der Punkt
+    auf der SonoSonde\u2122 zeigt dir, ob du das Gesuchte(Gelb) oder die Antworten(Blau)
+    untersuchen kannst."
+  - Jetzt solltest du alles haben, um loszulegen!
+--- !u!114 &2019136942236506114 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1140781834051280592, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
+  m_PrefabInstance: {fileID: 1428121917729556178}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019136942058009256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 917f3d415a532f54890abbda5a51c65f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

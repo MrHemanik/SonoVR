@@ -1587,6 +1587,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &1095886458 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6695987132744903764, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
+  m_PrefabInstance: {fileID: 8660873898534004360}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cbbb45f42bf00049b52211f09da49dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1191674277 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1952634466119826869, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
@@ -1897,17 +1908,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!114 &1488926508 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4218960044537534574, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
-  m_PrefabInstance: {fileID: 8660873898534004360}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cbbb45f42bf00049b52211f09da49dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1508069012 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8660873897877514268, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
@@ -2456,7 +2456,7 @@ PrefabInstance:
     - target: {fileID: 1140781834051280592, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
       propertyPath: sliceViews.Array.data[2]
       value: 
-      objectReference: {fileID: 1488926508}
+      objectReference: {fileID: 1095886458}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22723bbbc55c30841bbe3f4401db2072, type: 3}
 --- !u!1001 &1205175567888383972
@@ -2531,6 +2531,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4167135710922603826, guid: ed96851acfa4d504eb15152afcf41525, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4167135711349981504, guid: ed96851acfa4d504eb15152afcf41525, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -2632,6 +2636,10 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 71629186}
+    - target: {fileID: 3676592660508158952, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
+      propertyPath: m_Name
+      value: SonoProbeInformationArea
+      objectReference: {fileID: 0}
     - target: {fileID: 4286994172717623275, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
       propertyPath: m_Mesh
       value: 

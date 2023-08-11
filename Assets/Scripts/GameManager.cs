@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     public Transform[] AnswerSliceBoxGrabbables { get; private set; }
 
     public Transform[] MKitVolumes { get; private set; } = new Transform[4];
-    [HideInInspector] private List<Level> levelList;
+    [HideInInspector] public List<Level> LevelList { private get;  set; }
 
     [HideInInspector] public int WinningAnswerId { get; private set; }
     [HideInInspector] public Level CurrentLevel { get; private set; }
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
-        levelList = new LevelList().levelList;
+        LevelList = new LevelList().levelList;
     }
 
     private IEnumerator Start()
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator InitLevel()
     {
         resetComponentsEvent.Invoke();
-        CurrentLevel = levelList[CurrentLevelID];
+        CurrentLevel = LevelList[CurrentLevelID];
         Debug.Log(
             $"Loading Level {CurrentLevelID} of with compare:{CurrentLevel.levelType.compareObject} and answer:{CurrentLevel.levelType.answerOptions}");
         LevelWon = null;
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour
         //Part of loading new level
         CurrentLevelID++;
         yield return new WaitForSeconds(1f); //TODO: Replace with some sort of check for the player
-        if (CurrentLevelID >= levelList.Count) EndGame();
+        if (CurrentLevelID >= LevelList.Count) EndGame();
         else yield return InitLevel();
     }
 

@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
     {
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         LevelList = new LevelList().levelList;
-
+        LevelList.AddRange(new LevelList().levelList); //Adds another randomly generated instance of all levels to levelList to compare to.
         afterimagePool = GetComponent<ObjectPool>();
         am = GetComponent<AudioManager>();
         compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(1);

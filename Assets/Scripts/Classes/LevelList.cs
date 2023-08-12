@@ -42,27 +42,8 @@ namespace Classes
             levelList = new List<Level>
             {
                 //LevelType 0: compare Volume, answer Slices
-                //Fixed starter level to better explain the basics
-                new Level(LevelType.LevelTypes[0],
-                    new List<ShapeConfig> // Shapes in every Volume
-                        {LevelHelper.GenerateBasicCube(materialConfig.map[4].color)},
-                    new List<List<ShapeConfig>> // Unique Shapes
-                    {
-                        // Volume 1
-                        new()
-                        {
-                            LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
-                                usesSlices: true, rotation: Quaternion.identity)
-                        },
-                        // Volume 2
-                        new()
-                        {
-                            LevelHelper.GenerateRandomizedShape(ShapeType.ELIPSOID, materialConfig.map[3].color,
-                                size: new Vector3(100, 100, 100), usesSlices: true, edgeWidth: 10,
-                                rotation: Quaternion.identity)
-                        }
-                    }
-                ),
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
+                    shapeColors, 0, 2),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 2),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
@@ -73,7 +54,7 @@ namespace Classes
                     shapeColors, 1, 3, true),
                 //LevelType 1: compare Slice, answer Volumes
 
-                //Level that plays with different edgeWidth
+                //Level that uses edgeWidth as difference
                 new Level(LevelType.LevelTypes[1],
                     LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 4, usesSlices: true),
                     new List<List<ShapeConfig>>
@@ -81,12 +62,13 @@ namespace Classes
                         new() // Volume 1
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.TUBE_Y, materialConfig.map[1].color,
-                                size: new Vector3(50, 50, 50), usesSlices: true),
+                                center: new Vector3(100, 100, 100), size: new Vector3(50, 50, 50), usesSlices: true),
                         },
                         new() // Volume 2
                         {
                             LevelHelper.GenerateRandomizedShape(ShapeType.TUBE_Y, materialConfig.map[1].color,
-                                size: new Vector3(50, 50, 50), usesSlices: true, edgeWidth: 2)
+                                center: new Vector3(100, 100, 100), size: new Vector3(50, 50, 50), usesSlices: true,
+                                edgeWidth: 5)
                         }
                     }
                 ),
@@ -114,12 +96,10 @@ namespace Classes
                     shapeColors, 3, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3, true),
-                //From here on out there will be 4 instead of 5 level to cut down on time spent
+                //From here on out there will be 3 instead of 5 level to cut down on time spent
                 //LevelType 2 compare Afterimage, answer volume
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[2], GenerationType.SameShape, Shapes,
                     shapeColors, 1, 3),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[2], GenerationType.SameShape, Shapes,
-                    shapeColors, 2, 4),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[2], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 4, true),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[2], GenerationType.DifferentShape, Shapes,
@@ -127,8 +107,6 @@ namespace Classes
                 //LevelType 3 compare volume, answer afterimage
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[3], GenerationType.SameShape, Shapes,
                     shapeColors, 1, 3),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[3], GenerationType.SameShape, Shapes,
-                    shapeColors, 2, 4),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[3], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 4, true),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[3], GenerationType.DifferentShape, Shapes,
@@ -139,8 +117,6 @@ namespace Classes
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[4], GenerationType.SameShape, Shapes,
                     shapeColors, 2, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[4], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 1, 4, true),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[4], GenerationType.DifferentShape, Shapes,
                     shapeColors, 2, 4, true),
                 //LevelType 5 compare slice, answer afterimage
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[5], GenerationType.DifferentShape, Shapes,
@@ -148,34 +124,24 @@ namespace Classes
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[5], GenerationType.SameShape, Shapes,
                     shapeColors, 2, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[5], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 1, 4, true),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[5], GenerationType.DifferentShape, Shapes,
                     shapeColors, 2, 4, true),
-                //With HiddenVolume being the hardest ObjectType, level amount per levelType will be now be reduced to 3
+                //With HiddenVolume being the hardest ObjectType, level amount per levelType will be now be reduced to 2
                 //LevelType 6 compare hidden, answer volume
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[6], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 1, 2),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[6], GenerationType.DifferentShape, Shapes,
                     shapeColors, 2, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[6], GenerationType.DifferentShape, Shapes,
                     shapeColors, 3, 4, true),
                 //LevelType 7 compare volume, answer hidden
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[7], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 2, 2),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[7], GenerationType.SameShape, Shapes,
                     shapeColors, 2, 3, true),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[7], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 4, true),
                 //LevelType 8 compare hidden, answer slice
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[8], GenerationType.DifferentShape, Shapes,
-                    shapeColors, 2, 2),
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[8], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[8], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 4, true),
                 //LevelType 9 compare slice, answer hidden
-                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[9], GenerationType.SameShape, Shapes,
-                    shapeColors, 2, 2),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[9], GenerationType.DifferentShape, Shapes,
                     shapeColors, 2, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[9], GenerationType.DifferentShape, Shapes,

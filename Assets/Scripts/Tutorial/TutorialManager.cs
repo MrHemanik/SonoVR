@@ -26,24 +26,24 @@ namespace Tutorial
         public GameObject startButton;
         public SphereCollider rightHandCollider;
         public PlayerInput playerInput;
-
+        public GameObject rightControllerHoldInfo;
         //InputManagerParts
         private XRDirectInteractor leftController;
 
         private GameManager gm;
 
 
-        private String[] tutorialTexts =
+        private readonly String[] tutorialTexts =
         {
             "Willkommen zu SonoVR!\nFalls deine Position nicht ganz stimmt drücke auf die Menü Taste links.\nWo welche Taste ist, siehst du zu deiner Linken.\nDrücke den Trigger links um loszulegen.",
             "Ob du sitzt oder stehst ist egal, denn der Tisch vor dir ist höhenverstellbar.\nGreif den Griff und ziehe ihn nach Belieben nach oben und unten.",
             "Dann erkläre dich dir mal deine Aufgabe:\nDu sollst 3D-Körper (Volumen) untersuchen, indem du deren 2D-Ausschnitte (Schnittbilder) analysierst. Schnittbilder erzeugst du, indem du mit einer Sonde ein Volumen schneidest.\nDrücke den Trigger links um fortzufahren.",
-            "\nDafür ist dir eine SonoSonde™ bereitgestellt worden.\nMit ihrer Ultraschallsonde kannst du Schnittbilder erzeugen.\nGreif sie mit deiner rechten Hand auf um weiter zu machen.",
+            "\nDafür ist dir eine SonoSonde™ bereitgestellt worden.\nMit ihrer Ultraschallsonde kannst du Schnittbilder erzeugen.\nGreif sie mit deiner rechten Hand um weiter zu machen.",
             "Die SonoSonde ist nun an deine rechte Hand gebunden\nVor dir ist nun ein untersuchbares Volumen. Halte die Sonde auf das Volumen um ein Schnittbild zu erzeugen.\nDas Schnittbild der Sonde siehst du auf der SonoSonde™ selbst und auf der Anzeige hinter diesem Text.",
-            "Gut gemacht!\nGreif das Volumen mit deiner linken Hand um es hin und her zu bewegen. Drück währenddessen den linken Trigger um es als Antwort abzugeben.",
-            "Zu deiner linken ist nun ein gesuchtes Objekt zugekommen.\nUntersuche die beiden Volumen und wähle die dazugehörige Antwort aus.",
-            "Super! Ob die Antwort richtig war oder nicht, hörst du am Ton und siehst du an dem Farbrand.\nJetzt musst du das gesuchte Objekt untersuchen. Der Punkt auf der SonoSonde™ zeigt dir, ob du das Gesuchte(Gelb) oder die Antworten(Blau) untersuchen kannst.",
-            "Jetzt solltest du alles wissen, um loszulegen zu können. Falls du dir unsicher mit der Steuerung bist, schau auf den Schildern nach.\n Greif mit der linken Hand die Box um zu starten."
+            "Gut gemacht!\nGreif das Volumen mit deiner linken Hand um es hin und her zu bewegen. Drück währenddessen den linken Trigger um es als Antwort abzugeben.\nZur Erinnerung: Die Steuerung ist links von dir erklärt.",
+            "Auf der linken seite des Tisches ist nun ein gesuchtes Objekt zugekommen.\nUntersuche die beiden Volumen und wähle die dazugehörige Antwort aus.",
+            "Super! Ob die Antwort richtig war oder nicht, hörst du am Ton und siehst du an dem Farbrand.\nDer Punkt auf der SonoSonde™ zeigt dir, ob du das Gesuchte(Gelb) oder die Antworten(Blau) untersuchen kannst.\nHier musst du das gesuchte Objekt untersuchen.",
+            "Jetzt solltest du alles wissen, um loszulegen zu können. Falls du dir unsicher mit etwas bist, schau auf den Schildern nach.\n Greif mit der linken Hand die Box um zu das Spiel zu starten."
         };
 
         public int CurrentTutorialTextId { get; private set; }
@@ -67,6 +67,7 @@ namespace Tutorial
             ObjectHidden(sonoProbeInformation.transform, true);
             GameHelper.SetVisibility(rightController.GetChild(0), false);
             rightHandCollider.enabled = false;
+            rightControllerHoldInfo.SetActive(false);
             
             
         }
@@ -151,7 +152,7 @@ namespace Tutorial
                     GameHelper.SetVisibility(rightController.GetChild(0), true);
                     rightController.GetChild(1).gameObject.SetActive(false);
                     rightHandCollider.enabled = false;
-
+                    rightControllerHoldInfo.SetActive(true);
                     //Change Scene to now show Sono Elements
                     sonoProbeStand.SetActive(false);
                     ObjectHidden(frontArea.transform, false);
@@ -167,6 +168,7 @@ namespace Tutorial
                     ObjectHidden(compareArea.transform, false);
                     break;
                 case 8:
+                    rightControllerHoldInfo.SetActive(false);
                     ObjectHidden(frontArea.transform, true);
                     ObjectHidden(compareAnchor.transform, true);
                     ObjectHidden(compareArea.transform, true);
@@ -190,7 +192,7 @@ namespace Tutorial
         public void OnLeftTrigger(InputAction.CallbackContext context)
         {
             if (!context.started) return;
-            if (CurrentTutorialTextId == 0) NextStep(); //Only work when initial click & on first text
+            if (CurrentTutorialTextId == 0||CurrentTutorialTextId == 2) NextStep(); //Only work when initial click & on first text
             if (leftController.hasSelection && CurrentTutorialTextId >= 5)
             {
                 int answerId = leftController.interactablesSelected[0]

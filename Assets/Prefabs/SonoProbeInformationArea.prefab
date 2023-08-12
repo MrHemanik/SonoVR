@@ -101,8 +101,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Schnittbereich der Sonde. Untersuchbare Volumen die damit geschnitten werden,
-    erzeugen ein Schnittbild
+  m_text: "Schnittbereich der Ultraschallsonde.  Untersuchbare Volumen die damit
+    geschnitten werden, erzeugen ein Schnittbild. \nZur Veranschaulichung sichtbar\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: af0f05055fde7e8439feaca6d145e800, type: 2}
   m_sharedMaterial: {fileID: -3579625792165650921, guid: af0f05055fde7e8439feaca6d145e800, type: 2}

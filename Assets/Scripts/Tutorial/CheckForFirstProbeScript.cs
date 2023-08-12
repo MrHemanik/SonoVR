@@ -14,7 +14,7 @@ namespace Tutorial
 
         private void OnTriggerEnter(Collider other)
         {
-            if (tm.CurrentTutorialTextId == 3 && other.name == "EmptySliceCopy")
+            if (tm.CurrentTutorialTextId == 4 && other.name == "EmptySliceCopy")
                 tm.TriggerWithVolume();
         }
     }

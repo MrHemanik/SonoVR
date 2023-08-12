@@ -1119,6 +1119,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2247a4273ad5a2541831c6eb04d474c7, type: 2}
+    - target: {fileID: 3363413009505783505, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7204987287436813449, guid: eb9222c2c0c651144970d4fe5b36f5f8, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -21293,6 +21297,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 195503667722110715, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
+      propertyPath: m_text
+      value: "Schnittbereich der Ultraschallsonde.  Untersuchbare Volumen die damit
+        geschnitten werden, erzeugen ein Schnittbild. \nZur Veranschaulichung sichtbar\n"
+      objectReference: {fileID: 0}
     - target: {fileID: 552341093787665951, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
       propertyPath: m_InteractionManager
       value: 

@@ -14,7 +14,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 namespace Tutorial
 {
     //Everything relating to the tutorial
-    //Hastly build with no real structure
+    //Hastly build with no real structure, hardcoded
     public class TutorialManager : MonoBehaviour
     {
         public TextMeshPro shownText;
@@ -35,11 +35,12 @@ namespace Tutorial
 
         private String[] tutorialTexts =
         {
-            "Willkommen zu SonoVR!\nDrücke den Trigger links um loszulegen.\nFalls deine Position nicht ganz stimmt drücke links auf die Menü Taste.\nWo welche Taste ist, siehst du zu deiner Linken.",
-            "Der Tisch vor dir ist höhenverstellbar. Greif den Griff und ziehe ihn nach belieben nach oben und unten.",
-            "Bevor du starten kannst brauchst du noch das richtige Werkzeug um Volumen zu untersuchen.\nDafür ist dir eine SonoSonde™ bereitgestellt.\nMit ihr kannst du Schnittbilder erzeugen.\nGreif sie mit deiner rechten Hand auf um weiter zu machen.",
+            "Willkommen zu SonoVR!\nFalls deine Position nicht ganz stimmt drücke auf die Menü Taste links.\nWo welche Taste ist, siehst du zu deiner Linken.\nDrücke den Trigger links um loszulegen.",
+            "Ob du sitzt oder stehst ist egal, denn der Tisch vor dir ist höhenverstellbar.\nGreif den Griff und ziehe ihn nach Belieben nach oben und unten.",
+            "Dann erkläre dich dir mal deine Aufgabe:\nDu sollst 3D-Körper (Volumen) untersuchen, indem du deren 2D-Ausschnitte (Schnittbilder) analysierst. Schnittbilder erzeugst du, indem du mit einer Sonde ein Volumen schneidest.\nDrücke den Trigger links um fortzufahren.",
+            "\nDafür ist dir eine SonoSonde™ bereitgestellt worden.\nMit ihrer Ultraschallsonde kannst du Schnittbilder erzeugen.\nGreif sie mit deiner rechten Hand auf um weiter zu machen.",
             "Die SonoSonde ist nun an deine rechte Hand gebunden\nVor dir ist nun ein untersuchbares Volumen. Halte die Sonde auf das Volumen um ein Schnittbild zu erzeugen.\nDas Schnittbild der Sonde siehst du auf der SonoSonde™ selbst und auf der Anzeige hinter diesem Text.",
-            "Gut gemacht!\nGreif das Volumen mit deiner linken Hand um es hin und her zu bewegen. Greif es und drücke den linken Trigger um es als Antwort abzugeben.",
+            "Gut gemacht!\nGreif das Volumen mit deiner linken Hand um es hin und her zu bewegen. Drück währenddessen den linken Trigger um es als Antwort abzugeben.",
             "Zu deiner linken ist nun ein gesuchtes Objekt zugekommen.\nUntersuche die beiden Volumen und wähle die dazugehörige Antwort aus.",
             "Super! Ob die Antwort richtig war oder nicht, hörst du am Ton und siehst du an dem Farbrand.\nJetzt musst du das gesuchte Objekt untersuchen. Der Punkt auf der SonoSonde™ zeigt dir, ob du das Gesuchte(Gelb) oder die Antworten(Blau) untersuchen kannst.",
             "Jetzt solltest du alles wissen, um loszulegen zu können. Falls du dir unsicher mit der Steuerung bist, schau auf den Schildern nach.\n Greif mit der linken Hand die Box um zu starten."
@@ -140,11 +141,11 @@ namespace Tutorial
             shownText.text = tutorialTexts[CurrentTutorialTextId];
             switch (CurrentTutorialTextId)
             {
-                case 2:
+                case 3:
                     sonoProbeStand.SetActive(true);
                     rightHandCollider.enabled = true;
                     break;
-                case 3:
+                case 4: //On Probe pickup:
 
                     //Switch to SonoProbe in right hand
                     GameHelper.SetVisibility(rightController.GetChild(0), true);
@@ -158,14 +159,14 @@ namespace Tutorial
                     //Deactivate normal input
                     playerInput.enabled = false;
                     break;
-                case 4:
+                case 5:
                     playerInput.enabled = true;
                     break;
-                case 5:
+                case 6:
                     ObjectHidden(compareAnchor.transform, false);
                     ObjectHidden(compareArea.transform, false);
                     break;
-                case 7:
+                case 8:
                     ObjectHidden(frontArea.transform, true);
                     ObjectHidden(compareAnchor.transform, true);
                     ObjectHidden(compareArea.transform, true);
@@ -190,7 +191,7 @@ namespace Tutorial
         {
             if (!context.started) return;
             if (CurrentTutorialTextId == 0) NextStep(); //Only work when initial click & on first text
-            if (leftController.hasSelection && CurrentTutorialTextId >= 4)
+            if (leftController.hasSelection && CurrentTutorialTextId >= 5)
             {
                 int answerId = leftController.interactablesSelected[0]
                     .transform.GetComponent<InteractableInformation>().answerId;
@@ -205,7 +206,7 @@ namespace Tutorial
             {
                 NextStep();
             }
-            else if (CurrentTutorialTextId == 7 && args.interactableObject.transform.name == "StartButton")
+            else if (CurrentTutorialTextId == 8 && args.interactableObject.transform.name == "StartButton")
             {
                 foreach (var gmMKitVolume in gm.MKitVolumes)
                 {

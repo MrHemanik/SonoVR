@@ -23,8 +23,10 @@ public class InputManager : MonoBehaviour
         if (!context.started || gm.ActiveRound == false) return; //Only work when initial click & round active
         if (leftController.hasSelection)
         {
-            int answerId = leftController.interactablesSelected[0] //TODO: check if it crashes when left trigger while tableheightchange
-                .transform.GetComponent<InteractableInformation>().answerId;
+
+            var infoScript = leftController.interactablesSelected[0].transform.GetComponent<InteractableInformation>();
+            if (infoScript == null) return;
+            int answerId = infoScript.answerId;
             if (answerId == 0) return;
             leftController.allowSelect = false; //Will cancel the pickup, returning the answer to their anchor
             popupCanvas.SetActive(false);

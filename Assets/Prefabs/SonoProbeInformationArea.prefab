@@ -892,7 +892,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Erkl\xE4rung SonoProbe\u2122"
+  m_text: "Erkl\xE4rung SonoVRSonde\u2122"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: af0f05055fde7e8439feaca6d145e800, type: 2}
   m_sharedMaterial: {fileID: -3579625792165650921, guid: af0f05055fde7e8439feaca6d145e800, type: 2}
@@ -955,7 +955,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -0.42110065, y: 0.15271212, z: -0.40688974, w: 0.1771843}
+  m_margin: {x: -1.6632688, y: 0.15271212, z: -1.6706573, w: 0.1771843}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0

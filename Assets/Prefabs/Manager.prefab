@@ -550,14 +550,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: RightAnswer
-    clip: {fileID: 8300000, guid: e565c0fb1cae38b4691c4ca4b6652532, type: 3}
+    clip: {fileID: 8300000, guid: e24addccb1ab0ba488a2f6da6ca69641, type: 3}
     volume: 1
     pitch: 1
     source: {fileID: 0}
   - name: WrongAnswer
-    clip: {fileID: 8300000, guid: e565c0fb1cae38b4691c4ca4b6652532, type: 3}
+    clip: {fileID: 8300000, guid: 934ae0dd8b4fde74cac7165fcda79731, type: 3}
     volume: 1
-    pitch: 0.8
+    pitch: 1
     source: {fileID: 0}
 --- !u!1 &1140781834040885392
 GameObject:

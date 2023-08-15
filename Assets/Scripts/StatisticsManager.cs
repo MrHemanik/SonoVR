@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Classes;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class StatisticsManager : MonoBehaviour
     private Timer levelTimer;
     private StatisticsData data;
     private string filePath;
-
+    public LevelData LastLevelData { get; private set; }
     void Start()
     {
         filePath = $"{Application.persistentDataPath}/SonoVR_StatisticData.csv";
@@ -33,9 +34,10 @@ public class StatisticsManager : MonoBehaviour
 
     private void EndLevel()
     {
-        data.levelData.Add(new LevelData(gm.CurrentLevel.levelType.compareObject,
+        LastLevelData = new LevelData(gm.CurrentLevel.levelType.compareObject,
             gm.CurrentLevel.levelType.answerOptions, gm.LevelWon != null && (bool) gm.LevelWon,
-            levelTimer.StopTimer()));
+            levelTimer.StopTimer());
+        data.levelData.Add(LastLevelData);
     }
 
     private void EndGame()

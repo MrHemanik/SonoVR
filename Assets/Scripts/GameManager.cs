@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public bool? LevelWon { get; private set; } = null;
 
+    public int LevelCount { get; private set; }
     [HideInInspector] public int CurrentLevelID { get; private set; } = 0;
     [HideInInspector] public bool ActiveRound { get; private set; } = true;
 
@@ -79,6 +80,7 @@ public class GameManager : MonoBehaviour
         VolumeManager.Instance.SetMaterialConfig(materialConfig);
         LevelList = new LevelList().levelList;
         LevelList.AddRange(new LevelList().levelList); //Adds another randomly generated instance of all levels to levelList to compare to.
+        LevelCount = LevelList.Count;
         afterimagePool = GetComponent<ObjectPool>();
         am = GetComponent<AudioManager>();
         compareVolumeBoxGrabbable = compareAnchor.GetChild(0).GetChild(1);

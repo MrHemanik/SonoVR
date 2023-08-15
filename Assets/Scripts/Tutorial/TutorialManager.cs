@@ -38,7 +38,7 @@ namespace Tutorial
         private readonly String[] tutorialTexts =
         {
             "Willkommen zu SonoVR!\nFalls deine Position nicht ganz stimmt drücke auf die Menü Taste links.\nWo welche Taste ist, siehst du zu deiner Linken.\nDrücke den Trigger links um loszulegen.",
-            "Ob du sitzt oder stehst ist egal, denn der Tisch vor dir ist höhenverstellbar.\nGreif den Griff und ziehe ihn nach Belieben nach oben und unten.",
+            "Ob du sitzt oder stehst ist egal, denn der Tisch vor dir ist höhenverstellbar.\nGreif den Griff mit deiner linken Hand und ziehe ihn nach Belieben nach oben und unten.",
             "Dann erkläre dich dir mal deine Aufgabe:\nDu sollst 3D-Körper (Volumen) untersuchen, indem du deren 2D-Ausschnitte (Schnittbilder) analysierst. Schnittbilder erzeugst du, indem du mit einer Sonde ein Volumen schneidest.\nDrücke den Trigger links um fortzufahren.",
             "\nDafür ist dir eine SonoVRSonde™ bereitgestellt worden.\nMit ihrer Ultraschallsonde kannst du Schnittbilder erzeugen.\nGreif sie mit deiner rechten Hand um weiter zu machen.",
             "Die SonoVRSonde™ ist nun an deine rechte Hand gebunden\nVor dir ist nun ein untersuchbares Volumen. Halte die Sonde auf das Volumen um ein Schnittbild zu erzeugen.\nDas Schnittbild der Sonde siehst du auf der SonoSonde™ selbst und auf der Anzeige hinter diesem Text.",

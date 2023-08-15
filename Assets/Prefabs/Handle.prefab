@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6597017739506885831}
   - component: {fileID: 809787160}
+  - component: {fileID: 5686552272767408571}
   m_Layer: 0
   m_Name: Handle
   m_TagString: Untagged
@@ -46,6 +47,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 20, y: 3, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5686552272767408571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3858493068710497758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 8
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &5459170650010003001
 GameObject:
   m_ObjectHideFlags: 0
@@ -4833,7 +4852,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1882
+  m_VersionIndex: 1885
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

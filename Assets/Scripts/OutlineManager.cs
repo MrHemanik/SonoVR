@@ -41,7 +41,8 @@ public class OutlineManager : MonoBehaviour
     {
         if (!gm.ActiveRound) return;
         isGrabbed = false;
-        outline.OutlineColor = hover; //sets color to interactable due to it still being in range of hover
+        outline.enabled = false;
+        outline.OutlineColor = hover;
         outline.OutlineMode = Outline.Mode.OutlineAll;
     }
 }

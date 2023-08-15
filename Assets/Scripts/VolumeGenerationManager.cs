@@ -240,6 +240,7 @@ public class VolumeGenerationManager : MonoBehaviour
     internal IEnumerator GetStillDefaultSlice(Transform sourceSliceAnchor, Transform targetSliceAnchor)
     {
         Transform sliceCopyParent = sliceCopyTransform.parent;
+        var targetSliceGrabBox = targetSliceAnchor.GetChild(1);
         foreach (var sliceView in sliceViews
         ) //temporarily sets volumes in multiVolume texture to 0 so nothing will get rendered
         {
@@ -257,12 +258,10 @@ public class VolumeGenerationManager : MonoBehaviour
             true); //Needs to be done before GetSliceCamCapture, as it will not work without being active
         yield return
             null; //Needs yield return or else the SetPositionAndRotation will be executed after the sliceCamCapture
-        yield return targetSliceAnchor.GetComponentInChildren<RawImage>().texture =
-            VolumeManager.Instance
-                .GetSliceCamCapture(
-                    Volume.Volumes[
-                        sourceSliceAnchor.GetComponentInChildren<InteractableInformation>().answerId -
-                        1]); //Adds still shot of volume of volumeID to stillView
+        yield return targetSliceGrabBox.GetChild(0).GetChild(0).GetComponent<RawImage>().texture =
+            VolumeManager.Instance.GetSliceCamCapture(Volume.Volumes[
+                sourceSliceAnchor.GetComponentInChildren<InteractableInformation>().answerId -
+                1]); //Adds still shot of volume of volumeID to stillView
         sliceCopyTransform.SetParent(sliceCopyParent);
         sliceCopyTransform.SetLocalPositionAndRotation(defaultPosition, defaultRotation);
         yield return null; //needs yield return or else it will be executed after the foreach

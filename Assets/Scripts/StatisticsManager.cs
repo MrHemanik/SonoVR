@@ -10,13 +10,12 @@ public class StatisticsManager : MonoBehaviour
     private GameManager gm;
     private Timer overallTimer;
     private Timer levelTimer;
-    private StatisticsData data;
+    public StatisticsData Data { get; private set; }
     private string filePath;
-    public LevelData LastLevelData { get; private set; }
     void Start()
     {
         filePath = $"{Application.persistentDataPath}/SonoVR_StatisticData.csv";
-        data = new StatisticsData(dateTimeFormat);
+        Data = new StatisticsData(dateTimeFormat);
         overallTimer = gameObject.AddComponent<Timer>();
         overallTimer.StartTimer();
         levelTimer = gameObject.AddComponent<Timer>();
@@ -34,27 +33,26 @@ public class StatisticsManager : MonoBehaviour
 
     private void EndLevel()
     {
-        LastLevelData = new LevelData(gm.CurrentLevel.levelType.compareObject,
+        Data.levelData.Add(new LevelData(gm.CurrentLevel.levelType.compareObject,
             gm.CurrentLevel.levelType.answerOptions, gm.LevelWon != null && (bool) gm.LevelWon,
-            levelTimer.StopTimer());
-        data.levelData.Add(LastLevelData);
+            levelTimer.StopTimer()));
     }
 
     private void EndGame()
     {
-        data.overallTime = overallTimer.StopTimer();
-        data.endDate = DateTime.Now.ToString(dateTimeFormat);
+        Data.overallTime = overallTimer.StopTimer();
+        Data.endDate = DateTime.Now.ToString(dateTimeFormat);
         //In case where the statisticsData file is accidently open, put the data in a different file 
         try
         {
-            if (!File.Exists(filePath)) File.WriteAllText(filePath, data.ToCsvHeaderString());
-            File.AppendAllText(filePath, data.ToCsvString());
+            if (!File.Exists(filePath)) File.WriteAllText(filePath, Data.ToCsvHeaderString());
+            File.AppendAllText(filePath, Data.ToCsvString());
         }
         catch (Exception e)
         {
             File.WriteAllText(
                 filePath.Insert(filePath.Length - 4, DateTime.Now.ToString("yyyyMMdd_HHmmss")),
-                data.ToCsvString());
+                Data.ToCsvString());
         }
     }
 }

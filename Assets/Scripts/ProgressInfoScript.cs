@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class StatisticsVisualisationScript : MonoBehaviour
+public class ProgressInfoScript : MonoBehaviour
 {
     private GameManager gm;
     public GameObject progressBar;
@@ -27,7 +27,7 @@ public class StatisticsVisualisationScript : MonoBehaviour
     private void UpdateVisualisation()
     {
         levelCount = gm.LevelCount;
-        currentLevelNumber = gm.CurrentLevelID + 1;
+        currentLevelNumber = gm.CurrentLevelID;
         UpdateCurrentLevelText();
         UpdateProgressBar();
     }

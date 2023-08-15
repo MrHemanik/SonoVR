@@ -53,7 +53,7 @@ public class VolumeGenerationManager : MonoBehaviour
         Transform compareAnchor, Transform[] mKitVolumes, Transform[] answerVolumeBoxGrabbables)
     {
         enabled = false; // will be re-enabled after generating artificials
-        ResetComponents(answerAnchors, compareAnchor);
+        ResetComponents(answerAnchors, compareAnchor, mKitVolumes);
         yield return GenerateVolumesWithVolumeManager(currentLevel, winningAnswerID, answerAnchors);
         SetupVolumes(answerAnchors, mKitVolumes, answerVolumeBoxGrabbables, currentLevel.volumeList.Count);
         enabled = true;
@@ -279,12 +279,19 @@ public class VolumeGenerationManager : MonoBehaviour
 
     #endregion
 
-    public void ResetComponents(Transform[] answerAnchors, Transform compareAnchor)
+    private void ResetComponents(Transform[] answerAnchors, Transform compareAnchor, Transform[] mKitVolumes)
     {
         //Delete temporary Objects
         foreach (var temporaryObject in temporaryObjects)
         {
             Destroy(temporaryObject);
+        }
+
+        //Volume.UnloadAllVolumes would remove them all from the mKitVolumes array, for now they'll just be moved out of the way
+        foreach (var vol in mKitVolumes)
+        {
+            vol.parent = null;
+            vol.position = new Vector3(0, -100, 0);
         }
 
         //Resets all grabbable boxes to their respective anchor

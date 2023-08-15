@@ -46,14 +46,14 @@ namespace Classes
                     shapeColors, 0, 2),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 2),
-                /*LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
+                LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
                     shapeColors, 2, 2, false, true),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3, true),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[0], GenerationType.SameShape, Shapes,
                     shapeColors, 1, 3, true),
                 //LevelType 1: compare Slice, answer Volumes
-                
+
                 //Level that uses edgeWidth as difference
                 new Level(LevelType.LevelTypes[1],
                     LevelHelper.GenerateRandomizedShapes(Shapes, shapeColors, 4, usesSlices: true),
@@ -72,7 +72,6 @@ namespace Classes
                         }
                     }
                 ),
-                
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[1], GenerationType.DifferentShape, Shapes,
                     shapeColors, 1, 3, true),
                 //Level where one one volume misses a shape
@@ -147,7 +146,6 @@ namespace Classes
                     shapeColors, 2, 3),
                 LevelHelper.GenerateRandomizedLevel(LevelType.LevelTypes[9], GenerationType.DifferentShape, Shapes,
                     shapeColors, 2, 4, true),
-                    */
             };
         }
     }

@@ -2514,6 +2514,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Origin (XR Rig)
       objectReference: {fileID: 0}
+    - target: {fileID: 1205175568562182983, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_InteractionManager
       value: 

@@ -1,0 +1,46 @@
+﻿Models:
+
+Oculus Hands Model
+Copyright © Meta Platforms Technologies, LLC and its affiliates. All rights reserved.
+Licensed under the Creative Commons Attribution 4.0 https://creativecommons.org/licenses/by/4.0/
+Used as: General hand-model for left hand
+Oculus Hands Models: https://developer.oculus.com/downloads/package/oculus-hand-models/
+Pre-rigged from this video: https://www.youtube.com/watch?v=8PCNNro7Rt0
+With download from here: https://drive.google.com/file/d/10b39IekUdpBHlcTslZ-BlNRyH5uqPUe1/view
+
+
+Unity Store Assets:
+
+OToon - URP Toon Shading
+By Eric Hu https://assetstore.unity.com/publishers/63693
+License: Standard Unity Asset Store EULA https://unity.com/legal/as-terms
+Used as: Base for most materials to give them a more cartoon look
+https://assetstore.unity.com/packages/vfx/shaders/otoon-urp-toon-shading-216102
+
+Quick Outline
+By Chris Nolet https://assetstore.unity.com/publishers/35813
+License: Standard Unity Asset Store EULA https://unity.com/legal/as-terms
+Used as: Outlines for grabbable Volumes and Slices
+https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488
+
+
+Audio:
+
+Cling 01
+By SoundGator
+License: SoundGator Basic Standard https://www.soundgator.com/content/license/
+Used as: Sound that plays when you've answered correctly
+https://www.soundgator.com/product/1413-cling-01-sound-effect/
+
+Wrong
+By Raclure https://freesound.org/people/Raclure/
+License: Creative Commons 0 https://creativecommons.org/publicdomain/zero/1.0/
+Used as: Sound that plays when you've answered incorrectly
+https://freesound.org/people/Raclure/sounds/483598/
+
+Ambient Piano & Strings
+By Zakhar Valaha (Daddy_s_Music) https://pixabay.com/users/daddy_s_music-22836301/
+License: Pixabay "Free for use" https://pixabay.com/service/license-summary/
+Used as: Background Music
+https://pixabay.com/music/beautiful-plays-ambient-piano-ampamp-strings-10711/
+

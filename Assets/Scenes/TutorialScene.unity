@@ -9258,7 +9258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30d513a1ab29a7478f3782b671b9f06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  answerId: 1
+  answerId: 0
 --- !u!1001 &789039633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28839,15 +28839,83 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_PositionInput.m_Action.m_Id
-      value: 39dc9105-7536-42b6-a653-e7125ac00d84
+      value: 858106a2-fb5b-4015-8156-f062b497cbb4
       objectReference: {fileID: 0}
     - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_RotationInput.m_Action.m_Id
-      value: 93e95e53-efc7-40cc-8954-e8ecf5ca435a
+      value: e900566f-98dc-468f-a7d3-e8c6dbc573c1
       objectReference: {fileID: 0}
     - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_PositionInput.m_Action.m_Name
-      value: Position Input
+      value: Position
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_Name
+      value: Rotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_ExpectedControlType
+      value: Vector3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_ExpectedControlType
+      value: Quaternion
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 23922da2-6d11-4cfa-9e29-4b5460414b14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_SingletonActionBindings.Array.data[1].m_Id
+      value: e61f24e6-f3c2-4182-a3a6-c79b0024b25a
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 8d7ddc06-cdf9-45d8-938d-9f1f48143d16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 069fda68-e060-4b78-9ea9-6806f486779c
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRHMD>/centerEyePosition
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <HandheldARInputDevice>/devicePosition
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <XRHMD>/centerEyeRotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <HandheldARInputDevice>/deviceRotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Position
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_PositionInput.m_Action.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Position
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Rotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175567515161632, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_RotationInput.m_Action.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Rotation
       objectReference: {fileID: 0}
     - target: {fileID: 1205175567515853487, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_Enabled
@@ -28915,30 +28983,46 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1721144785}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
-      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartGrab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: OnLeftGrab
       objectReference: {fileID: 0}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HandTransparencyOnGrab, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: Tutorial.TutorialManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205175568665473871, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 1205175569048486579, guid: 6fdbbef22ff849442aa2230cc0df52e8, type: 3}

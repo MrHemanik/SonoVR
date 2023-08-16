@@ -14,6 +14,14 @@ public class OutlineManager : MonoBehaviour
     {
         outline.enabled = startWithVisibleOutline;
         gm = FindObjectOfType<GameManager>();
+        gm.initLevelEvent.AddListener(ResetOutline);
+    }
+
+    private void ResetOutline()
+    {
+        outline.enabled = false;
+        outline.OutlineColor = hover;
+        isGrabbed = false;
     }
     public void StartHover(HoverEnterEventArgs args)
     {

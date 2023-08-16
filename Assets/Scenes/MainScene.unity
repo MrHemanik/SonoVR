@@ -4048,6 +4048,10 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 71629186}
+    - target: {fileID: 2659413035867114480, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3163331671111261118, guid: b8860babea1928f40b8c6918afa3681f, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4278190148

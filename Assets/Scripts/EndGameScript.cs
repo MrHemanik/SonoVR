@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//Could be merged with EndScreenStatsScript
 public class EndGameScript : MonoBehaviour
 {
     private GameManager gm;

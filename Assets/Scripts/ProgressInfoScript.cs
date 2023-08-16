@@ -34,7 +34,7 @@ public class ProgressInfoScript : MonoBehaviour
 
     private void UpdateCurrentLevelText()
     {
-        levelText.text = $"Level {currentLevelNumber} von {levelCount}";
+        levelText.text = $"Level {currentLevelNumber+1} von {levelCount}";
     }
 
     private void UpdateProgressBar()
